@@ -15,6 +15,9 @@ RUN apt-get update && apt-get install -y \
     && docker-php-ext-configure gd --with-freetype --with-jpeg \
     && docker-php-ext-install gd pdo pdo_mysql zip
 
+RUN curl -sL https://deb.nodesource.com/setup_14.x | bash - \
+    && apt-get install -y nodejs
+
 # Active la réécriture d'URL pour Symfony
 RUN a2enmod rewrite
 
@@ -29,7 +32,6 @@ WORKDIR /var/www/html
 # Pour utiliser Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
-COPY entrypoint.sh /usr/local/bin/entrypoint.sh
-RUN chmod +x /usr/local/bin/entrypoint.sh
-
-ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
+# Configurer les droits de fichier pour WSL2/Windows
+# Important pour éviter les problèmes de droits entre le conteneur et l'hôte WSL2/Windows
+RUN usermod -u 1000 www-data && groupmod -g 1000 www-data
