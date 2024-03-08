@@ -35,3 +35,5 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 # Configurer les droits de fichier pour WSL2/Windows
 # Important pour éviter les problèmes de droits entre le conteneur et l'hôte WSL2/Windows
 RUN usermod -u 1000 www-data && groupmod -g 1000 www-data
+
+USER www-data
