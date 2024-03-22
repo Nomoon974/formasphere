@@ -45,6 +45,7 @@ final class Version20240214221440 extends AbstractMigration
         $this->addSql('ALTER TABLE trainee ADD CONSTRAINT FK_46C68DE7BEFD98D1 FOREIGN KEY (training_id) REFERENCES trainings (id)');
         $this->addSql('ALTER TABLE user_role ADD CONSTRAINT FK_2DE8C6A3A76ED395 FOREIGN KEY (user_id) REFERENCES user (id)');
         $this->addSql('ALTER TABLE user_role ADD CONSTRAINT FK_2DE8C6A3D60322AC FOREIGN KEY (role_id) REFERENCES roles (id)');
+        $this->addSql('ALTER TABLE user DROP COLUMN role');
     }
 
     public function down(Schema $schema): void

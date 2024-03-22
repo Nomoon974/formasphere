@@ -20,8 +20,7 @@ class DashboardController extends AbstractDashboardController
     public function configureDashboard(): Dashboard
     {
         return Dashboard::new()
-            ->setTitle('Formasphere')
-            ->setTitle('<img src="build/images/formasphere.cfc68f6b.png"> Fromasphere')
+            ->setTitle('<img style="border-radius: 10px; border: solid 3px rgb(24,48,69); width: 95%" src="build/images/formasphere.cfc68f6b.png"> Formasphere')
             ->setFaviconPath('build/images/formasphere.cfc68f6b.png');
     }
 
