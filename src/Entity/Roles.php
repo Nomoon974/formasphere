@@ -22,12 +22,8 @@ class Roles
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $permissions = null;
 
-    #[ORM\OneToMany(mappedBy: 'role', targetEntity: UserRole::class)]
-    private Collection $userRoles;
-
     public function __construct()
     {
-        $this->userRoles = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -55,36 +51,6 @@ class Roles
     public function setPermissions(?string $permissions): static
     {
         $this->permissions = $permissions;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, UserRole>
-     */
-    public function getUserRoles(): Collection
-    {
-        return $this->userRoles;
-    }
-
-    public function addUserRole(UserRole $userRole): static
-    {
-        if (!$this->userRoles->contains($userRole)) {
-            $this->userRoles->add($userRole);
-            $userRole->setRole($this);
-        }
-
-        return $this;
-    }
-
-    public function removeUserRole(UserRole $userRole): static
-    {
-        if ($this->userRoles->removeElement($userRole)) {
-            // set the owning side to null (unless already changed)
-            if ($userRole->getRole() === $this) {
-                $userRole->setRole(null);
-            }
-        }
 
         return $this;
     }

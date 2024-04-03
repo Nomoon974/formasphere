@@ -43,8 +43,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 50)]
     private ?string $status = null;
 
-    #[ORM\OneToMany(mappedBy: 'user', targetEntity: UserRole::class)]
-    private Collection $userRoles;
+//    #[ORM\OneToMany(mappedBy: 'user', targetEntity: UserRole::class)]
+//    private Collection $userRoles;
 
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: Chats::class)]
     private Collection $chats;
@@ -57,6 +57,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: Report::class)]
     private Collection $reports;
+
+    #[ORM\Column(length: 255)]
+    private ?string $firstname = null;
 
     public function __construct()
     {
@@ -187,36 +190,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
     /**
-     * @return Collection<int, UserRole>
-     */
-    public function getUserRoles(): Collection
-    {
-        return $this->userRoles;
-    }
-
-    public function addUserRole(UserRole $userRole): static
-    {
-        if (!$this->userRoles->contains($userRole)) {
-            $this->userRoles->add($userRole);
-            $userRole->setUser($this);
-        }
-
-        return $this;
-    }
-
-    public function removeUserRole(UserRole $userRole): static
-    {
-        if ($this->userRoles->removeElement($userRole)) {
-            // set the owning side to null (unless already changed)
-            if ($userRole->getUser() === $this) {
-                $userRole->setUser(null);
-            }
-        }
-
-        return $this;
-    }
-
-    /**
      * @return Collection<int, Chats>
      */
     public function getChats(): Collection
@@ -332,6 +305,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
                 $report->setUser(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getFirstname(): ?string
+    {
+        return $this->firstname;
+    }
+
+    public function setFirstname(string $firstname): static
+    {
+        $this->firstname = $firstname;
 
         return $this;
     }

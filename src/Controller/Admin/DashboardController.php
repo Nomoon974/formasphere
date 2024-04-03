@@ -7,7 +7,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Config\MenuItem;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractDashboardController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use App\Controller\Admin\UserCrudController;
+use App\Controller\UserController;
 
 class DashboardController extends AbstractDashboardController
 {
@@ -28,5 +28,6 @@ class DashboardController extends AbstractDashboardController
     {
         yield MenuItem::linkToDashboard('Dashboard', 'fa fa-home');
         yield MenuItem::linkToCrud('Utilisateur', 'fas fa-user', UserCrudController::getEntityFqcn());
+        yield MenuItem::linkToCrud('Role Utilisateur', 'fa fa-id-badge', RolesCrudController::getEntityFqcn());
     }
 }

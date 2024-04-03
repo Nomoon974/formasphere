@@ -1,0 +1,41 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Spaces index{% endblock %}
+
+{% block body %}
+    <h1>Spaces index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Space_name</th>
+                <th>Theme_color</th>
+                <th>Description</th>
+                <th>Creation_date</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for space in spaces %}
+            <tr>
+                <td>{{ space.id }}</td>
+                <td>{{ space.spaceName }}</td>
+                <td>{{ space.themeColor }}</td>
+                <td>{{ space.description }}</td>
+                <td>{{ space.creationDate ? space.creationDate|date('Y-m-d H:i:s') : '' }}</td>
+                <td>
+                    <a href="{{ path('app_spaces_show', {'id': space.id}) }}">show</a>
+                    <a href="{{ path('app_spaces_edit', {'id': space.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="6">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_spaces_new') }}">Create new</a>
+{% endblock %}

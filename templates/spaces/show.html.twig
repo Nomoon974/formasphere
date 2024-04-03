@@ -1,0 +1,38 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Spaces{% endblock %}
+
+{% block body %}
+    <h1>Spaces</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ space.id }}</td>
+            </tr>
+            <tr>
+                <th>Space_name</th>
+                <td>{{ space.spaceName }}</td>
+            </tr>
+            <tr>
+                <th>Theme_color</th>
+                <td>{{ space.themeColor }}</td>
+            </tr>
+            <tr>
+                <th>Description</th>
+                <td>{{ space.description }}</td>
+            </tr>
+            <tr>
+                <th>Creation_date</th>
+                <td>{{ space.creationDate ? space.creationDate|date('Y-m-d H:i:s') : '' }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_spaces_index') }}">back to list</a>
+
+    <a href="{{ path('app_spaces_edit', {'id': space.id}) }}">edit</a>
+
+    {{ include('spaces/_delete_form.html.twig') }}
+{% endblock %}
