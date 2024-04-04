@@ -43,9 +43,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 50)]
     private ?string $status = null;
 
-//    #[ORM\OneToMany(mappedBy: 'user', targetEntity: UserRole::class)]
-//    private Collection $userRoles;
-
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: Chats::class)]
     private Collection $chats;
 
@@ -63,12 +60,13 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function __construct()
     {
-        $this->userRoles = new ArrayCollection();
         $this->chats = new ArrayCollection();
         $this->contents = new ArrayCollection();
         $this->notifications = new ArrayCollection();
         $this->reports = new ArrayCollection();
         $this->last_login = new \DateTime();
+        $this->setRoles(["ROLE_USER"]);
+        $this->avatar = 'build/images/uifaces-abstract-image.66d70347.jpg';
     }
 
     public function getId(): ?int

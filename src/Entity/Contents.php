@@ -29,6 +29,11 @@ class Contents
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     private ?\DateTimeInterface $publication_date = null;
 
+    public function __construct()
+    {
+        $this->publication_date = new \DateTime();
+    }
+
     public function getId(): ?int
     {
         return $this->id;
