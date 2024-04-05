@@ -34,6 +34,7 @@ class Documents
     public function __construct()
     {
         $this->archivings = new ArrayCollection();
+        $this->timestamp = new \DateTime();
     }
 
     public function getId(): ?int

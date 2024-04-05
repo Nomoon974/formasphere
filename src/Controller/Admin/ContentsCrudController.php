@@ -20,14 +20,14 @@ class ContentsCrudController extends AbstractCrudController
     public function configureFields(string $pageName): iterable
     {
         return [
-            ChoiceField::new('content_type')
+            ChoiceField::new('content_type', "Contenu")
                 ->setLabel('Type de contenu')
                 ->setChoices([
                     'option 1' => 'temporaire'
                 ]),
-            TextField::new('content_link'),
-            TextField::new('category'),
-            DateTimeField::new('publication_date')
+            TextField::new('content_link', "Lien contenu"),
+            TextField::new('category', "Catégorie"),
+            DateTimeField::new('publication_date', "Date de publication")
         ];
     }
 }

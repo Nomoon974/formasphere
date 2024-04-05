@@ -26,13 +26,12 @@ class UserCrudController extends AbstractCrudController
     public function configureFields(string $pageName): iterable
     {
         return [
-            TextField::new('name'),
-            TextField::new('firstname'),
+            TextField::new('name', "Nom"),
+            TextField::new('firstname', "Prénom"),
             EmailField::new('email'),
-            TextField::new('password')->setFormType(PasswordType::class),
+            TextField::new('password', "Mot de passe")->setFormType(PasswordType::class),
             AvatarField::new('avatar'),
-            CollectionField::new('Roles')->allowAdd(false)->allowDelete(false),
-
+            CollectionField::new('Roles')->allowAdd(true)->allowDelete(false),
         ];
     }
 }
