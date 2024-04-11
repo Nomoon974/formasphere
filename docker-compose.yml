@@ -26,12 +26,6 @@ services:
     ports:
       - "3306:3306"
 
-  mail:
-    image: mailhog/mailhog
-    ports:
-      - "1025:1025"
-      - "8025:8025"
-
   adminer:
     container_name: adminer_1
     image: adminer

@@ -14,7 +14,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[UniqueEntity(fields: ['email'], message: 'There is already an account with this email')]
-class User implements UserInterface, PasswordAuthenticatedUserInterface
+class User implements UserInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -63,6 +63,15 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: 'boolean')]
     private $isVerified = false;
 
+    #[ORM\OneToMany(mappedBy: 'user_id', targetEntity: Comment::class)]
+    private Collection $comments;
+
+    #[ORM\OneToMany(mappedBy: 'userId', targetEntity: ChatMessage::class)]
+    private Collection $chatMessages;
+
+    #[ORM\ManyToMany(targetEntity: Spaces::class, mappedBy: 'userId')]
+    private Collection $spaces;
+
     public function __construct()
     {
         $this->chats = new ArrayCollection();
@@ -73,6 +82,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->setRoles(["ROLE_USER"]);
         $this->avatar = 'build/images/uifaces-abstract-image.66d70347.jpg';
         $this->status = "ok";
+        $this->comments = new ArrayCollection();
+        $this->chatMessages = new ArrayCollection();
+        $this->spaces = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -155,6 +167,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->name = $name;
 
         return $this;
+    }
+
+    /**
+     * Retourne le nom complet de l'utilisateur.
+     *
+     * @return string
+     */
+    public function getFullName(): string
+    {
+        return $this->getFirstname() . ' ' . $this->getName();
     }
 
     public function getAvatar(): ?string
@@ -336,4 +358,97 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
         return $this;
     }
+
+    /**
+     * @return Collection<int, Comment>
+     */
+    public function getComments(): Collection
+    {
+        return $this->comments;
+    }
+
+    public function addComment(Comment $comment): static
+    {
+        if (!$this->comments->contains($comment)) {
+            $this->comments->add($comment);
+            $comment->setUserId($this);
+        }
+
+        return $this;
+    }
+
+    public function removeComment(Comment $comment): static
+    {
+        if ($this->comments->removeElement($comment)) {
+            // set the owning side to null (unless already changed)
+            if ($comment->getUserId() === $this) {
+                $comment->setUserId(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, ChatMessage>
+     */
+    public function getChatMessages(): Collection
+    {
+        return $this->chatMessages;
+    }
+
+    public function addChatMessage(ChatMessage $chatMessage): static
+    {
+        if (!$this->chatMessages->contains($chatMessage)) {
+            $this->chatMessages->add($chatMessage);
+            $chatMessage->setUserId($this);
+        }
+
+        return $this;
+    }
+
+    public function removeChatMessage(ChatMessage $chatMessage): static
+    {
+        if ($this->chatMessages->removeElement($chatMessage)) {
+            // set the owning side to null (unless already changed)
+            if ($chatMessage->getUserId() === $this) {
+                $chatMessage->setUserId(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Spaces>
+     */
+    public function getSpaces(): Collection
+    {
+        return $this->spaces;
+    }
+
+    public function addSpace(Spaces $space): static
+    {
+        if (!$this->spaces->contains($space)) {
+            $this->spaces->add($space);
+            $space->addUserId($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSpace(Spaces $space): static
+    {
+        if ($this->spaces->removeElement($space)) {
+            $space->removeUserId($this);
+        }
+
+        return $this;
+    }
+
+    public function __toString(): string
+    {
+        return $this->getFullName();
+    }
+
 }

@@ -31,7 +31,7 @@ class UserCrudController extends AbstractCrudController
             EmailField::new('email'),
             TextField::new('password', "Mot de passe")->setFormType(PasswordType::class),
             AvatarField::new('avatar'),
-            CollectionField::new('Roles')->allowAdd(true)->allowDelete(false),
+            CollectionField::new('Roles')->allowAdd(false)->allowDelete(false),
         ];
     }
 }

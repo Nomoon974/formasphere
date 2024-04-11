@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\ContentsRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -29,9 +31,13 @@ class Contents
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     private ?\DateTimeInterface $publication_date = null;
 
+    #[ORM\OneToMany(mappedBy: 'content_id', targetEntity: Comment::class)]
+    private Collection $comments;
+
     public function __construct()
     {
         $this->publication_date = new \DateTime();
+        $this->comments = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -95,6 +101,36 @@ class Contents
     public function setPublicationDate(\DateTimeInterface $publication_date): static
     {
         $this->publication_date = $publication_date;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Comment>
+     */
+    public function getComments(): Collection
+    {
+        return $this->comments;
+    }
+
+    public function addComment(Comment $comment): static
+    {
+        if (!$this->comments->contains($comment)) {
+            $this->comments->add($comment);
+            $comment->setContentId($this);
+        }
+
+        return $this;
+    }
+
+    public function removeComment(Comment $comment): static
+    {
+        if ($this->comments->removeElement($comment)) {
+            // set the owning side to null (unless already changed)
+            if ($comment->getContentId() === $this) {
+                $comment->setContentId(null);
+            }
+        }
 
         return $this;
     }

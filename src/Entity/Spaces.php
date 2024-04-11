@@ -31,9 +31,13 @@ class Spaces
     #[ORM\OneToMany(mappedBy: 'space', targetEntity: Chats::class)]
     private Collection $chats;
 
+    #[ORM\ManyToMany(targetEntity: User::class, inversedBy: 'spaces')]
+    private Collection $userId;
+
     public function __construct()
     {
         $this->chats = new ArrayCollection();
+        $this->userId = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -115,6 +119,30 @@ class Spaces
                 $chat->setSpace(null);
             }
         }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, User>
+     */
+    public function getUserId(): Collection
+    {
+        return $this->userId;
+    }
+
+    public function addUserId(User $userId): static
+    {
+        if (!$this->userId->contains($userId)) {
+            $this->userId->add($userId);
+        }
+
+        return $this;
+    }
+
+    public function removeUserId(User $userId): static
+    {
+        $this->userId->removeElement($userId);
 
         return $this;
     }

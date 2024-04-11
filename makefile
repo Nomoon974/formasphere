@@ -27,7 +27,7 @@ ssh-db: ## Se connecte au conteneur MySQL
 help: ## Affiche cette aide
 	@awk 'BEGIN {FS = ":.*?## "} /^[a-zA-Z_-]+:.*?## / {printf "\033[36m%-15s\033[0m %s\n", $$1, $$2}' $(MAKEFILE_LIST)
 
-exec-php: ## Exécute une commande dans le conteneur PHP (utilisation : make exec-php cmd="votre_commande")
+php: ## Exécute une commande dans le conteneur PHP (utilisation : make exec-php cmd="votre_commande")
 	docker-compose exec php_apache $(cmd)
 
 exec-db: ## Exécute une commande dans le conteneur MySQL (utilisation : make exec-db cmd="votre_commande")

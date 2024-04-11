@@ -54,7 +54,7 @@ class LoginFormAuthenticator extends AbstractLoginFormAuthenticator
         }
 
         // Redirection par défaut pour les utilisateurs non-admin
-        return new RedirectResponse($this->urlGenerator->generate('home'));
+        return new RedirectResponse($this->urlGenerator->generate('app_overview'));
     }
 
     protected function getLoginUrl(Request $request): string
