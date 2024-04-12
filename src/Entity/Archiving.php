@@ -14,8 +14,8 @@ class Archiving
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\ManyToOne(inversedBy: 'archivings')]
-    private ?Documents $document = null;
+    #[ORM\ManyToOne(targetEntity: Spaces::class , inversedBy: 'archivings')]
+    private ?Spaces $space = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     private ?\DateTimeInterface $archiving_date = null;
@@ -31,17 +31,23 @@ class Archiving
         return $this->id;
     }
 
-    public function getDocument(): ?Documents
+    /**
+     * @return Spaces|null
+     */
+    public function getSpace(): ?Spaces
     {
-        return $this->document;
+        return $this->space;
     }
 
-    public function setDocument(?Documents $document): static
+    /**
+     * @param Spaces|null $space
+     */
+    public function setSpace(?Spaces $space): void
     {
-        $this->document = $document;
-
-        return $this;
+        $this->space = $space;
     }
+
+
 
     public function getArchivingDate(): ?\DateTimeInterface
     {
@@ -78,4 +84,5 @@ class Archiving
 
         return $this;
     }
+
 }

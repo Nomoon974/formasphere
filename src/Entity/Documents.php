@@ -28,12 +28,12 @@ class Documents
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     private ?\DateTimeInterface $timestamp = null;
 
-    #[ORM\OneToMany(mappedBy: 'document', targetEntity: Archiving::class)]
-    private Collection $archivings;
+    #[ORM\ManyToOne(targetEntity: Spaces::class, inversedBy: "documents")]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Spaces $space = null;
 
     public function __construct()
     {
-        $this->archivings = new ArrayCollection();
         $this->timestamp = new \DateTime();
     }
 
@@ -91,32 +91,19 @@ class Documents
     }
 
     /**
-     * @return Collection<int, Archiving>
+     * @return Spaces|null
      */
-    public function getArchivings(): Collection
+    public function getSpace(): ?Spaces
     {
-        return $this->archivings;
+        return $this->space;
     }
 
-    public function addArchiving(Archiving $archiving): static
+    /**
+     * @param Spaces|null $space
+     */
+    public function setSpace(?Spaces $space): void
     {
-        if (!$this->archivings->contains($archiving)) {
-            $this->archivings->add($archiving);
-            $archiving->setDocument($this);
-        }
-
-        return $this;
+        $this->space = $space;
     }
 
-    public function removeArchiving(Archiving $archiving): static
-    {
-        if ($this->archivings->removeElement($archiving)) {
-            // set the owning side to null (unless already changed)
-            if ($archiving->getDocument() === $this) {
-                $archiving->setDocument(null);
-            }
-        }
-
-        return $this;
-    }
 }

@@ -34,6 +34,10 @@ class Contents
     #[ORM\OneToMany(mappedBy: 'content_id', targetEntity: Comment::class)]
     private Collection $comments;
 
+    #[ORM\ManyToOne(targetEntity: Spaces::class, inversedBy: "contents")]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Spaces $space = null;
+
     public function __construct()
     {
         $this->publication_date = new \DateTime();
@@ -134,4 +138,21 @@ class Contents
 
         return $this;
     }
+
+    /**
+     * @return Spaces|null
+     */
+    public function getSpace(): ?Spaces
+    {
+        return $this->space;
+    }
+
+    /**
+     * @param Spaces|null $space
+     */
+    public function setSpace(?Spaces $space): void
+    {
+        $this->space = $space;
+    }
+
 }

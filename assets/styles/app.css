@@ -1,7 +1,3 @@
-body {
-    background-color: lightgray;
-}
-
-.custom-pointer {
-    color: #83122A;
+body, html {
+    background-color: white;
 }

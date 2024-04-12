@@ -34,10 +34,22 @@ class Spaces
     #[ORM\ManyToMany(targetEntity: User::class, inversedBy: 'spaces')]
     private Collection $userId;
 
+    #[ORM\OneToMany(mappedBy: "space", targetEntity: Archiving::class)]
+    private Collection $archivings;
+
+    #[ORM\OneToMany(targetEntity: Documents::class, mappedBy: "space")]
+    private Collection $documents;
+
+    #[ORM\OneToMany(targetEntity: Contents::class, mappedBy: "space")]
+    private Collection $contents;
+
     public function __construct()
     {
         $this->chats = new ArrayCollection();
         $this->userId = new ArrayCollection();
+        $this->archivings = new ArrayCollection();
+        $this->documents = new ArrayCollection();
+        $this->contents = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -146,4 +158,119 @@ class Spaces
 
         return $this;
     }
+
+    /**
+     * @return Collection
+     */
+    public function getArchivings(): Collection
+    {
+        return $this->archivings;
+    }
+
+    /**
+     * @param Collection $archivings
+     */
+    public function setArchivings(Collection $archivings): void
+    {
+        $this->archivings = $archivings;
+    }
+
+    public function addArchiving(Archiving $archiving): self
+    {
+        if (!$this->archivings->contains($archiving)) {
+            $this->archivings[] = $archiving;
+            $archiving->setSpace($this);
+        }
+
+        return $this;
+    }
+
+    public function removeArchiving(Archiving $archiving): self
+    {
+        if ($this->archivings->removeElement($archiving)) {
+            // set the owning side to null (unless already changed)
+            if ($archiving->getSpace() === $this) {
+                $archiving->setSpace(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection
+     */
+    public function getDocuments(): Collection
+    {
+        return $this->documents;
+    }
+
+    /**
+     * @param Collection $documents
+     */
+    public function setDocuments(Collection $documents): void
+    {
+        $this->documents = $documents;
+    }
+
+    public function addDocument(Documents $document): self
+    {
+        if (!$this->documents->contains($document)) {
+            $this->documents[] = $document;
+            $document->setSpace($this);
+        }
+
+        return $this;
+    }
+
+    public function removeDocument(Documents $document): self
+    {
+        if ($this->documents->removeElement($document)) {
+            // set the owning side to null (unless already changed)
+            if ($document->getSpace() === $this) {
+                $document->setSpace(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection
+     */
+    public function getContents(): Collection
+    {
+        return $this->contents;
+    }
+
+    /**
+     * @param Collection $contents
+     */
+    public function setContents(Collection $contents): void
+    {
+        $this->contents = $contents;
+    }
+
+    public function addContent(Contents $content): self
+    {
+        if (!$this->contents->contains($content)) {
+            $this->contents[] = $content;
+            $content->setSpace($this);
+        }
+
+        return $this;
+    }
+
+    public function removeContent(Contents $content): self
+    {
+        if ($this->contents->removeElement($content)) {
+            // set the owning side to null (unless already changed)
+            if ($content->getSpace() === $this) {
+                $content->setSpace(null);
+            }
+        }
+
+        return $this;
+    }
+
 }
