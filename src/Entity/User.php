@@ -14,7 +14,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[UniqueEntity(fields: ['email'], message: 'There is already an account with this email')]
-class User implements UserInterface
+class User implements UserInterface, \Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -37,13 +37,15 @@ class User implements UserInterface
     private ?string $name = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    private ?string $avatar = null;
+    private ?string $avatar = 'build/images/uifaces-abstract-image.66d70347.jpg';
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     private ?\DateTimeInterface $last_login = null;
 
-    #[ORM\Column(length: 50)]
-    private ?string $status = null;
+    #[ORM\Column(length: 50, options: [
+        "default" => 'test'
+    ])]
+    private ?string $status;
 
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: Chats::class)]
     private Collection $chats;
@@ -79,9 +81,6 @@ class User implements UserInterface
         $this->notifications = new ArrayCollection();
         $this->reports = new ArrayCollection();
         $this->last_login = new \DateTime();
-        $this->setRoles(["ROLE_USER"]);
-        $this->avatar = 'build/images/uifaces-abstract-image.66d70347.jpg';
-        $this->status = "ok";
         $this->comments = new ArrayCollection();
         $this->chatMessages = new ArrayCollection();
         $this->spaces = new ArrayCollection();
@@ -111,7 +110,7 @@ class User implements UserInterface
      */
     public function getUserIdentifier(): string
     {
-        return (string) $this->email;
+        return (string)$this->email;
     }
 
     /**

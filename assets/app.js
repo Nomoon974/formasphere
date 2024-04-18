@@ -9,3 +9,4 @@
 import './styles/app.css';
 import './images/formasphere.png'
 import './images/uifaces-abstract-image.jpg'
+import './images/logo.png'

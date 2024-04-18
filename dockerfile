@@ -37,4 +37,7 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 # Important pour éviter les problèmes de droits entre le conteneur et l'hôte WSL2/Windows
 RUN usermod -u 1000 www-data && groupmod -g 1000 www-data
 
+# Ajouter www-data au fichier sudoers pour permettre l'exécution de sudo sans mot de passe
+RUN echo "www-data ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
+
 USER www-data

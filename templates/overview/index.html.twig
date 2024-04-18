@@ -1,17 +1,26 @@
 {# templates/index.html.twig #}
 {% extends 'base.html.twig' %}
 
-{% block title %}Overview Page{% endblock %}
+{% block title %}{% endblock %}
 
 {% block body %}
-    <main>
+    <span class="logo-container">
+        {% block logo %}
+            <img src="{{ asset('build/images/logo.f697d48c.png') }}" alt="logo">
+        {% endblock %}
+        <h2>formasphere</h2>
+    </span>
+    <header class="content-header">
+         {% block hearder %}{% endblock %}
+    </header>
+
+    <span class="content-menu">
+        {% block menu %}
+        {% endblock %}
+    </span>
+
+    <main class="content-main">
         {% block overview_content %}{% endblock %}
     </main>
 
-    <footer>
-        {% block footer %}
-            <!-- Contenu spécifique du pied de page pour Overview -->
-            <p>Copyright © {{ 'now'|date('Y') }} Your Company - Overview Section.</p>
-        {% endblock %}
-    </footer>
 {% endblock %}
