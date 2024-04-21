@@ -1,20 +1,19 @@
 body, html {
-    background-color: white;
-    display: grid;
+    margin: 0;
+    padding: 0;
+}
+
+#container-overview {
+    background-color: #cfcfcf;
     width: 100vw;
     height: 100vh;
+    display: grid;
     grid-template-areas:
     "aa bb"
     "cc dd"
     "cc dd";
     grid-template-columns: 20% 1fr;
-    grid-template-rows: 0.1fr 1fr 15%;
-    margin: 0;
-    padding: 0;
-}
-
-body {
-    background-color: #dfdfdf;
+    grid-template-rows: 5% 1fr;
 }
 
 .logo-container {
@@ -29,13 +28,12 @@ body {
 }
 
 .logo-container img {
-    width: 60px;
-    height: 60px;
+    width: 35px;
+    height: 35px;
 }
 
 .logo-container > h2 {
     margin-left: 5px;
-    text-transform: lowercase;
 
     font-family: "Oswald", sans-serif;
     font-optical-sizing: auto;
@@ -66,8 +64,7 @@ body {
     padding: 5px;
 }
 
-.content-footer {
-    grid-area: ee;
-    background-color: white;
-    padding: 5px;
+.container-form-login {
+    display: flex;
+    align-self: center;
 }
