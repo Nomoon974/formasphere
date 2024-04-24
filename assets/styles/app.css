@@ -1,23 +1,54 @@
 body, html {
     margin: 0;
     padding: 0;
+    width: 100vw;
+    height: 100vh;
+    font-family: "Sen", sans-serif;
+    font-optical-sizing: auto;
 }
+
+/***************** overview-page *****************/
 
 #container-overview {
     background-color: #cfcfcf;
-    width: 100vw;
-    height: 100vh;
+    width: 100%;
+    height: 100%;
     display: grid;
     grid-template-areas:
-    "aa bb"
-    "cc dd"
-    "cc dd";
+    "jj"
+    "cc";
+    grid-template-rows: 7% 93%;
+    grid-template-columns: 1fr;
+}
+
+#header-container {
+    grid-area: jj;
+    width: 100%;
+    display: grid;
+    grid-template-areas: "logo bar";
     grid-template-columns: 20% 1fr;
-    grid-template-rows: 5% 1fr;
+    grid-template-rows: 1fr;
+    background-color: #ffffff;
+    border-bottom: solid 1px #cfcfcf;
+    position: sticky;
+    top: 0;
+}
+
+#container-main {
+    width: 100%;
+    height: 100%;
+    display: grid;
+
+    grid-template-areas: "men main";
+    grid-template-columns: 20% 1fr;
+    grid-template-rows: 1fr;
+    grid-area: cc;
+    background-color: #cfcfcf;
+    gap: 1px;
 }
 
 .logo-container {
-    grid-area: aa;
+    grid-area: logo;
     background-color: white;
     padding: 5px;
     display: flex;
@@ -25,6 +56,7 @@ body, html {
     align-items: center;
     margin-bottom: 1px;
     border-color: #c6c6c6;
+    overflow: hidden;
 }
 
 .logo-container img {
@@ -43,28 +75,142 @@ body, html {
 }
 
 .content-header {
-    grid-area: bb;
     background-color: white;
     padding: 5px;
     margin-bottom: 1px;
     border-color: #c6c6c6;
+
+    grid-area: bar;
 }
 
 .content-menu {
-    grid-area: cc;
-    background-color: white;
+    background-color: #ffffff;
     padding: 5px;
-    margin-right: 1px;
     border-color: #c6c6c6;
+
+    grid-area: men;
 }
 
 .content-main {
-    grid-area: dd;
-    background-color: white;
+    background-color: #ffffff;
     padding: 5px;
+    grid-area: main;
 }
 
 .container-form-login {
     display: flex;
     align-self: center;
 }
+
+/********************** login-page *********************/
+
+
+.container-form-login {
+    width: 100%;
+    height: 100%;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.container-form-login > form {
+    border: solid 1px #cfcfcf;
+    border-radius: 30px;
+    padding: 50px 50px 80px 50px;
+    width: 15%;
+    max-width: 300px; /* Une largeur maximale pour les grands écrans */
+    box-sizing: border-box; /* Inclure la bordure et le padding dans la largeur totale */
+}
+
+.container-form-login > form > h1 {
+    font-family: "Cormorant Garamond", serif;
+    font-optical-sizing: auto;
+    font-weight: 700;
+    font-style: normal;
+    text-transform: capitalize;
+}
+
+/* Appliquer à tous les éléments input de type text, email et password, ainsi qu'au bouton */
+input[type="email"],
+input[type="password"],
+input[type="checkbox"],
+button[type="submit"] {
+    background-color: white;
+    border: 1px solid #cfcfcf; /* Bordure grise */
+    padding: 0.5rem; /* Espacement intérieur */
+    margin-bottom: 0.5rem; /* Espacement extérieur en bas */
+    margin-left: auto;
+    margin-right: auto;
+    display: block; /* Faire en sorte que les éléments prennent toute la largeur disponible */
+    width: 100%; /* Assurer une largeur complète */
+    box-sizing: border-box; /* Inclure la bordure et le padding dans la largeur totale */
+    border-radius: 5px;
+}
+
+/* Style pour la couleur d'arrière-plan des champs remplis automatiquement */
+input[type="email"]:-webkit-autofill,
+input[type="password"]:-webkit-autofill,
+input[type="email"]:-webkit-autofill:hover,
+input[type="password"]:-webkit-autofill:hover,
+input[type="email"]:-webkit-autofill:focus,
+input[type="password"]:-webkit-autofill:focus {
+    border: 1px solid #cfcfcf; /* Couleur de bordure personnalisée pour l'autofill */
+    -webkit-text-fill-color: #000; /* Couleur de texte pour l'autofill */
+    -webkit-box-shadow: 0 0 0px 1000px white inset; /* Arrière-plan blanc pour l'autofill */
+    box-shadow: 0 0 0px 1000px white inset; /* Arrière-plan blanc pour l'autofill */
+    transition: background-color 5000s ease-in-out 0s; /* Transition pour éviter le changement de couleur instantané */
+}
+
+.checkbox {
+    display: flex; /* Utiliser flexbox pour aligner les éléments */
+    align-items: center; /* Centrer verticalement les éléments à l'intérieur */
+    justify-self: center;
+    justify-content: center;
+}
+
+.checkbox > label:last-child {
+    width: max-content;
+    margin: 0;
+}
+
+.checkbox label {
+    margin-left: 0.5rem; /* Espacement entre la case à cocher et le texte */
+}
+
+/* Styles pour le bouton de soumission */
+button[type="submit"] {
+    background-color: cadetblue; /* Couleur de fond bleu */
+    color: white; /* Texte blanc */
+    border: none; /* Aucune bordure pour le bouton */
+    padding: 10px 15px; /* Espacement intérieur du bouton */
+    cursor: pointer; /* Style du curseur en tant que pointeur */
+    transition: background-color 0.3s ease; /* Transition fluide pour le survol */
+}
+
+button[type="submit"]:hover {
+    background-color: #0056b3; /* Couleur de fond plus foncée au survol */
+}
+
+/* Styles pour le container de la case à cocher */
+.checkbox {
+    margin-bottom: 1rem; /* Espacement en bas du container de la case à cocher */
+}
+
+/* Styles spécifiques pour le label de la case à cocher pour un alignement correct */
+.checkbox label {
+    display: block; /* Affichage en bloc */
+    cursor: pointer; /* Pointeur au survol */
+}
+
+/* Cache l'input hidden pour le token CSRF */
+input[type="hidden"] {
+    display: none; /* Cache cet élément */
+}
+
+/* Styles pour les labels */
+label {
+    display: block; /* Fait en sorte que le label prenne toute la largeur de son container */
+    margin-bottom: 0.25rem; /* Petit espacement en dessous du label */
+}
+

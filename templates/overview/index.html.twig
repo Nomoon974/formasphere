@@ -5,23 +5,30 @@
 
 {% block body %}
     <div id="container-overview">
-        <div class="logo-container">
-            {% block logo %}
-                <img src="{{ asset('build/images/logo.f697d48c.png') }}" alt="logo">
-            {% endblock %}
-            <h2>formasphere</h2>
-        </div>
-        <div class="content-header">
-            {% block hearder %}{% endblock %}
-        </div>
+        <div id="header-container">
+            <div class="logo-container">
+                {% block logo %}
+                    <img src="{{ asset('build/images/logo.f697d48c.png') }}" alt="logo">
+                {% endblock %}
+                <h2>formasphere</h2>
+            </div>
+            <div class="content-header">
+                {% block hearder %}
 
-        <div class="content-menu">
-            {% block menu %}
-            {% endblock %}
+                {% endblock %}
+            </div>
         </div>
+        <div id="container-main">
+            <div class="content-menu">
+                {% block menu %}
+                {% endblock %}
+            </div>
 
-        <div class="content-main">
-            {% block overview_content %}{% endblock %}
+            <div class="content-main">
+                {% block overview_content %}
+                    <p>content</p>
+                {% endblock %}
+            </div>
         </div>
     </div>
 
