@@ -1,0 +1,45 @@
+{# templates/index.html.twig #}
+{% extends 'layout/base.html.twig' %}
+{% set logo_class = 'logo-container' %}
+{% set logo_title = 'formasphere' %}
+{% set card_style = 'card_style' %}
+{% set card_img = 'card_img' %}
+{% set card_content = 'card_content' %}
+{% set container_list = 'container_list' %}
+{% set list_style = 'list_style' %}
+{% set list_content = 'contenu' %}
+
+
+{% block body %}
+    <div id="container-overview">
+        <div id="header-container">
+            {% include 'components/logo.html.twig' with {'logo_class': logo_class, 'logo_title': logo_title} %}
+            <div class="content-header">
+                {% block hearder %}
+                    {% if app.user %}
+                        <p>Bonjour, {{ app.user.getFullName }}!</p>
+                        <a href="{{ path('app_user_show', {'id': app.user.id}) }}">
+                            <img src="{{ asset(app.user.getAvatar) }}" alt="user profile picture">
+                        </a>
+                    {% else %}
+                        <p>Bonjour, invité!</p>
+                    {% endif %}
+                {% endblock %}
+            </div>
+        </div>
+        <div id="container-main">
+            <div class="content-menu navbar navbar-expand-lg navbar-light bg-light fixed-bottom">
+                {% block menu %}
+                    {% include 'components/menu-list.html.twig' with {'container_list': container_list, 'list_style': list_style, 'list_content': list_content} %}
+                {% endblock %}
+            </div>
+
+            <div class="content-main">
+                {% block overview_content %}
+
+                {% endblock %}
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

@@ -25,9 +25,36 @@ Encore
     // When enabled, Webpack "splits" your files into smaller pieces for greater optimization.
     .splitEntryChunks()
 
+    // enables the Symfony UX Stimulus bridge (used in assets/bootstrap.js)
+    .enableStimulusBridge('./assets/controllers.json')
+
     // will require an extra script tag for runtime.js
     // but, you probably want this, unless you're building a single-page app
     .enableSingleRuntimeChunk()
+
+    .configureDevServerOptions((options) => {
+        options.liveReload = true;  // Active le rechargement en direct du navigateur lors de la modification des fichiers.
+        options.static = {
+            watch: false,  // Désactive le suivi automatique des modifications des fichiers servis statiquement.
+        };
+        options.watchFiles = {
+            paths: ["src/**/*.php", "templates/**/*", 'assets/images'],  // Définit les chemins spécifiques que Webpack devrait surveiller pour les modifications.
+        };
+    })
+
+
+    // Copie les fichiers d'images de 'assets/images' vers 'public/build/images'
+    .copyFiles({
+        from: './assets/images',
+
+        // facultatif: si tu utilises la version, ajoute un hash aux fichiers copiés
+        // en production, les noms des fichiers pourraient ressembler à `images/your-image.abcdef.jpg`
+        // note: n'oublie pas que tu dois utiliser la fonction asset() dans Twig pour charger les images de `public/build/`
+        to: 'images/[path][name].[hash:8].[ext]',
+
+        // uniquement copier les fichiers correspondant à ce motif
+        pattern: /\.(png|jpg|jpeg|gif|webp)$/
+    })
 
     /*
      * FEATURE CONFIG

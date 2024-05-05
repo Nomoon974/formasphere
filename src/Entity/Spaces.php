@@ -43,6 +43,9 @@ class Spaces
     #[ORM\OneToMany(targetEntity: Contents::class, mappedBy: "space")]
     private Collection $contents;
 
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    private ?string $space_img = null;
+
     public function __construct()
     {
         $this->chats = new ArrayCollection();
@@ -269,6 +272,18 @@ class Spaces
                 $content->setSpace(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getSpaceImg(): ?string
+    {
+        return $this->space_img;
+    }
+
+    public function setSpaceImg(?string $space_img): static
+    {
+        $this->space_img = $space_img;
 
         return $this;
     }

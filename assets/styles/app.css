@@ -1,18 +1,27 @@
+:root {
+    --light-grey: #cfcfcf;
+    --cadetblue: cadetblue;
+}
+
+* {
+    box-sizing: border-box;
+}
+
 body, html {
     margin: 0;
     padding: 0;
-    width: 100vw;
-    height: 100vh;
+    /*width: 100vw;*/
+    /*height: 100vh;*/
     font-family: "Sen", sans-serif;
-    font-optical-sizing: auto;
+    /*font-optical-sizing: auto;*/
 }
 
 /***************** overview-page *****************/
 
 #container-overview {
-    background-color: #cfcfcf;
+    background-color: var(--light-grey);
     width: 100%;
-    height: 100%;
+    height: 100vh;
     display: grid;
     grid-template-areas:
     "jj"
@@ -29,7 +38,7 @@ body, html {
     grid-template-columns: 20% 1fr;
     grid-template-rows: 1fr;
     background-color: #ffffff;
-    border-bottom: solid 1px #cfcfcf;
+    border-bottom: solid 1px var(--light-grey);
     position: sticky;
     top: 0;
 }
@@ -43,8 +52,7 @@ body, html {
     grid-template-columns: 20% 1fr;
     grid-template-rows: 1fr;
     grid-area: cc;
-    background-color: #cfcfcf;
-    gap: 1px;
+    background-color: var(--light-grey);
 }
 
 .logo-container {
@@ -55,7 +63,7 @@ body, html {
     justify-content: center;
     align-items: center;
     margin-bottom: 1px;
-    border-color: #c6c6c6;
+    border-color: var(--light-grey);
     overflow: hidden;
 }
 
@@ -75,26 +83,47 @@ body, html {
 }
 
 .content-header {
+    display: flex;
+    justify-content: end;
+    align-items: center;
     background-color: white;
     padding: 5px;
     margin-bottom: 1px;
-    border-color: #c6c6c6;
-
+    border-color: var(--light-grey);
+    margin-right: 50px;
     grid-area: bar;
+}
+
+.content-header a img {
+    width: 50px;
+    height: 50px;
+    border-radius: 25px;
+    margin-left: 5px;
+    transition: all 0.3s ease-in;
+}
+
+.content-header a img:hover {
+    -webkit-box-shadow: 5px 5px 15px 5px rgba(0, 0, 0, 0.1);
+    box-shadow: 5px 5px 15px 5px rgba(0, 0, 0, 0.1);
 }
 
 .content-menu {
     background-color: #ffffff;
-    padding: 5px;
-    border-color: #c6c6c6;
+    border-color: var(--light-grey);
+    padding: 30px 0 0 30px;
 
     grid-area: men;
 }
 
 .content-main {
     background-color: #ffffff;
-    padding: 5px;
+    padding: 30px 0 0 30px;
     grid-area: main;
+}
+
+.content-main p {
+    margin: 0;
+    border-left: 1px solid var(--light-grey);
 }
 
 .container-form-login {
@@ -102,12 +131,124 @@ body, html {
     align-self: center;
 }
 
+/********************** card *******************************/
+
+.card-grid {
+    display: flex;
+    gap: 50px;
+    flex-wrap: wrap;
+}
+
+.card_style {
+    width: 300px;
+    height: 400px;
+    overflow: hidden;
+
+    border: 1px solid var(--light-grey);
+    border-radius: 10px;
+
+    display: grid;
+    grid-template-areas:
+    "cardimg"
+    "cardcontent";
+    grid-template-rows: 60% 40%;
+
+    transition: all 0.3s ease-in;
+}
+
+.card_style:hover {
+    -webkit-box-shadow: 5px 5px 15px 5px rgba(0, 0, 0, 0.1);
+    box-shadow: 5px 5px 15px 5px rgba(0, 0, 0, 0.1);
+}
+
+.card_img {
+    background-color: #6E6E6E;
+    grid-area: cardimg;
+    width: 100%;
+}
+
+.card_style .card_img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.card_content {
+    background-color: white;
+    grid-area: cardcontent;
+    width: 100%;
+    padding: 5px;
+    text-overflow: ellipsis;
+}
+
+/************************ menu-list *********************/
+
+.content-menu {
+    padding: 0 20px 0 15px;
+    border-right: 1px solid var(--light-grey);
+    text-overflow: ellipsis;
+    word-wrap: break-word;
+}
+
+.content-menu ul {
+    padding: 0;
+}
+
+.container_list {
+    border-radius: 10px;
+    padding: 5px;
+    width: 100%;
+    height: 60px;
+    font-weight: bold;
+    background-color: white;
+    color: #7e7e7e;
+    text-transform: capitalize;
+
+
+    cursor: pointer;
+    transition: background-color 0.3s ease-in, color 0.3s ease-in;
+
+    display: flex;
+    align-items: center;
+}
+
+.container_list:hover {
+    background-color: var(--cadetblue);
+    color: white;
+}
+
+.list_style {
+    list-style: none;
+    margin-left: 15px;
+}
+
 /********************** login-page *********************/
 
+.logo-container-login-page {
+    width: 100%;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 50px;
+    flex-direction: column;
+}
+
+.logo-container-login-page h2 {
+    font-size: 3em;
+    font-family: "Oswald", sans-serif;
+    font-weight: 300;
+    text-transform: uppercase;
+}
+
+.logo-container-login-page img {
+    width: 180px;
+    height: 180px;
+}
 
 .container-form-login {
     width: 100%;
-    height: 100%;
+    height: 50%;
 
     display: flex;
     justify-content: center;
@@ -115,12 +256,17 @@ body, html {
 }
 
 .container-form-login > form {
-    border: solid 1px #cfcfcf;
+    border: solid 1px var(--light-grey);
     border-radius: 30px;
     padding: 50px 50px 80px 50px;
-    width: 15%;
-    max-width: 300px; /* Une largeur maximale pour les grands écrans */
+    width: max-content;
+    /*max-width: 300px; !* Une largeur maximale pour les grands écrans *!*/
     box-sizing: border-box; /* Inclure la bordure et le padding dans la largeur totale */
+    height: max-content;
+    display: flex;
+    flex-direction: column;
+    align-self: center;
+    justify-content: center;
 }
 
 .container-form-login > form > h1 {
@@ -137,7 +283,7 @@ input[type="password"],
 input[type="checkbox"],
 button[type="submit"] {
     background-color: white;
-    border: 1px solid #cfcfcf; /* Bordure grise */
+    border: 1px solid var(--light-grey); /* Bordure grise */
     padding: 0.5rem; /* Espacement intérieur */
     margin-bottom: 0.5rem; /* Espacement extérieur en bas */
     margin-left: auto;
@@ -155,7 +301,7 @@ input[type="email"]:-webkit-autofill:hover,
 input[type="password"]:-webkit-autofill:hover,
 input[type="email"]:-webkit-autofill:focus,
 input[type="password"]:-webkit-autofill:focus {
-    border: 1px solid #cfcfcf; /* Couleur de bordure personnalisée pour l'autofill */
+    border: 1px solid var(--light-grey); /* Couleur de bordure personnalisée pour l'autofill */
     -webkit-text-fill-color: #000; /* Couleur de texte pour l'autofill */
     -webkit-box-shadow: 0 0 0px 1000px white inset; /* Arrière-plan blanc pour l'autofill */
     box-shadow: 0 0 0px 1000px white inset; /* Arrière-plan blanc pour l'autofill */
@@ -180,7 +326,7 @@ input[type="password"]:-webkit-autofill:focus {
 
 /* Styles pour le bouton de soumission */
 button[type="submit"] {
-    background-color: cadetblue; /* Couleur de fond bleu */
+    background-color: var(--cadetblue); /* Couleur de fond bleu */
     color: white; /* Texte blanc */
     border: none; /* Aucune bordure pour le bouton */
     padding: 10px 15px; /* Espacement intérieur du bouton */
@@ -214,3 +360,99 @@ label {
     margin-bottom: 0.25rem; /* Petit espacement en dessous du label */
 }
 
+
+@media all and (max-device-width: 900px) {
+
+    body, html {
+        height: 100svh;
+    }
+
+    .logo-container-login-page {
+        width: 100%;
+        height: 30%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-top: 70px;
+        flex-direction: column;
+    }
+
+    .logo-container-login-page h2 {
+        font-size: 5em;
+        font-family: "Oswald", sans-serif;
+        font-weight: 300;
+        text-transform: uppercase;
+    }
+
+    .logo-container-login-page img {
+        width: 200px;
+        height: 200px;
+    }
+
+    .logo-login {
+        background-color: white;
+        padding: 5px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        overflow: hidden;
+    }
+
+    .logo-login > img {
+        width: 50px;
+        height: 50px;
+    }
+
+    .container-form-login {
+        display: flex;
+        width: 100%;
+        height: max-content;
+        font-size: 4em;
+    }
+
+    .container-form-login > form {
+        display: flex;
+        width: 100%;
+        height: 100%;
+        border: none;
+    }
+
+    .container-form-login > form > h1 {
+        font-family: "Cormorant Garamond", serif;
+        font-weight: 700;
+        font-style: normal;
+        text-transform: capitalize;
+        font-size: 2em;
+    }
+
+    input[type="email"],
+    input[type="password"],
+    input[type="checkbox"],
+    button[type="submit"] {
+        background-color: white;
+        /*border: 1px solid #cfcfcf; !* Bordure grise *!*/
+        padding: 0.5rem; /* Espacement intérieur */
+        margin-bottom: 0.5rem; /* Espacement extérieur en bas */
+        margin-left: auto;
+        margin-right: auto;
+        display: block; /* Faire en sorte que les éléments prennent toute la largeur disponible */
+        width: 100%; /* Assurer une largeur complète */
+        height: 50px;
+        box-sizing: border-box; /* Inclure la bordure et le padding dans la largeur totale */
+        border-radius: 5px;
+    }
+
+    button[type="submit"] {
+        background-color: var(--cadetblue);
+        color: black;
+        border-radius: 10px;
+    }
+
+    input[type="email"],
+    input[type="password"],
+    button[type="submit"] {
+        height: 100px;
+        font-size: 3rem;
+    }
+
+}

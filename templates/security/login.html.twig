@@ -1,12 +1,17 @@
-{% extends 'base.html.twig' %}
+{% extends './layout/base.html.twig' %}
+{% set logo_class = 'logo-container-login-page' %}
+{% set logo_title = 'formasphere' %}
 
 {% block title %}Log in!{% endblock %}
 
 {% block body %}
+    {% include 'components/logo.html.twig' with {'logo_class': logo_class, 'logo_title': logo_title}%}
+
     <div class="container-form-login">
+
         <form method="post">
             {% if error %}
-                <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+                <div class="alert alert-danger" role="alert">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
             {% endif %}
 
             {% if app.user %}

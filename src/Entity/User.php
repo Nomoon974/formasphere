@@ -42,10 +42,8 @@ class User implements UserInterface, \Symfony\Component\Security\Core\User\Passw
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     private ?\DateTimeInterface $last_login = null;
 
-    #[ORM\Column(length: 50, options: [
-        "default" => 'test'
-    ])]
-    private ?string $status;
+    #[ORM\Column(length: 50)]
+    private ?string $status = 'ok';
 
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: Chats::class)]
     private Collection $chats;

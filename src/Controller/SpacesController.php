@@ -78,4 +78,11 @@ class SpacesController extends AbstractController
 
         return $this->redirectToRoute('app_spaces_index', [], Response::HTTP_SEE_OTHER);
     }
+
+    #[Route('/space/{id}', name:'space_views')]
+    public function view(Spaces $space): Response
+    {
+        return $this->render('spaces/space_view.html.twig', ['space' => $space]);
+    }
+
 }

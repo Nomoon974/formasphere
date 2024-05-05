@@ -45,6 +45,11 @@ class UserController extends AbstractController
     #[Route('/{id}', name: 'app_user_show', methods: ['GET'])]
     public function show(User $user): Response
     {
+
+        if ($user !== $this->getUser() && !$this->isGranted('ROLE_USER')) {
+            throw $this->createAccessDeniedException('Vous n\'êtes pas autorisé à modifier ce profil.');
+        }
+
         return $this->render('user/show.html.twig', [
             'user' => $user,
         ]);
@@ -57,6 +62,8 @@ class UserController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+//            $user->setRoles($form->get('roles')->getData());
+//            $entityManager->persist($user);
             $entityManager->flush();
 
             return $this->redirectToRoute('app_user_index', [], Response::HTTP_SEE_OTHER);

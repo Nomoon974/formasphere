@@ -1,35 +1,30 @@
 {# templates/index.html.twig #}
-{% extends 'base.html.twig' %}
+{% extends 'layout/overview_layout.html.twig' %}
 
-{% block title %}{% endblock %}
+{% set card_style = 'card_style' %}
+{% set card_img = 'card_img' %}
+{% set card_content = 'card_content' %}
+{% set container_list = 'container_list' %}
+{% set list_style = 'list_style' %}
+{% set list_content = 'contenu' %}
 
-{% block body %}
-    <div id="container-overview">
-        <div id="header-container">
-            <div class="logo-container">
-                {% block logo %}
-                    <img src="{{ asset('build/images/logo.f697d48c.png') }}" alt="logo">
-                {% endblock %}
-                <h2>formasphere</h2>
-            </div>
-            <div class="content-header">
-                {% block hearder %}
 
-                {% endblock %}
-            </div>
-        </div>
-        <div id="container-main">
-            <div class="content-menu">
-                {% block menu %}
-                {% endblock %}
-            </div>
-
-            <div class="content-main">
-                {% block overview_content %}
-                    <p>content</p>
-                {% endblock %}
-            </div>
-        </div>
+{% block overview_content %}
+    <div class="card-grid">
+        {% for space in spaces %}
+            <a href="{{ path('space_views', {'id': space.id}) }}">
+                {% include 'components/card.html.twig' with {
+                    'card_style': card_style,
+                    'theme_color': space.themeColor,
+                    'card_img': card_img,
+                    'card_descr': space.description,
+                    'card_title': space.spaceName,
+                    'image_url': space.space_img | default('build/images/professional_placeholder.081eab66.webp')
+                } %}
+            </a>
+        {% endfor %}
     </div>
-
 {% endblock %}
+
+
+
