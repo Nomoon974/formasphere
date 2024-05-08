@@ -1,5 +1,17 @@
 {% extends 'layout/overview_layout.html.twig' %}
 
 {% block overview_content %}
-    content
+    <div id="space_container">
+        <div id="compose_box">
+            <div>
+                <img class="profil-img" src="{{ asset(app.user.getAvatar) }}" alt="user profile picture">
+                <h4>{{ app.user.getFullName }}</h4>
+                {# composant quil ici #}
+            </div>
+        </div>
+        <hr>
+        <div id="post_box">
+
+        </div>
+    </div>
 {% endblock %}

@@ -19,7 +19,7 @@
                     {% if app.user %}
                         <p>Bonjour, {{ app.user.getFullName }}!</p>
                         <a href="{{ path('app_user_show', {'id': app.user.id}) }}">
-                            <img src="{{ asset(app.user.getAvatar) }}" alt="user profile picture">
+                            <img class="profil-img" src="{{ asset(app.user.getAvatar) }}" alt="user profile picture">
                         </a>
                     {% else %}
                         <p>Bonjour, invité!</p>

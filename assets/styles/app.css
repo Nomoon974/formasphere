@@ -5,11 +5,11 @@
 
 * {
     box-sizing: border-box;
+    margin: 0;
+    padding: 0;
 }
 
 body, html {
-    margin: 0;
-    padding: 0;
     /*width: 100vw;*/
     /*height: 100vh;*/
     font-family: "Sen", sans-serif;
@@ -94,7 +94,7 @@ body, html {
     grid-area: bar;
 }
 
-.content-header a img {
+.profil-img {
     width: 50px;
     height: 50px;
     border-radius: 25px;
@@ -192,6 +192,7 @@ body, html {
 
 .content-menu ul {
     padding: 0;
+    margin-top: 20px;
 }
 
 .container_list {
@@ -358,6 +359,48 @@ input[type="hidden"] {
 label {
     display: block; /* Fait en sorte que le label prenne toute la largeur de son container */
     margin-bottom: 0.25rem; /* Petit espacement en dessous du label */
+}
+
+/******************* spaces **************************/
+
+#space_container{
+    display: grid;
+    justify-content: center;
+    grid-template-rows: 28% 8% 1fr;
+
+    width: 100%;
+    height: 100%;
+}
+
+hr {
+    border: 0;
+    height: 1px;
+    background: #333;
+    background-image: linear-gradient(to right, #ccc, #333, #ccc);
+}
+
+#compose_box {
+    width: 50vw;
+    height: 18vh;
+    border: 1px solid var(--light-grey);
+    border-radius: 5px;
+}
+
+#compose_box div {
+    margin: 8px 0 0 0;
+    width: 18%;
+    height: min-content;
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+}
+
+#post_box {
+    width: 50vw;
+    height: 25vh;
+    border: 1px solid var(--light-grey);
+    border-radius: 5px;
+
 }
 
 
