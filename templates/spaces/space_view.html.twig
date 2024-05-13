@@ -3,15 +3,27 @@
 {% block overview_content %}
     <div id="space_container">
         <div id="compose_box">
-            <div>
+            <div class="profile-container">
                 <img class="profil-img" src="{{ asset(app.user.getAvatar) }}" alt="user profile picture">
                 <h4>{{ app.user.getFullName }}</h4>
-                {# composant quil ici #}
+
+            </div>
+            <div data-controller="quill-editor" id="editor">
+
             </div>
         </div>
-        <hr>
-        <div id="post_box">
 
-        </div>
+        <hr>
+
+
+        {% for post in posts %}
+            <div id="post_box">
+                {{ post.id }}
+                <p>{{ post.text }}</p>
+                -<small>{{ post.createdAt|date('Y-m-d H:i:s') }}</small>
+            </div>
+        {% endfor %}
+
+
     </div>
 {% endblock %}

@@ -366,13 +366,18 @@ label {
 #space_container{
     display: grid;
     justify-content: center;
-    grid-template-rows: 28% 8% 1fr;
+    grid-template-rows: 1fr 1fr 1fr;
 
     width: 100%;
-    height: 100%;
+}
+
+#editor {
+    visibility: hidden;
 }
 
 hr {
+    margin-top: auto;
+    margin-bottom: auto;
     border: 0;
     height: 1px;
     background: #333;
@@ -380,13 +385,13 @@ hr {
 }
 
 #compose_box {
-    width: 50vw;
+    width: 55vw;
     height: 18vh;
     border: 1px solid var(--light-grey);
     border-radius: 5px;
 }
 
-#compose_box div {
+#compose_box .profile-container {
     margin: 8px 0 0 0;
     width: 18%;
     height: min-content;
@@ -396,11 +401,11 @@ hr {
 }
 
 #post_box {
-    width: 50vw;
+    width: 55vw;
     height: 25vh;
     border: 1px solid var(--light-grey);
     border-radius: 5px;
-
+    margin-bottom: 50px;
 }
 
 

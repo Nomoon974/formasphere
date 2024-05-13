@@ -1,4 +1,6 @@
 import './bootstrap.js';
+
+
 /*
  * Welcome to your app's main JavaScript file!
  *
@@ -11,3 +13,10 @@ import './styles/app.css';
 import './images/formasphere.png'
 import './images/uifaces-abstract-image.jpg'
 import './images/logo.png'
+
+
+import initializeQuill from './controllers/QuilEditor'; // Mettez à jour le chemin selon votre structure de dossiers
+
+document.addEventListener('DOMContentLoaded', () => {
+    initializeQuill();
+});

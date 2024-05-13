@@ -72,6 +72,9 @@ class User implements UserInterface, \Symfony\Component\Security\Core\User\Passw
     #[ORM\ManyToMany(targetEntity: Spaces::class, mappedBy: 'userId')]
     private Collection $spaces;
 
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Posts::class)]
+    private Collection $posts;
+
     public function __construct()
     {
         $this->chats = new ArrayCollection();
@@ -82,6 +85,7 @@ class User implements UserInterface, \Symfony\Component\Security\Core\User\Passw
         $this->comments = new ArrayCollection();
         $this->chatMessages = new ArrayCollection();
         $this->spaces = new ArrayCollection();
+        $this->posts = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -446,6 +450,36 @@ class User implements UserInterface, \Symfony\Component\Security\Core\User\Passw
     public function __toString(): string
     {
         return $this->getFullName();
+    }
+
+    /**
+     * @return Collection<int, Posts>
+     */
+    public function getPosts(): Collection
+    {
+        return $this->posts;
+    }
+
+    public function addPost(Posts $post): static
+    {
+        if (!$this->posts->contains($post)) {
+            $this->posts->add($post);
+            $post->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removePost(Posts $post): static
+    {
+        if ($this->posts->removeElement($post)) {
+            // set the owning side to null (unless already changed)
+            if ($post->getUser() === $this) {
+                $post->setUser(null);
+            }
+        }
+
+        return $this;
     }
 
 }

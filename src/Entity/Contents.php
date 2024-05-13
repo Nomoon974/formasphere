@@ -38,6 +38,9 @@ class Contents
     #[ORM\JoinColumn(nullable: false)]
     private ?Spaces $space = null;
 
+    #[ORM\ManyToOne(inversedBy: 'contents')]
+    private ?Posts $post = null;
+
     public function __construct()
     {
         $this->publication_date = new \DateTime();
@@ -153,6 +156,18 @@ class Contents
     public function setSpace(?Spaces $space): void
     {
         $this->space = $space;
+    }
+
+    public function getPost(): ?Posts
+    {
+        return $this->post;
+    }
+
+    public function setPost(?Posts $post): static
+    {
+        $this->post = $post;
+
+        return $this;
     }
 
 }

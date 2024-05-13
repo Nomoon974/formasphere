@@ -27,9 +27,10 @@ class Comment
     #[ORM\JoinColumn(nullable: false)]
     private ?User $user_id = null;
 
-    #[ORM\ManyToOne(inversedBy: 'comments')]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?Contents $content_id = null;
+
+    #[ORM\ManyToOne(targetEntity:Posts::class, inversedBy:"comments")]
+    #[ORM\JoinColumn(nullable:false)]
+    private $posts;
 
     public function getId(): ?int
     {
@@ -84,15 +85,21 @@ class Comment
         return $this;
     }
 
-    public function getContentId(): ?Contents
+    /**
+     * @return mixed
+     */
+    public function getPost()
     {
-        return $this->content_id;
+        return $this->posts;
     }
 
-    public function setContentId(?Contents $content_id): static
+    /**
+     * @param mixed $post
+     */
+    public function setPost($post): void
     {
-        $this->content_id = $content_id;
-
-        return $this;
+        $this->posts = $post;
     }
+
+
 }

@@ -4,9 +4,11 @@ namespace App\Controller;
 
 use App\Entity\Spaces;
 use App\Form\SpacesType;
+use App\Repository\PostsRepository;
 use App\Repository\SpacesRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -80,9 +82,17 @@ class SpacesController extends AbstractController
     }
 
     #[Route('/space/{id}', name:'space_views')]
-    public function view(Spaces $space): Response
+    public function view(Spaces $space, Security $security, PostsRepository $postsRepository, Int $id): Response
     {
-        return $this->render('spaces/space_view.html.twig', ['space' => $space]);
+
+        $posts = $postsRepository->findBy(['space' => $id], ['created_at' => 'DESC']);
+
+        return $this->render('spaces/space_view.html.twig',
+            [
+                'space' => $space,
+                'user' => $security->getUser(),
+                'posts' => $posts
+            ]);
     }
 
 }
