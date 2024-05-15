@@ -366,7 +366,7 @@ label {
 #space_container{
     display: grid;
     justify-content: center;
-    grid-template-rows: 1fr 1fr 1fr;
+    row-gap: 5svh;
 
     width: 100%;
 }
@@ -380,20 +380,25 @@ hr {
     margin-bottom: auto;
     border: 0;
     height: 1px;
-    background: #333;
-    background-image: linear-gradient(to right, #ccc, #333, #ccc);
+    background: var(--cadetblue);
+    background-image: linear-gradient(to right, #ccc, var(--cadetblue), #ccc);
 }
 
 #compose_box {
+    padding: 5px;
     width: 55vw;
-    height: 18vh;
+    height: max-content;
     border: 1px solid var(--light-grey);
     border-radius: 5px;
 }
 
+#editor {
+    visibility: visible;
+}
+
 #compose_box .profile-container {
-    margin: 8px 0 0 0;
-    width: 18%;
+    margin: 8px 0 8px 0;
+    width: 15%;
     height: min-content;
     display: flex;
     justify-content: space-evenly;
@@ -403,9 +408,85 @@ hr {
 #post_box {
     width: 55vw;
     height: 25vh;
+    padding: 5px;
     border: 1px solid var(--light-grey);
-    border-radius: 5px;
+    border-radius: 10px;
+    /*margin-bottom: 30px;*/
+}
+
+#submit-button {
+
+    margin: 5px 0 0 auto;
+    width: max-content;
+    justify-self: end;
+}
+
+/******************* pagination *********************/
+
+/* Ajoutez ceci dans votre fichier CSS */
+.navigation {
+    text-align: center;
+}
+
+.navigation .pagination {
+    display: inline-block;
+    padding-left: 0;
     margin-bottom: 50px;
+    border-radius: 4px;
+    font-size: 1.4rem;
+}
+
+.navigation .pagination li {
+    display: inline;
+}
+
+.navigation .pagination li a,
+.navigation .pagination li span {
+    position: relative;
+    display: block;
+    padding: 6px 12px;
+    margin-left: -1px;
+    line-height: 1.42857143;
+    color: #337ab7;
+    background-color: #fff;
+    border: 1px solid #ddd;
+}
+
+.navigation .pagination li a:hover {
+    color: #23527c;
+    background-color: #eee;
+    border-color: #ddd;
+}
+
+/* Styles pour la pagination */
+.pagination a {
+    border: 1px solid var(--light-grey); /* Utilisez une variable CSS ou remplacez par une couleur spécifique */
+    padding: 8px 12px; /* Ajustez selon les besoins pour le padding */
+    border-radius: 4px; /* Rayon des coins arrondis */
+    text-decoration: none; /* Supprime le soulignement par défaut des liens */
+    color: black; /* Couleur du texte, ajustez selon vos variables ou préférences */
+    margin-right: 5px; /* Espacement entre les liens */
+    transition: background-color 0.3s, color 0.3s; /* Transition douce pour hover */
+}
+
+/* Effet au survol */
+.pagination a:hover {
+    background-color: var(--light-grey); /* Couleur de fond au survol */
+    color: black; /* Couleur de texte au survol */
+}
+
+/* Style pour le lien actif de la page courante */
+.pagination .active a {
+    background-color: white; /* Couleur de fond pour la page active */
+    color: white; /* Couleur de texte pour la page active */
+    border-color: white; /* Bordure pour la page active */
+}
+
+.current {
+    margin-right: 7px;
+    font-size: larger;
+    font-weight: bolder;
+    color: var(--cadetblue);
 }
 
 

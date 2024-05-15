@@ -15,7 +15,7 @@ import './images/uifaces-abstract-image.jpg'
 import './images/logo.png'
 
 
-import initializeQuill from './controllers/QuilEditor'; // Mettez à jour le chemin selon votre structure de dossiers
+import initializeQuill from './controllers/QuilEditor';
 
 document.addEventListener('DOMContentLoaded', () => {
     initializeQuill();

@@ -1,0 +1,11 @@
+knp_paginator:
+  page_range: 5        # nombre de liens affichés dans la pagination
+  default_options:
+    page_name: page   # paramètre GET pour la page
+    sort_field_name: sort  # paramètre GET pour les champs de tri
+    sort_direction_name: direction  # paramètre GET pour la direction du tri
+    distinct: true
+  template:
+    pagination: '@KnpPaginator/Pagination/sliding.html.twig'  # Template pour la barre de pagination
+    sortable: '@KnpPaginator/Pagination/sortable_link.html.twig'  # Template pour les liens triables
+

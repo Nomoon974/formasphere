@@ -8,22 +8,25 @@
                 <h4>{{ app.user.getFullName }}</h4>
 
             </div>
-            <div data-controller="quill-editor" id="editor">
-
-            </div>
+            <form id="postForm" method="POST" action="{{ path('save_post', {'space_id': space.id}) }}">
+                <div id="editor"></div>
+                <textarea name="content" id="content" style="display:none;"></textarea>
+                <button type="submit" id="submit-button">Submit</button>
+            </form>
         </div>
 
         <hr>
 
-
-        {% for post in posts %}
+        {% for post in pagination %}
             <div id="post_box">
                 {{ post.id }}
-                <p>{{ post.text }}</p>
+                <p>{{ post.text|raw }}</p>
                 -<small>{{ post.createdAt|date('Y-m-d H:i:s') }}</small>
             </div>
         {% endfor %}
 
-
+        <div class="navigation active">
+            {{ knp_pagination_render(pagination) }}
+        </div>
     </div>
 {% endblock %}

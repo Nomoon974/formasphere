@@ -2,11 +2,13 @@
 
 namespace App\Controller;
 
+use App\Entity\Posts;
 use App\Entity\Spaces;
 use App\Form\SpacesType;
 use App\Repository\PostsRepository;
 use App\Repository\SpacesRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
@@ -82,16 +84,25 @@ class SpacesController extends AbstractController
     }
 
     #[Route('/space/{id}', name:'space_views')]
-    public function view(Spaces $space, Security $security, PostsRepository $postsRepository, Int $id): Response
+    public function view(Spaces $space, Security $security, PostsRepository $postsRepository, Int $id, PaginatorInterface $paginator, Request $request, EntityManagerInterface $entityManager): Response
     {
 
-        $posts = $postsRepository->findBy(['space' => $id], ['created_at' => 'DESC']);
+        $posts = $entityManager->getRepository(Posts::class)->createQueryBuilder('p')
+            ->orderBy('p.created_at', 'DESC');
+
+        $pagination = $paginator->paginate(
+            $posts, /* query NOT result */
+            $request->query->getInt('page', 1), /* numéro de la page, 1 par défaut */
+            10 /* limit per page */
+        );
 
         return $this->render('spaces/space_view.html.twig',
             [
                 'space' => $space,
                 'user' => $security->getUser(),
-                'posts' => $posts
+                'posts' => $posts,
+                'pagination' => $pagination,
+                'spaceId' => $id,
             ]);
     }
 

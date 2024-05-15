@@ -36,13 +36,14 @@ class Posts
     #[ORM\OneToMany(mappedBy: 'post', targetEntity: Contents::class)]
     private Collection $contents;
 
-    #[ORM\OneToMany(targetEntity:Comment::class, mappedBy:"post")]
-    private $comments;
+    #[ORM\OneToMany(mappedBy: "post", targetEntity: Comment::class)]
+    private Collection $comments;
 
     public function __construct()
     {
         $this->contents = new ArrayCollection();
         $this->comments = new ArrayCollection();
+        $this->created_at = new \DateTime();
     }
 
     public function getId(): ?int
