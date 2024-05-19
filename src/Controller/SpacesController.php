@@ -84,26 +84,24 @@ class SpacesController extends AbstractController
     }
 
     #[Route('/space/{id}', name:'space_views')]
-    public function view(Spaces $space, Security $security, PostsRepository $postsRepository, Int $id, PaginatorInterface $paginator, Request $request, EntityManagerInterface $entityManager): Response
+    public function view(Spaces $space, Security $security, Posts $post, Int $id, PaginatorInterface $paginator, Request $request, EntityManagerInterface $entityManager): Response
     {
-
-        $posts = $entityManager->getRepository(Posts::class)->createQueryBuilder('p')
+        $queryBuilder = $entityManager->getRepository(Posts::class)->createQueryBuilder('p')
+            ->where('p.space = :space')
+            ->setParameter('space', $space)
             ->orderBy('p.created_at', 'DESC');
 
         $pagination = $paginator->paginate(
-            $posts, /* query NOT result */
+            $queryBuilder->getQuery(), /* query NOT result */
             $request->query->getInt('page', 1), /* numéro de la page, 1 par défaut */
             10 /* limit per page */
         );
 
-        return $this->render('spaces/space_view.html.twig',
-            [
-                'space' => $space,
-                'user' => $security->getUser(),
-                'posts' => $posts,
-                'pagination' => $pagination,
-                'spaceId' => $id,
-            ]);
+        return $this->render('spaces/space_view.html.twig', [
+            'space' => $space,
+            'user' => $security->getUser(),
+            'pagination' => $pagination,
+        ]);
     }
 
 }

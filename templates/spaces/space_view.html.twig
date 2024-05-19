@@ -4,9 +4,10 @@
     <div id="space_container">
         <div id="compose_box">
             <div class="profile-container">
-                <img class="profil-img" src="{{ asset(app.user.getAvatar) }}" alt="user profile picture">
+                <img class="profil-img"
+                     src="{{ asset(app.user.getAvatar) }}"
+                     alt="user profile picture">
                 <h4>{{ app.user.getFullName }}</h4>
-
             </div>
             <form id="postForm" method="POST" action="{{ path('save_post', {'space_id': space.id}) }}">
                 <div id="editor"></div>
@@ -18,10 +19,28 @@
         <hr>
 
         {% for post in pagination %}
-            <div id="post_box">
-                {{ post.id }}
-                <p>{{ post.text|raw }}</p>
-                -<small>{{ post.createdAt|date('Y-m-d H:i:s') }}</small>
+            <div id="container-post">
+                <div id="post_box">
+                    <div class="container-profil-post">
+                        <img class="profil-img img-profil-post" src="{{ asset(post.user.avatar) }}"
+                             alt="avatar de "{{ post.user.fullName }}>
+                        <h4>{{ post.user.fullName }}</h4>
+                    </div>
+                    <div class="post-text">
+                        <p >{{ post.text|raw }}</p>
+                    </div>
+                    <div class="foot-post">
+                        <button class="read-more-btn">Lire plus</button>
+                        <small>{{ post.createdAt|date('Y-m-d H:i:s') }}</small>
+                    </div>
+                </div>
+                <div id="post-comment">
+                    <form class="form-comment">
+                        <input type="text" class="comment-input" placeholder="Entrez votre texte">
+                        <btn><img class="icon-send" src="{{ asset('build/images/send-message.acb93f2a.png') }}"></btn>
+                    </form>
+
+                </div>
             </div>
         {% endfor %}
 
@@ -29,4 +48,9 @@
             {{ knp_pagination_render(pagination) }}
         </div>
     </div>
+    {% block javascripts %}
+        {{ parent() }}
+        <script src="{{ asset('build/js/initializeQuill.js') }}"></script>
+    {% endblock %}
+
 {% endblock %}

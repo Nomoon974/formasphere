@@ -8,8 +8,10 @@
 {% set list_style = 'list_style' %}
 {% set list_content = 'contenu' %}
 
-
 {% block overview_content %}
+
+
+
     <div class="card-grid">
         {% for space in spaces %}
             <a href="{{ path('space_views', {'id': space.id}) }}">
@@ -24,6 +26,8 @@
             </a>
         {% endfor %}
     </div>
+
+
 {% endblock %}
 
 

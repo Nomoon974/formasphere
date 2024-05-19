@@ -16,7 +16,9 @@ import './images/logo.png'
 
 
 import initializeQuill from './controllers/QuilEditor';
+import toggleReadMore from './controllers/ReadMore.js';
 
 document.addEventListener('DOMContentLoaded', () => {
     initializeQuill();
+    toggleReadMore();
 });

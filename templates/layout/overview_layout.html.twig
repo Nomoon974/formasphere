@@ -31,9 +31,10 @@
             </div>
         </div>
         <div id="container-main">
-            <div class="content-menu navbar navbar-expand-lg navbar-light bg-light fixed-bottom">
+
+            <div class="content-menu">
                 {% block menu %}
-                    {% include 'components/menu-list.html.twig' with {'container_list': container_list, 'list_style': list_style, 'list_content': list_content} %}
+                    {% include 'components/menu-list.html.twig' with {'container_list': container_list, 'list_style': list_style, 'list_content': list_content, 'rou': rou} %}
                 {% endblock %}
             </div>
 

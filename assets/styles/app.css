@@ -11,9 +11,12 @@
 
 body, html {
     /*width: 100vw;*/
-    /*height: 100vh;*/
     font-family: "Sen", sans-serif;
     /*font-optical-sizing: auto;*/
+}
+
+a {
+    text-decoration: none;
 }
 
 /***************** overview-page *****************/
@@ -21,35 +24,40 @@ body, html {
 #container-overview {
     background-color: var(--light-grey);
     width: 100%;
-    height: 100vh;
+    height: 100lvh;
     display: grid;
     grid-template-areas:
     "jj"
     "cc";
-    grid-template-rows: 7% 93%;
-    grid-template-columns: 1fr;
+    grid-template-rows: auto 1fr;
+    overflow: hidden;
+    position: absolute;
 }
 
 #header-container {
-    grid-area: jj;
-    width: 100%;
     display: grid;
+    grid-area: jj;
     grid-template-areas: "logo bar";
     grid-template-columns: 20% 1fr;
-    grid-template-rows: 1fr;
+
+    width: 100%;
+
     background-color: #ffffff;
     border-bottom: solid 1px var(--light-grey);
-    position: sticky;
+    position: fixed;
     top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
 }
 
 #container-main {
     width: 100%;
-    height: 100%;
+    height: fit-content;
     display: grid;
 
     grid-template-areas: "men main";
-    grid-template-columns: 20% 1fr;
+    grid-template-columns: auto 1fr;
     grid-template-rows: 1fr;
     grid-area: cc;
     background-color: var(--light-grey);
@@ -111,14 +119,28 @@ body, html {
     background-color: #ffffff;
     border-color: var(--light-grey);
     padding: 30px 0 0 30px;
+    width: 20svw;
 
     grid-area: men;
+
+    position: fixed;
+    top: 60px; /* Ajustez cette valeur pour correspondre à la hauteur du header */
+    left: 0;
+    bottom: 0;
+    overflow-y: auto;
 }
 
 .content-main {
     background-color: #ffffff;
     padding: 30px 0 0 30px;
     grid-area: main;
+
+    position: fixed;
+    height: calc(100vh - 5vh);
+    left: 20vw; /* Commence là où le menu se termine */
+    bottom: 0;
+    right: 0; /* Prend tout l'espace restant */
+    overflow-y: auto;
 }
 
 .content-main p {
@@ -195,9 +217,12 @@ body, html {
     margin-top: 20px;
 }
 
+
+
 .container_list {
-    border-radius: 10px;
+    border-radius: 5px;
     padding: 5px;
+    margin-bottom: 8px;
     width: 100%;
     height: 60px;
     font-weight: bold;
@@ -221,8 +246,21 @@ body, html {
 .list_style {
     list-style: none;
     margin-left: 15px;
+
+    font-size: larger;
 }
 
+.list_style a {
+    text-decoration: none;
+}
+
+.list_style:hover a {
+    color: white;
+}
+
+.list_style a:visited {
+    color: transparent;
+}
 /********************** login-page *********************/
 
 .logo-container-login-page {
@@ -363,16 +401,53 @@ label {
 
 /******************* spaces **************************/
 
-#space_container{
-    display: grid;
-    justify-content: center;
-    row-gap: 5svh;
+#space_container {
+    display: flex; /* Utilise flexbox pour une meilleure gestion des enfants */
+    flex-direction: column; /* Organise les enfants en colonne */
+    justify-content: flex-start; /* Aligne les enfants en haut du conteneur */
+    align-items: center; /* Centre les enfants horizontalement */
+    row-gap: 5vh;
+    padding-top: 10vh;
 
+    position: fixed;
+    height: calc(100vh - 5vh);
+    left: 20vw; /* Commence là où le menu se termine */
+    bottom: 0;
+    right: 0; /* Prend tout l'espace restant */
+    overflow-y: auto;
+    overflow-x: hidden; /* Empêche le défilement horizontal */
+}
+
+#editor-container {
     width: 100%;
+    transition: all 0.3s ease; /* Transition douce */
 }
 
 #editor {
-    visibility: hidden;
+    min-height: 150px; /* Hauteur initiale */
+    transition: all 0.3s ease; /* Transition douce */
+}
+
+.ql-blank, .ql-editor {
+    height: 150px;
+}
+
+/* suppresion barre grise inconnu dans la zone de texte */
+.ql-editor p,
+.ql-editor div,
+.ql-editor span {
+    border-left: none !important; /* Supprime la bordure gauche */
+    outline: none !important; /* Supprime toute outline qui pourrait ressembler à une barre */
+    box-shadow: none !important; /* Supprime toute ombre interne */
+    margin: 0; /* Supprime les marges */
+    padding: 0; /* Supprime les paddings */
+    width: 100%;
+}
+
+/* Cible spécifiquement la barre grise */
+.ql-editor .ql-blank::before {
+    border-left: none !important; /* Supprime la bordure gauche des éléments vides */
+    content: none !important; /* Supprime le contenu des éléments vides */
 }
 
 hr {
@@ -392,30 +467,128 @@ hr {
     border-radius: 5px;
 }
 
-#editor {
-    visibility: visible;
-}
+
 
 #compose_box .profile-container {
-    margin: 8px 0 8px 0;
-    width: 15%;
+    margin: 8px 0 20px 0;
+    width: fit-content;
     height: min-content;
     display: flex;
     justify-content: space-evenly;
     align-items: center;
 }
 
+.profile-container img {
+    margin-right: 10px;
+}
+
+.form-comment {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+#container-post {
+    display: grid;
+    width: fit-content;
+    height: fit-content;
+    flex-direction: column;
+    padding: 10px;
+    border-radius: 10px;
+}
+
 #post_box {
     width: 55vw;
-    height: 25vh;
-    padding: 5px;
+    height: fit-content;
     border: 1px solid var(--light-grey);
-    border-radius: 10px;
-    /*margin-bottom: 30px;*/
+    border-radius: 10px 10px 0 0;
+    padding: 10px 10px 20px 10px;
+    position: relative; /* Pour positionner le bouton à l'intérieur */
+}
+
+.post-text {
+    max-height: 100px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    transition: all 0.5s ease-in-out;
+}
+
+.post-text.expanded {
+    max-height: none; /* Supprime la limitation de hauteur */
+}
+
+.read-more-btn {
+    background-color: #353434;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 5px 10px;
+    cursor: pointer;
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+}
+
+.foot-post {
+    margin-top: 10px;
+}
+
+.container-profil-post {
+    width: fit-content;
+    padding: 5px 5px 5px 0;
+    margin-bottom: 10px;
+}
+
+#post-comment {
+    border-left: 1px solid var(--light-grey);
+    border-right: 1px solid var(--light-grey);
+    border-bottom: 1px solid var(--light-grey);
+    padding: 10px;
+    border-radius: 0 0 10px 10px;
+    width: 55vw;
+    height: fit-content;
+}
+
+.comment-input {
+    width: 100%;
+    padding: 10px 0;
+    font-size: 16px;
+    border: none;
+    border-bottom: 1px solid cadetblue;
+    outline: none;
+    transition: border-color 0.3s;
+}
+
+.comment-input::placeholder {
+    color: #999;
+}
+
+.comment-input:focus {
+    border-bottom-color: #007BFF;
+}
+
+.icon-send {
+    width: 20px;
+}
+
+@keyframes move {
+    0% {
+        transform: translateX(0);
+    }
+    50% {
+        transform: translateX(3px);
+    }
+    100% {
+        transform: translateX(0);
+    }
+}
+
+/* Application de l'animation sur hover */
+.icon-send:hover {
+    animation: move 1s infinite;
 }
 
 #submit-button {
-
     margin: 5px 0 0 auto;
     width: max-content;
     justify-self: end;

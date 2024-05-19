@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Posts;
+use App\Entity\Spaces;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -19,6 +20,19 @@ class PostsRepository extends ServiceEntityRepository
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Posts::class);
+    }
+
+    /**
+     * @return Posts[]
+     */
+    public function findBySpace(Spaces $space): array
+    {
+        return $this->createQueryBuilder('p')
+            ->andWhere('p.space = :space')
+            ->setParameter('space', $space)
+            ->orderBy('p.createdAt', 'DESC')
+            ->getQuery()
+            ->getResult();
     }
 
     //    /**

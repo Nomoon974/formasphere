@@ -2,50 +2,90 @@ import Quill from 'quill';
 import 'quill/dist/quill.snow.css';
 
 function initializeQuill() {
+    // Vérifie si Quill est déjà initialisé
+    if (window.quillInitialized) {
+        return;
+    }
+
     const editor = document.getElementById('editor');
     if (editor) {
         const quill = new Quill('#editor', {
-            theme: 'snow',
-            placeholder: 'Compose an epic...'
+            theme: 'snow'
         });
 
         let form = document.getElementById('postForm');
         form.onsubmit = function (e) {
-            // Get the Quill editor's content as plain text
-            let textContent = quill.getText().trim();
-            let delta = quill.getContents();
+            let content = document.querySelector('textarea[name="content"]');
+            content.value = quill.root.innerHTML;
 
-            // Validate the content
-            if (!isValidContent(textContent, delta)) {
-                e.preventDefault(); // Prevent form submission
-                alert('Le contenu ne peut pas être vide ou invalide.');
-                return false;  // Stop execution
+            let htmlContent = quill.root.innerHTML.trim();  // Nettoie les espaces vides
+
+            // Vérifie si le contenu est vide ou ne contient que des balises HTML vides
+            if (!htmlContent || htmlContent === '<p><br></p>' || !htmlContent.replace(/<(.|\n)*?>/g, '').trim()) {
+                e.preventDefault();  // Empêche la soumission du formulaire
+                alert('Le contenu ne peut pas être vide.');
+                return false;  // Arrête l'exécution
             }
 
-            // Assign the purified content to the hidden textarea
-            document.querySelector('textarea[name="content"]').value = quill.root.innerHTML.trim();
+            // Validation du contenu
+            if (!isValidContent(content.value)) {
+                e.preventDefault(); // Empêche la soumission du formulaire
+                return false;
+            }
+
+            // Assigner le contenu purifié au champ caché du formulaire
+            document.querySelector('textarea[name="content"]').value = htmlContent;
         };
+
+        // Événements focus et blur pour agrandir et réduire la zone de texte
+        quill.on('editor-change', (eventName) => {
+            if (eventName === 'selection-change') {
+                if (quill.hasFocus()) {
+                    quill.root.style.minHeight = '300px'; // Définir la nouvelle hauteur sur focus
+                } else {
+                    quill.root.style.minHeight = '150px'; // Réduire la hauteur sur blur
+                }
+            }
+        });
+
+        // Ajouter un gestionnaire d'événements pour détecter les clics en dehors de l'éditeur
+        document.addEventListener('click', (event) => {
+            if (!editorContainer.contains(event.target) && document.activeElement !== quill.root) {
+                quill.root.style.minHeight = '150px'; // Réduire la hauteur si le clic est en dehors
+            }
+        });
+
+        function isValidContent(content) {
+            // Vérifie si le contenu n'est pas vide
+            let div = document.createElement('div');
+            div.innerHTML = content;
+            return div.textContent.trim().length > 0;
+        }
+
+        // Marque Quill comme initialisé
+        window.quillInitialized = true;
     }
 }
 
-function isValidContent(textContent, delta) {
-    // Check if the text content is empty or contains only whitespace
-    if (textContent.length === 0) {
+function isValidContent(content) {
+    // Supprime les balises HTML pour ne garder que le texte
+    let textContent = content.replace(/<(.|\n)*?>/g, '').trim();
+
+    // Vérifie si le contenu texte n'est pas vide et a une longueur minimale
+    if (textContent.length < 5) { // Remplacez 5 par le nombre minimum de caractères souhaité
+        alert('Le contenu doit comporter au moins 5 caractères.');
         return false;
     }
 
-    // Check if Delta contains meaningful content
-    let hasMeaningfulContent = false;
-    delta.ops.forEach(op => {
-        if (op.insert && typeof op.insert === 'string' && op.insert.trim().length > 0) {
-            hasMeaningfulContent = true;
-        }
-    });
+    // Vérifie la longueur du contenu avec les balises
+    if (content.length > 5000) {
+        alert('Le contenu ne doit pas dépasser 5000 caractères.');
+        return false;
+    }
 
-    return hasMeaningfulContent;
+    return true;
 }
 
-// Initialize Quill when the document is ready
-// document.addEventListener('DOMContentLoaded', initializeQuill);
+document.addEventListener('DOMContentLoaded', initializeQuill);
 
 export default initializeQuill;
