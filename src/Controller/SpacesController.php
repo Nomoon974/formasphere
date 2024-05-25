@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Posts;
 use App\Entity\Spaces;
+use App\Form\PostsType;
 use App\Form\SpacesType;
 use App\Repository\PostsRepository;
 use App\Repository\SpacesRepository;
@@ -83,8 +84,8 @@ class SpacesController extends AbstractController
         return $this->redirectToRoute('app_spaces_index', [], Response::HTTP_SEE_OTHER);
     }
 
-    #[Route('/space/{id}', name:'space_views')]
-    public function view(Spaces $space, Security $security, Posts $post, Int $id, PaginatorInterface $paginator, Request $request, EntityManagerInterface $entityManager): Response
+    #[Route('/space/{id}', name: 'space_views')]
+    public function view(Spaces $space, Security $security, PaginatorInterface $paginator, Request $request, EntityManagerInterface $entityManager): Response
     {
         $queryBuilder = $entityManager->getRepository(Posts::class)->createQueryBuilder('p')
             ->where('p.space = :space')
@@ -97,11 +98,19 @@ class SpacesController extends AbstractController
             10 /* limit per page */
         );
 
+        // Création des formulaires d'édition pour chaque post
+        $editForms = [];
+        foreach ($pagination as $post) {
+            $form = $this->createForm(PostsType::class, $post);
+            $editForms[$post->getId()] = $form->createView();
+        }
+
         return $this->render('spaces/space_view.html.twig', [
             'space' => $space,
             'user' => $security->getUser(),
             'pagination' => $pagination,
+            'editForms' => $editForms,
         ]);
     }
-
 }
+

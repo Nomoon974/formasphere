@@ -2,6 +2,13 @@
 
 {% block overview_content %}
     <div id="space_container">
+        {% for label, messages in app.flashes %}
+            <div class="flash-{{ label }}">
+                {% for message in messages %}
+                    <p>{{ message }}</p>
+                {% endfor %}
+            </div>
+        {% endfor %}
         <div id="compose_box">
             <div class="profile-container">
                 <img class="profil-img"
@@ -11,6 +18,7 @@
             </div>
             <form id="postForm" method="POST" action="{{ path('save_post', {'space_id': space.id}) }}">
                 <div id="editor"></div>
+                <label for="content" style="display:none;">Editeur de texte</label>
                 <textarea name="content" id="content" style="display:none;"></textarea>
                 <button type="submit" id="submit-button">Submit</button>
             </form>
@@ -19,27 +27,56 @@
         <hr>
 
         {% for post in pagination %}
-            <div id="container-post">
+            <div class="container-post">
                 <div id="post_box">
-                    <div class="container-profil-post">
-                        <img class="profil-img img-profil-post" src="{{ asset(post.user.avatar) }}"
-                             alt="avatar de "{{ post.user.fullName }}>
-                        <h4>{{ post.user.fullName }}</h4>
+                    <div class="post-header">
+                        <div class="container-profil-post">
+                            <img class="profil-img img-profil-post" src="{{ asset(post.user.avatar) }}"
+                                 alt="avatar de {{ post.user.fullName }}">
+                            <h4>{{ post.user.fullName }}</h4>
+                        </div>
+                        <div class="post-actions">
+                            <button type="button" class="edit-btn" data-post-id="{{ post.id }}" style="background: none; border: none;">
+                                <img src="{{ asset('build/images/pencil.6bc05206.png') }}" alt="bouton edition de poste">
+                            </button>
+                            <button type="button" class="delete-btn" data-post-id="{{ post.id }}" style="background: none; border: none;">
+                                <img src="{{ asset('build/images/close.53e53dde.png') }}" alt="bouton suppression de poste">
+                            </button>
+                            <form id="delete-form-{{ post.id }}" action="{{ path('app_posts_delete', {'id': post.id}) }}" method="POST" style="display:none;">
+                                <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ post.id) }}">
+                            </form>
+                        </div>
                     </div>
                     <div class="post-text">
-                        <p >{{ post.text|raw }}</p>
+                        <p>{{ post.text|raw }}</p>
+                    </div>
+                    <div class="post-edit-form" id="edit-post-form-container-{{ post.id }}" style="display: none;">
+                        {{ form_start(editForms[post.id], {
+                            'action': path('app_postEdit', {'id': post.id}),
+                            'method': 'POST',
+                            'attr': {'class': 'edit-form'}
+                        }) }}
+                        <div id="editor-{{ post.id }}" class="quill-editor"></div>
+                        <textarea style="display:none;" id="edit-content-{{ post.id }}" name="editContent">{{ post.text|raw }}</textarea>
+                        <div class="form-errors">
+                            {{ form_errors(editForms[post.id]) }}
+                        </div>
+                        <button type="submit" class="save-btn">Editer</button>
+                        <button type="button" class="cancel-btn">Annuler</button>
+                        {{ form_end(editForms[post.id]) }}
                     </div>
                     <div class="foot-post">
                         <button class="read-more-btn">Lire plus</button>
-                        <small>{{ post.createdAt|date('Y-m-d H:i:s') }}</small>
+                        <small>{{ post.createdAt|date('d-m-Y H:i:s') }}</small>
+                        <small>#{{ post.id }}</small>
                     </div>
                 </div>
                 <div id="post-comment">
                     <form class="form-comment">
-                        <input type="text" class="comment-input" placeholder="Entrez votre texte">
-                        <btn><img class="icon-send" src="{{ asset('build/images/send-message.acb93f2a.png') }}"></btn>
+                        <label for="comment" style="display:none;">Commentaire</label>
+                        <textarea name="comment" class="comment-input" placeholder="Entrez votre commentaire"></textarea>
+                        <btn><img class="icon-send" src="{{ asset('build/images/send-message.acb93f2a.png') }}" alt="bouton d'envoi de commentaire"></btn>
                     </form>
-
                 </div>
             </div>
         {% endfor %}
@@ -48,9 +85,8 @@
             {{ knp_pagination_render(pagination) }}
         </div>
     </div>
-    {% block javascripts %}
-        {{ parent() }}
-        <script src="{{ asset('build/js/initializeQuill.js') }}"></script>
-    {% endblock %}
+{% endblock %}
 
+{% block javascript %}
+{{ parent() }}
 {% endblock %}

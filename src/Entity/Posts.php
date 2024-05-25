@@ -144,7 +144,7 @@ class Posts
     /**
      * @return mixed
      */
-    public function getComments()
+    public function getComments(): mixed
     {
         return $this->comments;
     }
@@ -152,7 +152,7 @@ class Posts
     /**
      * @param mixed $comments
      */
-    public function setComments($comments): void
+    public function setComments(mixed $comments): void
     {
         $this->comments = $comments;
     }

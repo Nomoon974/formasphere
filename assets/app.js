@@ -15,10 +15,16 @@ import './images/uifaces-abstract-image.jpg'
 import './images/logo.png'
 
 
-import initializeQuill from './controllers/QuilEditor';
-import toggleReadMore from './controllers/ReadMore.js';
+import initializeQuill from "./controllers/QuilEditor";
+import toggleReadMore from "./controllers/toggleReadMore.js";
+import adjustTextArea from "./controllers/adjustTextArea";
+import editPost from "./controllers/editPost";
+import deletePost from "./controllers/deletePost";
 
 document.addEventListener('DOMContentLoaded', () => {
     initializeQuill();
     toggleReadMore();
+    adjustTextArea();
+    editPost();
+    deletePost();
 });

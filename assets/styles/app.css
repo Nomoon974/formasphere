@@ -19,6 +19,14 @@ a {
     text-decoration: none;
 }
 
+a:visited {
+    color: black;
+}
+
+small {
+    color: #999999;
+}
+
 /***************** overview-page *****************/
 
 #container-overview {
@@ -108,6 +116,11 @@ a {
     border-radius: 25px;
     margin-left: 5px;
     transition: all 0.3s ease-in;
+}
+
+.content-header * {
+    margin-left: 15px;
+    text-decoration: none;
 }
 
 .content-header a img:hover {
@@ -420,16 +433,15 @@ label {
 
 #editor-container {
     width: 100%;
-    transition: all 0.3s ease; /* Transition douce */
 }
 
 #editor {
     min-height: 150px; /* Hauteur initiale */
-    transition: all 0.3s ease; /* Transition douce */
 }
 
 .ql-blank, .ql-editor {
     height: 150px;
+    transition: all 0.3s ease;
 }
 
 /* suppresion barre grise inconnu dans la zone de texte */
@@ -437,8 +449,6 @@ label {
 .ql-editor div,
 .ql-editor span {
     border-left: none !important; /* Supprime la bordure gauche */
-    outline: none !important; /* Supprime toute outline qui pourrait ressembler à une barre */
-    box-shadow: none !important; /* Supprime toute ombre interne */
     margin: 0; /* Supprime les marges */
     padding: 0; /* Supprime les paddings */
     width: 100%;
@@ -485,10 +495,11 @@ hr {
 .form-comment {
     display: flex;
     align-items: center;
+    width: 100%;
     gap: 10px;
 }
 
-#container-post {
+.container-post {
     display: grid;
     width: fit-content;
     height: fit-content;
@@ -504,6 +515,8 @@ hr {
     border-radius: 10px 10px 0 0;
     padding: 10px 10px 20px 10px;
     position: relative; /* Pour positionner le bouton à l'intérieur */
+    transition: all 0.5s ease-in-out;
+
 }
 
 .post-text {
@@ -511,32 +524,130 @@ hr {
     overflow: hidden;
     text-overflow: ellipsis;
     transition: all 0.5s ease-in-out;
+    margin: 25px 0 25px 0;
 }
 
+.post-text p {
+    border-left: none !important; /* Supprime la bordure gauche */
+}
+
+.hidden-label {
+    display: none;
+}
+
+
 .post-text.expanded {
-    max-height: none; /* Supprime la limitation de hauteur */
+    max-height: none !important; /* Supprime la limitation de hauteur */
 }
 
 .read-more-btn {
-    background-color: #353434;
-    color: white;
-    border: none;
+    background-color: transparent;
+    color: black;
+    border: 1px solid var(--cadetblue);
     border-radius: 5px;
     padding: 5px 10px;
     cursor: pointer;
     position: absolute;
     bottom: 10px;
     right: 10px;
+    transition: background-color 0.5s ease;
+}
+
+.read-more-btn:hover {
+    background-color: var(--cadetblue);
+    color: white;
+}
+
+.post-actions {
+    display: flex;
+    gap: 5px;
+}
+
+.edit-btn, .delete-btn {
+    background-color: transparent;
+    color: white;
+    border: none !important;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.5s ease;
+}
+
+.edit-btn > img, .delete-btn > img {
+    width: 25px !important;
+}
+
+.edit-btn {
+    background-color: transparent; /* Green color for edit button */
+    margin: 0 10px 0 0 !important;
+}
+
+.delete-btn {
+    background-color: transparent !important; /* Red color for delete button */
+
+}
+
+.delete-btn:hover {
+    border: 1px solid red !important;
+}
+
+.edit-btn:hover {
+    border: 1px solid #0056b3 !important;
+}
+
+.save-btn, .cancel-btn {
+    background-color: #007BFF;
+    width: fit-content !important;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 5px 10px !important;
+    cursor: pointer;
+    margin-left: 0 !important;
+    margin-right: auto !important;
+}
+
+.save-btn {
+    margin-top: 5px;
+    background-color: #28a745; /* Green color for save button */
+
+}
+
+.cancel-btn {
+    background-color: #dc3545; /* Red color for cancel button */
+}
+
+.edit-btn:disabled, .delete-btn:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
 }
 
 .foot-post {
     margin-top: 10px;
 }
 
+.post-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
 .container-profil-post {
-    width: fit-content;
-    padding: 5px 5px 5px 0;
-    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+}
+
+.img-profil-post {
+    margin-right: 5px;
+}
+
+.post-actions {
+    display: flex;
+    gap: 5px;
+}
+
+.post-actions  img {
+    width: 20px;
 }
 
 #post-comment {
@@ -550,13 +661,18 @@ hr {
 }
 
 .comment-input {
-    width: 100%;
-    padding: 10px 0;
-    font-size: 16px;
-    border: none;
+    flex-grow: 1;
+    padding: 5px;
+    border: 0;
     border-bottom: 1px solid cadetblue;
-    outline: none;
+    resize: none; /* Empêche l'utilisateur de redimensionner manuellement le textarea */
+    overflow: hidden; /* Cache les débordements */
     transition: border-color 0.3s;
+    font-size: 1.1rem;
+    line-height: 1;
+    height: fit-content;
+    min-height: 25px;
+    box-sizing: border-box;
 }
 
 .comment-input::placeholder {
@@ -564,7 +680,8 @@ hr {
 }
 
 .comment-input:focus {
-    border-bottom-color: #007BFF;
+    border-bottom-color: #007BFF; /* Change la couleur de la bordure inférieure au focus */
+    outline: none; /* Supprime le contour par défaut du navigateur */
 }
 
 .icon-send {

@@ -12,6 +12,7 @@ use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 #[Route('/posts')]
 class PostsController extends AbstractController
@@ -80,14 +81,27 @@ class PostsController extends AbstractController
     }
 
     #[Route('/{id}', name: 'app_posts_delete', methods: ['POST'])]
-    public function delete(Request $request, Posts $post, EntityManagerInterface $entityManager): Response
+    public function delete(Request $request, Posts $post, EntityManagerInterface $entityManager, Security $security): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$post->getId(), $request->request->get('_token'))) {
-            $entityManager->remove($post);
-            $entityManager->flush();
+        // Vérifier si l'utilisateur est authentifié
+        if (!$this->isGranted('IS_AUTHENTICATED_FULLY')) {
+            throw $this->createAccessDeniedException('Vous devez être authentifié pour supprimer un post.');
         }
 
-        return $this->redirectToRoute('app_posts_index', [], Response::HTTP_SEE_OTHER);
+        //Seul l'admin et le createur du poste peuvent supprimer le poste
+        $user = $security->getUser();
+        if ($post->getUser() !== $user && !$this->isGranted('ROLE_ADMIN')) {
+            throw new AccessDeniedException('Vous n\'avez pas la permission de supprimer ce post.');
+        }
+        // Valider le token CSRF
+        if ($this->isCsrfTokenValid('delete' . $post->getId(), $request->request->get('_token'))) {
+            $entityManager->remove($post);
+            $entityManager->flush();
+        } else {
+            throw $this->createAccessDeniedException('Token CSRF invalide.');
+        }
+
+        return $this->redirectToRoute('space_views', ['id' => $post->getSpace()->getId()]);
     }
 
 
@@ -115,11 +129,6 @@ class PostsController extends AbstractController
 
         $cleanHtml = $purifier->purify($content);
 
-//        if (empty(trim(strip_tags($cleanHtml)))) {
-//            $this->addFlash('error', 'Le contenu ne peut pas être vide ou invalide.');
-//            return $this->redirectToRoute('space_views', ['id' => $space_id]);
-//        }
-
         $post->setText($cleanHtml);
 
         $entityManager->persist($post);
@@ -129,4 +138,38 @@ class PostsController extends AbstractController
         return $this->redirectToRoute('space_views', ['id' => $space_id]);
     }
 
+    #[Route('/post/edit/{id}', name: 'app_postEdit')]
+    public function editPost(Request $request, Posts $post, EntityManagerInterface $entityManager, Security $security, $id): Response
+    {
+        $form = $this->createForm(PostsType::class, $post);
+        $form->handleRequest($request);
+
+        $post = $entityManager->getRepository(Posts::class)->find($id);
+        if (!$post) {
+            throw $this->createNotFoundException('Post not found');
+        }
+
+        $user = $security->getUser();
+        if ($post->getUser() !== $user && !$this->isGranted('ROLE_ADMIN')) {
+            throw new AccessDeniedException('Vous n\'avez pas la permission de modifier ce post.');
+        }
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $post->setUpdatedAt(new \DateTime());
+            $content = $form->get('editContent')->getData(); // ou $request->request->get('editContent') si non géré par un formulaire Symfony
+            $purifier = new \HTMLPurifier();
+            $cleanHtml = $purifier->purify($content);
+            $post->setText($cleanHtml);
+
+            $entityManager->flush();
+
+            return $this->redirectToRoute('space_views', ['id' => $post->getSpace()->getId()]); // Assurez-vous de rediriger vers une route valide
+        }
+
+        if ($form->isSubmitted()) {
+            $this->addFlash('error', 'Le formulaire contient des erreurs. Veuillez vérifier les champs et réessayer.');
+        }
+
+        return $this->redirectToRoute('space_views', ['id' => $post->getSpace()->getId()]); // Assurez-vous de rediriger vers une route valide
+    }
 }
