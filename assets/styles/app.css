@@ -442,6 +442,7 @@ label {
 .ql-blank, .ql-editor {
     height: 150px;
     transition: all 0.3s ease;
+    background-color: white;
 }
 
 /* suppresion barre grise inconnu dans la zone de texte */
@@ -475,9 +476,8 @@ hr {
     height: max-content;
     border: 1px solid var(--light-grey);
     border-radius: 5px;
+    background-color: #fafafa;
 }
-
-
 
 #compose_box .profile-container {
     margin: 8px 0 20px 0;
@@ -688,6 +688,14 @@ hr {
     width: 20px;
 }
 
+#comment-section {
+    border-bottom: 1px solid var(--light-grey);
+    border-left: 1px solid var(--light-grey);
+    border-right: 1px solid var(--light-grey);
+    width: 100%;
+    min-height: 50px;
+}
+
 @keyframes move {
     0% {
         transform: translateX(0);
@@ -710,6 +718,53 @@ hr {
     width: max-content;
     justify-self: end;
 }
+
+/******************** chat ****************************/
+
+#chat-icon-container {
+    position: fixed;
+    bottom: 40px;
+    right: 40px;
+    z-index: 1000;
+}
+
+#chat-icon {
+    width: 80px;
+    height: 80px;
+    cursor: pointer;
+    animation: shake-pause 1.1s infinite;
+}
+
+#notification-badge {
+    position: absolute;
+    top: 0;
+    right: 0;
+    background-color: red;
+    color: white;
+    font-weight: bold;
+    border-radius: 50%;
+    padding: 3px 8px;
+    font-size: 1rem;
+    z-index: 1001;
+}
+
+@keyframes shake {
+    0%, 100% { transform: translateX(0); filter: blur(0); }
+    25% { transform: translateX(-3px) scale(1.05); filter: blur(0); }
+    50% { transform: translateX(3px) scale(1.05); filter: blur(1px); }
+    75% { transform: translateX(-3px) scale(1.05); filter: blur(1px); }
+}
+
+@keyframes shake-pause {
+    0%, 50%, 100% { transform: translateX(0); filter: blur(0); }
+    25% { transform: translateX(-3px) scale(1.05); filter: blur(0); }
+    30% { transform: translateX(3px) scale(1.05); filter: blur(1px); }
+    35% { transform: translateX(-3px) scale(1.05); filter: blur(1px); }
+    40% { transform: translateX(3px) scale(1.05); filter: blur(1px); }
+    45% { transform: translateX(-3px) scale(1.05); filter: blur(1px); }
+}
+
+
 
 /******************* pagination *********************/
 

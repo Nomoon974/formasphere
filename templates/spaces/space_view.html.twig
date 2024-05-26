@@ -71,6 +71,9 @@
                         <small>#{{ post.id }}</small>
                     </div>
                 </div>
+                <div id="comment-section">
+
+                </div>
                 <div id="post-comment">
                     <form class="form-comment">
                         <label for="comment" style="display:none;">Commentaire</label>
@@ -85,6 +88,7 @@
             {{ knp_pagination_render(pagination) }}
         </div>
     </div>
+    {% include 'components/chat.html.twig' %}
 {% endblock %}
 
 {% block javascript %}
