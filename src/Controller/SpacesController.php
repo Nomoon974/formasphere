@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Comment;
 use App\Entity\Posts;
 use App\Entity\Spaces;
 use App\Form\PostsType;
@@ -100,9 +101,14 @@ class SpacesController extends AbstractController
 
         // Création des formulaires d'édition pour chaque post
         $editForms = [];
+        $commentsData = [];
         foreach ($pagination as $post) {
             $form = $this->createForm(PostsType::class, $post);
             $editForms[$post->getId()] = $form->createView();
+
+            // Récupérer les commentaires associés à ce post
+            $comments = $entityManager->getRepository(Comment::class)->findBy(['post' => $post]);
+            $commentsData[$post->getId()] = $comments;
         }
 
         return $this->render('spaces/space_view.html.twig', [
@@ -110,7 +116,9 @@ class SpacesController extends AbstractController
             'user' => $security->getUser(),
             'pagination' => $pagination,
             'editForms' => $editForms,
+            'commentsData' => $commentsData,
         ]);
     }
+
 }
 

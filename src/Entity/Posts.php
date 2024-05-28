@@ -33,10 +33,10 @@ class Posts
     #[ORM\JoinColumn(nullable: false)]
     private ?Spaces $space = null;
 
-    #[ORM\OneToMany(mappedBy: 'post', targetEntity: Contents::class)]
+    #[ORM\OneToMany(mappedBy: 'post', targetEntity: Contents::class, cascade: ['persist', 'remove'])]
     private Collection $contents;
 
-    #[ORM\OneToMany(mappedBy: "post", targetEntity: Comment::class)]
+    #[ORM\OneToMany(mappedBy: 'post', targetEntity: Comment::class, cascade: ['persist', 'remove'])]
     private Collection $comments;
 
     public function __construct()
@@ -142,22 +142,24 @@ class Posts
     }
 
     /**
-     * @return mixed
+     * @return Collection<int, Comment>
      */
-    public function getComments(): mixed
+    public function getComments(): Collection
     {
         return $this->comments;
     }
 
-    /**
-     * @param mixed $comments
-     */
-    public function setComments(mixed $comments): void
+    public function addComment(Comment $comment): static
     {
-        $this->comments = $comments;
+        if (!$this->comments->contains($comment)) {
+            $this->comments->add($comment);
+            $comment->setPost($this);
+        }
+
+        return $this;
     }
 
-    public function removeComment(Comment $comment): self
+    public function removeComment(Comment $comment): static
     {
         if ($this->comments->removeElement($comment)) {
             // set the owning side to null (unless already changed)

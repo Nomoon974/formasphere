@@ -72,7 +72,14 @@
                     </div>
                 </div>
                 <div id="comment-section">
-
+                    <button type="button" class="toggle-comments-btn" data-post-id="{{ post.id }}">
+                        ↓ Afficher les commentaires ↓
+                    </button>
+                    <div id="comments_{{ post.id }}" class="comment-section" style="display:none;">
+                        {% for comment in commentsData[post.getId] %}
+                            <p>{{ comment.text }}</p>
+                        {% endfor %}
+                    </div>
                 </div>
                 <div id="post-comment">
                     <form class="form-comment">

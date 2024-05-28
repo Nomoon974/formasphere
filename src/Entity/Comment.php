@@ -25,11 +25,10 @@ class Comment
 
     #[ORM\ManyToOne(inversedBy: 'comments')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?User $user_id = null;
+    private ?User $user = null;
 
-
-    #[ORM\ManyToOne(targetEntity:Posts::class, inversedBy:"comments")]
-    #[ORM\JoinColumn(nullable:false)]
+    #[ORM\ManyToOne(targetEntity: Posts::class, inversedBy: 'comments')]
+    #[ORM\JoinColumn(nullable: false)]
     private ?Posts $post = null;
 
     public function getId(): ?int
@@ -73,33 +72,27 @@ class Comment
         return $this;
     }
 
-    public function getUserId(): ?User
+    public function getUser(): ?User
     {
-        return $this->user_id;
+        return $this->user;
     }
 
-    public function setUserId(?User $user_id): static
+    public function setUser(?User $user): static
     {
-        $this->user_id = $user_id;
+        $this->user = $user;
 
         return $this;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getPost()
+    public function getPost(): ?Posts
     {
-        return $this->posts;
+        return $this->post;
     }
 
-    /**
-     * @param mixed $post
-     */
-    public function setPost($post): void
+    public function setPost(?Posts $post): static
     {
-        $this->posts = $post;
+        $this->post = $post;
+
+        return $this;
     }
-
-
 }

@@ -694,6 +694,18 @@ hr {
     border-right: 1px solid var(--light-grey);
     width: 100%;
     min-height: 50px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#comment-section .toggle-comments-btn {
+    background-color: transparent;
+    border: none;
+    font-weight: bold;
+    font-family: "Sen", sans-serif;
+    cursor: pointer;
 }
 
 @keyframes move {
