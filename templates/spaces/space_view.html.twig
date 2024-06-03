@@ -61,8 +61,10 @@
                         <div class="form-errors">
                             {{ form_errors(editForms[post.id]) }}
                         </div>
-                        <button type="submit" class="save-btn">Editer</button>
-                        <button type="button" class="cancel-btn">Annuler</button>
+                        <div class="edit-form-btn">
+                            <button type="submit" class="save-btn">Editer</button>
+                            <button type="button" class="cancel-btn">Annuler</button>
+                        </div>
                         {{ form_end(editForms[post.id]) }}
                     </div>
                     <div class="foot-post">
@@ -72,10 +74,12 @@
                     </div>
                 </div>
                 <div id="comment-section">
-                    <button type="button" class="toggle-comments-btn" data-post-id="{{ post.id }}">
+                    <button type="button" class="toggle-comments-btn" data-post-id="{{ post.id }}"
+                            data-up-arrow="{{ asset('build/images/up-arrow.a444ac92.png') }}"
+                            data-down-arrow="{{ asset('build/images/down-arrow.215b1a22.png') }}">
                         ↓ Afficher les commentaires ↓
                     </button>
-                    <div id="comments_{{ post.id }}" class="comment-section" style="display:none;">
+                    <div id="comments_{{ post.id }}" class="comments" style="display:none;">
                         {% for comment in commentsData[post.getId] %}
                             <p>{{ comment.text }}</p>
                         {% endfor %}
@@ -100,4 +104,39 @@
 
 {% block javascript %}
 {{ parent() }}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        console.log('DOM fully loaded and parsed');
+        const toggleButtons = document.querySelectorAll('.toggle-comments-btn');
+        console.log('Total buttons found:', toggleButtons.length); // Check if buttons are found
+
+        toggleButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                console.log('Button clicked'); // Check if this logs when you click the button
+                const postId = this.getAttribute('data-post-id');
+                const commentsContainer = document.getElementById(`comments_${postId}`);
+                const upArrow = this.getAttribute('data-up-arrow');
+                const downArrow = this.getAttribute('data-down-arrow');
+
+                if (commentsContainer) {
+                    if (commentsContainer.style.display === 'none' || commentsContainer.style.display === '') {
+                        // Show comments
+                        commentsContainer.style.display = 'block';
+                        commentsContainer.style.maxHeight = commentsContainer.scrollHeight + 'px';
+                        this.innerHTML = `<img src="${upArrow}" alt=""> Masquer les commentaires <img src="${upArrow}" alt="">`;
+                    } else {
+                        // Hide comments with animation
+                        commentsContainer.style.maxHeight = '0';
+                        setTimeout(() => {
+                            commentsContainer.style.display = 'none';
+                        }, 300); // Duration of the animation should match CSS transition duration
+                        this.innerHTML = `<img src="${downArrow}" alt=""> Afficher les commentaires <img src="${downArrow}" alt="">`;
+                    }
+                } else {
+                    console.log('Comments container not found for post id:', postId);
+                }
+            });
+        });
+    });
+</script>
 {% endblock %}

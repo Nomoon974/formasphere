@@ -193,7 +193,7 @@ small {
 
 .card_style:hover {
     -webkit-box-shadow: 5px 5px 15px 5px rgba(0, 0, 0, 0.1);
-    box-shadow: 5px 5px 15px 5px rgba(0, 0, 0, 0.1);
+    box-shadow: 2px 2px 5px 5px rgba(0, 0, 0, 0.1);
 }
 
 .card_img {
@@ -515,15 +515,12 @@ hr {
     border-radius: 10px 10px 0 0;
     padding: 10px 10px 20px 10px;
     position: relative; /* Pour positionner le bouton à l'intérieur */
-    transition: all 0.5s ease-in-out;
-
 }
 
 .post-text {
     max-height: 100px;
     overflow: hidden;
     text-overflow: ellipsis;
-    transition: all 0.5s ease-in-out;
     margin: 25px 0 25px 0;
 }
 
@@ -570,6 +567,7 @@ hr {
     border-radius: 5px;
     cursor: pointer;
     transition: all 0.5s ease;
+    box-sizing: border-box;
 }
 
 .edit-btn > img, .delete-btn > img {
@@ -594,6 +592,15 @@ hr {
     border: 1px solid #0056b3 !important;
 }
 
+.edit-form-btn {
+    height: min-content;
+    margin-top: 4px;
+    display: flex;
+    justify-content: end;
+    flex-direction: row-reverse;
+    gap: 10px;
+}
+
 .save-btn, .cancel-btn {
     background-color: #007BFF;
     width: fit-content !important;
@@ -602,14 +609,13 @@ hr {
     border-radius: 5px;
     padding: 5px 10px !important;
     cursor: pointer;
-    margin-left: 0 !important;
-    margin-right: auto !important;
+    margin: 0 !important;
+    /*margin-right: auto !important;*/
 }
 
 .save-btn {
     margin-top: 5px;
     background-color: #28a745; /* Green color for save button */
-
 }
 
 .cancel-btn {
@@ -700,6 +706,18 @@ hr {
     align-items: center;
 }
 
+#comment-section {
+    width: 100%;
+}
+
+.comments {
+    /*display: none;*/
+    /*overflow: hidden;*/
+    transition: max-height 0.3s ease-out;
+    max-height: 0; /* Start with max-height 0 for the animation */
+}
+
+
 #comment-section .toggle-comments-btn {
     background-color: transparent;
     border: none;
@@ -741,8 +759,8 @@ hr {
 }
 
 #chat-icon {
-    width: 80px;
-    height: 80px;
+    width: 60px;
+    height: 60px;
     cursor: pointer;
     animation: shake-pause 1.1s infinite;
 }

@@ -2,6 +2,7 @@
 
 namespace App\DataFixtures;
 
+use App\Entity\Comment;
 use App\Entity\Posts;
 use App\Entity\Spaces;
 use Doctrine\Bundle\FixturesBundle\Fixture;
@@ -23,51 +24,63 @@ class DataFixtures extends Fixture
         $plainPassword = "123456";
 
         // Spaces
-
         for ($i = 0; $i < 5; $i++) {
             $space = new Spaces();
             $space->setSpaceName($faker->company);
             $space->setThemeColor($faker->safeHexColor);
             $space->setDescription($faker->text);
-            $space->setCreationDate($faker->dateTimeThisYear);
+            $space->setCreationDate(new \DateTimeImmutable());  // Convert to DateTimeImmutable
             $space->setSpaceImg($faker->imageUrl(640, 480, 'business', true));
-
             $manager->persist($space);
-
             $this->addReference('space-' . $i, $space);
-
         }
 
-        // User
+        $manager->flush();  // Make sure all spaces are persisted before referencing
 
+        // Users
         for ($j = 0; $j < 10; $j++) {
             $user = new User();
             $user->setName($faker->userName);
             $user->setFirstname($faker->firstName);
             $user->setEmail($faker->email);
-            $user->setPassword($this->passwordHasher->hashpassword($user, $plainPassword));
+            $user->setPassword($this->passwordHasher->hashPassword($user, $plainPassword));
             $user->setStatus("test");
             $user->setRoles(['ROLE_ADMIN']);
-
             $manager->persist($user);
-
             $this->addReference('user-' . $j, $user);
+        }
 
+        $manager->flush();  // Make sure all users are persisted before referencing
 
-            // Posts
-
+        // Posts and Comments
+        for ($j = 0; $j < 10; $j++) {
+            $user = $this->getReference('user-' . $j);
             for ($k = 0; $k < 20; $k++) {
                 $post = new Posts();
                 $post->setText($faker->paragraph);
-                $post->setCreatedAt($faker->dateTimeThisYear);
+                $post->setCreatedAt(new \DateTimeImmutable());  // Convert to DateTimeImmutable
                 $post->setUser($user);
-
-                $post->setSpace($this->getReference('space-' . rand(0, 4)));
-
+                $spaceIndex = rand(0, 4);
+                if ($this->hasReference('space-' . $spaceIndex)) {
+                    $post->setSpace($this->getReference('space-' . $spaceIndex));
+                }
                 $manager->persist($post);
+
+                // Comments
+                for ($m = 0; $m < rand(1, 5); $m++) {
+                    $comment = new Comment();
+                    $comment->setText($faker->sentence);
+                    $comment->setCreatedAt(new \DateTimeImmutable());  // Consistent DateTimeImmutable usage
+                    $userIndex = rand(0, 9);
+                    if ($this->hasReference('user-' . $userIndex)) {
+                        $comment->setUser($this->getReference('user-' . $userIndex));
+                    }
+                    $comment->setPost($post);
+                    $manager->persist($comment);
+                }
             }
         }
 
-        $manager->flush();
+        $manager->flush();  // Final flush to persist all posts and comments
     }
 }
