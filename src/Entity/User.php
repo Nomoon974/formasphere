@@ -75,6 +75,12 @@ class User implements UserInterface, \Symfony\Component\Security\Core\User\Passw
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: Posts::class)]
     private Collection $posts;
 
+    #[ORM\ManyToMany(targetEntity: Module::class, mappedBy: 'User')]
+    private Collection $modules;
+
+    #[ORM\Column]
+    private ?\DateTimeImmutable $agreedToTermsAt = null;
+
     public function __construct()
     {
         $this->chats = new ArrayCollection();
@@ -86,6 +92,7 @@ class User implements UserInterface, \Symfony\Component\Security\Core\User\Passw
         $this->chatMessages = new ArrayCollection();
         $this->spaces = new ArrayCollection();
         $this->posts = new ArrayCollection();
+        $this->modules = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -478,6 +485,45 @@ class User implements UserInterface, \Symfony\Component\Security\Core\User\Passw
                 $post->setUser(null);
             }
         }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Module>
+     */
+    public function getModules(): Collection
+    {
+        return $this->modules;
+    }
+
+    public function addModule(Module $module): static
+    {
+        if (!$this->modules->contains($module)) {
+            $this->modules->add($module);
+            $module->addUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeModule(Module $module): static
+    {
+        if ($this->modules->removeElement($module)) {
+            $module->removeUser($this);
+        }
+
+        return $this;
+    }
+
+    public function getAgreedToTermsAt(): ?\DateTimeImmutable
+    {
+        return $this->agreedToTermsAt;
+    }
+
+    public function setAgreedToTermsAt(\DateTimeImmutable $agreedToTermsAt): static
+    {
+        $this->agreedToTermsAt = $agreedToTermsAt;
 
         return $this;
     }

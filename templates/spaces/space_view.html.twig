@@ -11,9 +11,7 @@
         {% endfor %}
         <div id="compose_box">
             <div class="profile-container">
-                <img class="profil-img"
-                     src="{{ asset(app.user.getAvatar) }}"
-                     alt="user profile picture">
+                <img class="profil-img" src="{{ asset(app.user.getAvatar) }}" alt="user profile picture">
                 <h4>{{ app.user.getFullName }}</h4>
             </div>
             <form id="postForm" method="POST" action="{{ path('save_post', {'space_id': space.id}) }}">
@@ -31,8 +29,7 @@
                 <div id="post_box">
                     <div class="post-header">
                         <div class="container-profil-post">
-                            <img class="profil-img img-profil-post" src="{{ asset(post.user.avatar) }}"
-                                 alt="avatar de {{ post.user.fullName }}">
+                            <img class="profil-img img-profil-post" src="{{ asset(post.user.avatar) }}" alt="avatar de {{ post.user.fullName }}">
                             <h4>{{ post.user.fullName }}</h4>
                         </div>
                         <div class="post-actions">
@@ -73,15 +70,22 @@
                         <small>#{{ post.id }}</small>
                     </div>
                 </div>
-                <div id="comment-section">
-                    <button type="button" class="toggle-comments-btn" data-post-id="{{ post.id }}"
-                            data-up-arrow="{{ asset('build/images/up-arrow.a444ac92.png') }}"
-                            data-down-arrow="{{ asset('build/images/down-arrow.215b1a22.png') }}">
+                <div id="comment-section-{{ post.id }}" class="comment-section">
+                    <button type="button" class="toggle-comments-btn" data-post-id="{{ post.id }}" aria-expanded="false">
                         ↓ Afficher les commentaires ↓
                     </button>
-                    <div id="comments_{{ post.id }}" class="comments" style="display:none;">
+                    <div id="comments_{{ post.id }}" class="comments">
                         {% for comment in commentsData[post.getId] %}
-                            <p>{{ comment.text }}</p>
+                            <div class="comment">
+                                <div class="comment-header">
+                                    <img class="profil-img img-profil-comment" src="{{ asset(comment.user.avatar) }}" alt="avatar de {{ comment.user.fullName }}">
+                                    <div class="comment-meta">
+                                        <h5>{{ comment.user.fullName }}</h5>
+                                        <small>{{ comment.createdAt|date('d M Y') }}</small>
+                                    </div>
+                                </div>
+                                <p>{{ comment.text }}</p>
+                            </div>
                         {% endfor %}
                     </div>
                 </div>
@@ -89,7 +93,7 @@
                     <form class="form-comment">
                         <label for="comment" style="display:none;">Commentaire</label>
                         <textarea name="comment" class="comment-input" placeholder="Entrez votre commentaire"></textarea>
-                        <btn><img class="icon-send" src="{{ asset('build/images/send-message.acb93f2a.png') }}" alt="bouton d'envoi de commentaire"></btn>
+                        <button type="submit" class="icon-send-btn"><img class="icon-send" src="{{ asset('build/images/send-message.acb93f2a.png') }}" alt="bouton d'envoi de commentaire"></button>
                     </form>
                 </div>
             </div>
@@ -104,39 +108,4 @@
 
 {% block javascript %}
 {{ parent() }}
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        console.log('DOM fully loaded and parsed');
-        const toggleButtons = document.querySelectorAll('.toggle-comments-btn');
-        console.log('Total buttons found:', toggleButtons.length); // Check if buttons are found
-
-        toggleButtons.forEach(button => {
-            button.addEventListener('click', function() {
-                console.log('Button clicked'); // Check if this logs when you click the button
-                const postId = this.getAttribute('data-post-id');
-                const commentsContainer = document.getElementById(`comments_${postId}`);
-                const upArrow = this.getAttribute('data-up-arrow');
-                const downArrow = this.getAttribute('data-down-arrow');
-
-                if (commentsContainer) {
-                    if (commentsContainer.style.display === 'none' || commentsContainer.style.display === '') {
-                        // Show comments
-                        commentsContainer.style.display = 'block';
-                        commentsContainer.style.maxHeight = commentsContainer.scrollHeight + 'px';
-                        this.innerHTML = `<img src="${upArrow}" alt=""> Masquer les commentaires <img src="${upArrow}" alt="">`;
-                    } else {
-                        // Hide comments with animation
-                        commentsContainer.style.maxHeight = '0';
-                        setTimeout(() => {
-                            commentsContainer.style.display = 'none';
-                        }, 300); // Duration of the animation should match CSS transition duration
-                        this.innerHTML = `<img src="${downArrow}" alt=""> Afficher les commentaires <img src="${downArrow}" alt="">`;
-                    }
-                } else {
-                    console.log('Comments container not found for post id:', postId);
-                }
-            });
-        });
-    });
-</script>
 {% endblock %}

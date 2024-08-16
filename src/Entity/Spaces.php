@@ -49,6 +49,9 @@ class Spaces
     #[ORM\OneToMany(mappedBy: 'space', targetEntity: Posts::class)]
     private Collection $posts;
 
+    #[ORM\ManyToOne(inversedBy: 'Spaces')]
+    private ?Module $module = null;
+
     public function __construct()
     {
         $this->chats = new ArrayCollection();
@@ -318,6 +321,18 @@ class Spaces
                 $post->setSpace(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getModule(): ?Module
+    {
+        return $this->module;
+    }
+
+    public function setModule(?Module $module): static
+    {
+        $this->module = $module;
 
         return $this;
     }

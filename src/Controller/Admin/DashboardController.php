@@ -32,11 +32,8 @@ class DashboardController extends AbstractDashboardController
         yield MenuItem::linkToCrud("Documents", 'fa-solid fa-file', DocumentsCrudController::getEntityFqcn());
         yield MenuItem::linkToCrud("Contents", 'fa-solid fa-folder', ContentsCrudController::getEntityFqcn());
         yield MenuItem::linkToCrud("Module", 'fa-solid fa-book', ModuleCrudController::getEntityFqcn());
-        yield MenuItem::linkToCrud("Program", 'fa-solid fa-gears', ProgramCrudController::getEntityFqcn());
         yield MenuItem::linkToCrud("Report", 'fa-solid fa-flag', ReportCrudController::getEntityFqcn());
         yield MenuItem::linkToCrud("Chat", 'fa-solid fa-comment', ChatsCrudController::getEntityFqcn());
-        yield MenuItem::linkToCrud("Trainee", 'fa-solid fa-people-group', TraineeCrudController::getEntityFqcn());
-        yield MenuItem::linkToCrud("Trainings", 'fa-solid fa-pen-nib', TrainingsCrudController::getEntityFqcn());
         yield MenuItem::linkToCrud("Archive", 'fa-solid fa-box-archive', ArchivingCrudController::getEntityFqcn());
     }
 

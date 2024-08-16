@@ -15,9 +15,6 @@ class Report
     private ?int $id = null;
 
     #[ORM\ManyToOne(inversedBy: 'reports')]
-    private ?Trainings $Training = null;
-
-    #[ORM\ManyToOne(inversedBy: 'reports')]
     private ?User $user = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
@@ -32,18 +29,6 @@ class Report
     public function getId(): ?int
     {
         return $this->id;
-    }
-
-    public function getTraining(): ?Trainings
-    {
-        return $this->Training;
-    }
-
-    public function setTraining(?Trainings $Training): static
-    {
-        $this->Training = $Training;
-
-        return $this;
     }
 
     public function getUser(): ?User
