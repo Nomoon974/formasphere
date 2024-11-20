@@ -22,8 +22,6 @@ class OverviewController extends AbstractController
         $user = $security->getUser();
         $spaces = $doctrine->getRepository(Spaces::class)->findAll();
 
-
-
         return $this->render('overview/index.html.twig', [
             'controller_name' => 'OverviewController',
             'user' => $user,

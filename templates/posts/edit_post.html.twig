@@ -1,14 +1,35 @@
-{# templates/post/edit.html.twig #}
+{% extends 'layout/overview_layout.html.twig' %}
 
-{% extends 'layout/base.html.twig' %}
+{% block overview_content %}
+    <div class="back-button">
+        <a href="{{ path('app_posts_show', {'id': post.id}) }}" class="btn-back">
+            Retour
+        </a>
+    </div>
+    <div class="post-edit-container">
+        <h3>Modifier le post</h3>
+        {{ form_start(editForm) }}
+        <div id="editor-container" class="quill-editor">{{ post.text|raw }}</div>
+        {{ form_widget(editForm.editContent) }}
+        <button type="submit">Sauvegarder</button>
+        {{ form_end(editForm) }}
+    </div>
 
-{% block body %}
-{#    {{ form_start(form, {'attr': {'class': 'edit-form', 'id': 'edit-form-' ~ post.id}}) }}#}
-{#    <div id="editor-container-{{ post.id }}">#}
-{#        <div class="quill-editor" id="editor-{{ post.id }}"></div>#}
-{#        {{ form_widget(form.text) }}#}
-{#    </div>#}
-{#    <button type="submit" class="save-btn">✔</button>#}
-{#    <button type="button" class="cancel-btn" data-post-id="{{ post.id }}">✖</button>#}
-{#    {{ form_end(form) }}#}
+    <h3>Commentaires</h3>
+    <div class="comments-list">
+        {% for comment in comments %}
+            <div class="comment">
+                <p>{{ comment.text }}</p>
+                <small>{{ comment.createdAt|date('d/m/Y H:i:s') }}</small>
+            </div>
+        {% else %}
+            <p>Aucun commentaire.</p>
+        {% endfor %}
+    </div>
+
+    <h3>Ajouter un commentaire</h3>
+    {{ form_start(commentForm) }}
+    {{ form_widget(commentForm.text) }}
+    <button type="submit">Ajouter</button>
+    {{ form_end(commentForm) }}
 {% endblock %}

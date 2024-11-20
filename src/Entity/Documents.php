@@ -3,8 +3,6 @@
 namespace App\Entity;
 
 use App\Repository\DocumentsRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -16,8 +14,9 @@ class Documents
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column]
-    private ?int $user_id = null;
+    #[ORM\ManyToOne(targetEntity: User::class)]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?User $user = null;
 
     #[ORM\Column(length: 50)]
     private ?string $link = null;
@@ -32,6 +31,11 @@ class Documents
     #[ORM\JoinColumn(nullable: false)]
     private ?Spaces $space = null;
 
+
+    #[ORM\ManyToOne(targetEntity: Posts::class, inversedBy: "documents")]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Posts $post = null;
+
     public function __construct()
     {
         $this->timestamp = new \DateTime();
@@ -42,16 +46,14 @@ class Documents
         return $this->id;
     }
 
-    public function getUserId(): ?int
+    public function getUser(): ?User
     {
-        return $this->user_id;
+        return $this->user;
     }
 
-    public function setUserId(int $user_id): static
+    public function setUser(?User $user): void
     {
-        $this->user_id = $user_id;
-
-        return $this;
+        $this->user = $user;
     }
 
     public function getLink(): ?string
@@ -105,5 +107,16 @@ class Documents
     {
         $this->space = $space;
     }
+
+    public function getPost(): ?Posts
+    {
+        return $this->post;
+    }
+
+    public function setPost(?Posts $post): void
+    {
+        $this->post = $post;
+    }
+
 
 }

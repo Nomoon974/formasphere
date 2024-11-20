@@ -21,6 +21,8 @@ class SpacesRepository extends ServiceEntityRepository
         parent::__construct($registry, Spaces::class);
     }
 
+
+
 //    /**
 //     * @return Spaces[] Returns an array of Spaces objects
 //     */

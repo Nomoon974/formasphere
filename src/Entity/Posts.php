@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints\Length;
 
 #[ORM\Entity(repositoryClass: PostsRepository::class)]
 class Posts
@@ -16,6 +17,12 @@ class Posts
     #[ORM\Column]
     private ?int $id = null;
 
+    #[Length(
+        min: 5,
+        max: 10000,
+        minMessage: "Votre commentaire doit contenir au moins {{ limit }} caractères.",
+        maxMessage: "Votre commentaire ne peut pas dépasser {{ limit }} caractères."
+    )]
     #[ORM\Column(type: Types::TEXT)]
     private ?string $text = null;
 
@@ -39,11 +46,15 @@ class Posts
     #[ORM\OneToMany(mappedBy: 'post', targetEntity: Comment::class, cascade: ['persist', 'remove'])]
     private Collection $comments;
 
+    #[ORM\OneToMany(mappedBy: 'post', targetEntity: Documents::class, cascade: ['persist', 'remove'])]
+    private Collection $documents;
+
     public function __construct()
     {
         $this->contents = new ArrayCollection();
         $this->comments = new ArrayCollection();
         $this->created_at = new \DateTime();
+        $this->documents = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -170,4 +181,33 @@ class Posts
 
         return $this;
     }
+
+    public function getDocuments(): Collection
+    {
+        return $this->documents;
+    }
+
+    public function addDocument(Documents $document): self
+    {
+        if (!$this->documents->contains($document)) {
+            $this->documents[] = $document;
+            $document->setPost($this);
+        }
+
+        return $this;
+    }
+
+    public function removeDocument(Documents $document): self
+    {
+        if ($this->documents->removeElement($document)) {
+            // Si le document était associé à ce post, on enlève cette association
+            if ($document->getPost() === $this) {
+                $document->setPost(null);
+            }
+        }
+
+        return $this;
+    }
+
+
 }

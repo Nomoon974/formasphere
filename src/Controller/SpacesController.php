@@ -86,29 +86,26 @@ class SpacesController extends AbstractController
     }
 
     #[Route('/space/{id}', name: 'space_views')]
-    public function view(Spaces $space, Security $security, PaginatorInterface $paginator, Request $request, EntityManagerInterface $entityManager): Response
-    {
-        $queryBuilder = $entityManager->getRepository(Posts::class)->createQueryBuilder('p')
-            ->where('p.space = :space')
-            ->setParameter('space', $space)
-            ->orderBy('p.created_at', 'DESC');
+    public function view(
+        Spaces $space,
+        Security $security,
+        PaginatorInterface $paginator,
+        Request $request,
+        PostsRepository $postsRepository
+    ): Response {
+        $queryBuilder = $postsRepository->findPostsBySpaceQueryBuilder($space);
 
         $pagination = $paginator->paginate(
-            $queryBuilder->getQuery(), /* query NOT result */
-            $request->query->getInt('page', 1), /* numéro de la page, 1 par défaut */
-            10 /* limit per page */
+            $queryBuilder->getQuery(),
+            $request->query->getInt('page', 1),
+            10
         );
 
         // Création des formulaires d'édition pour chaque post
         $editForms = [];
-        $commentsData = [];
         foreach ($pagination as $post) {
             $form = $this->createForm(PostsType::class, $post);
             $editForms[$post->getId()] = $form->createView();
-
-            // Récupérer les commentaires associés à ce post
-            $comments = $entityManager->getRepository(Comment::class)->findBy(['post' => $post]);
-            $commentsData[$post->getId()] = $comments;
         }
 
         return $this->render('spaces/space_view.html.twig', [
@@ -116,9 +113,8 @@ class SpacesController extends AbstractController
             'user' => $security->getUser(),
             'pagination' => $pagination,
             'editForms' => $editForms,
-            'commentsData' => $commentsData,
         ]);
     }
 
-}
 
+}

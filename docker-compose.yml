@@ -6,11 +6,16 @@ services:
       dockerfile: Dockerfile
     volumes:
       - .:/var/www/html
+      - ./config/php.ini:/usr/local/etc/php/php.ini
+      - /tmp:/tmp
     ports:
       - "8090:80"
     environment:
       DATABASE_URL: mysql://symfony:symfony@mysql:3306/formasphere
-
+    deploy:
+      resources:
+        limits:
+          memory: 512M
   mysql:
     container_name: mysql_1
     image: mysql:8.0
@@ -29,6 +34,7 @@ services:
     image: adminer
     ports:
       - "8081:8080"
+
 
 volumes:
   mysql-data:

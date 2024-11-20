@@ -1,4 +1,3 @@
-// deletePost.js
 export default function deletePost() {
     const deleteButtons = document.querySelectorAll('.delete-btn');
 

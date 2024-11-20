@@ -40,6 +40,15 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         $this->getEntityManager()->flush();
     }
 
+    public function findInactiveUsersSince(\DateTimeInterface $date)
+    {
+        return $this->createQueryBuilder('u')
+            ->where('u.lastLogin < :date OR u.lastLogin IS NULL')
+            ->setParameter('date', $date)
+            ->getQuery()
+            ->getResult();
+    }
+
 //    /**
 //     * @return User[] Returns an array of User objects
 //     */

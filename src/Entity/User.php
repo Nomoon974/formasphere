@@ -5,7 +5,7 @@ namespace App\Entity;
 use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
-use Doctrine\DBAL\Types\DateTimeImmutableType;
+use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
@@ -34,6 +34,11 @@ class User implements UserInterface, \Symfony\Component\Security\Core\User\Passw
     private ?string $password = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank(message: "Le nom est obligatoire.")]
+    #[Assert\Regex(
+        pattern: '/^[a-zA-ZÀ-ÿ\s\-]+$/',
+        message: "Le nom ne peut contenir que des lettres, des espaces et des traits d'union."
+    )]
     private ?string $name = null;
 
     #[ORM\Column(length: 255, nullable: true)]
@@ -57,6 +62,11 @@ class User implements UserInterface, \Symfony\Component\Security\Core\User\Passw
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: Report::class)]
     private Collection $reports;
 
+    #[Assert\NotBlank(message: "Le prénom est obligatoire.")]
+    #[Assert\Regex(
+        pattern: '/^[a-zA-ZÀ-ÿ\s\-]+$/',
+        message: "Le prénom ne peut contenir que des lettres, des espaces et des traits d'union."
+    )]
     #[ORM\Column(length: 255)]
     private ?string $firstname = null;
 
@@ -78,7 +88,7 @@ class User implements UserInterface, \Symfony\Component\Security\Core\User\Passw
     #[ORM\ManyToMany(targetEntity: Module::class, mappedBy: 'User')]
     private Collection $modules;
 
-    #[ORM\Column]
+    #[ORM\Column(type: Types::DATETIME_IMMUTABLE, nullable: true)]
     private ?\DateTimeImmutable $agreedToTermsAt = null;
 
     public function __construct()

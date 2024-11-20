@@ -13,11 +13,26 @@ RUN apt-get update && apt-get install -y \
         sudo \
         nano \
         libicu-dev \
+        curl \
+        xz-utils \
+        gnupg \
     && docker-php-ext-configure gd --with-freetype --with-jpeg \
     && docker-php-ext-install gd pdo pdo_mysql zip intl
 
-RUN curl -sL https://deb.nodesource.com/setup_14.x | bash - \
-    && apt-get install -y nodejs
+# Télécharge et installe Node.js et npm depuis les binaires officiels
+ENV NODE_VERSION=18.18.0
+RUN curl -fsSL https://nodejs.org/dist/v$NODE_VERSION/node-v$NODE_VERSION-linux-x64.tar.xz | tar -xJ \
+    && mv node-v$NODE_VERSION-linux-x64 /usr/local/nodejs \
+    && ln -s /usr/local/nodejs/bin/node /usr/local/bin/node \
+    && ln -s /usr/local/nodejs/bin/npm /usr/local/bin/npm \
+    && ln -s /usr/local/nodejs/bin/npx /usr/local/bin/npx
+
+# Installation de Yarn
+RUN npm install -g yarn
+
+# Création d'un lien symbolique pour Yarn
+RUN ln -s /usr/local/nodejs/lib/node_modules/yarn/bin/yarn /usr/local/bin/yarn \
+    && ln -s /usr/local/nodejs/lib/node_modules/yarn/bin/yarnpkg /usr/local/bin/yarnpkg
 
 # Active la réécriture d'URL pour Symfony
 RUN a2enmod rewrite

@@ -2,103 +2,86 @@
 
 {% block overview_content %}
     <div id="space_container">
-        {% for label, messages in app.flashes %}
-            <div class="flash-{{ label }}">
-                {% for message in messages %}
-                    <p>{{ message }}</p>
-                {% endfor %}
-            </div>
-        {% endfor %}
+        {% include 'components/search_bar.html.twig' %}
+
+        <!-- Boîte de composition de nouveau post -->
         <div id="compose_box">
-            <div class="profile-container">
-                <img class="profil-img" src="{{ asset(app.user.getAvatar) }}" alt="user profile picture">
-                <h4>{{ app.user.getFullName }}</h4>
-            </div>
-            <form id="postForm" method="POST" action="{{ path('save_post', {'space_id': space.id}) }}">
+{#            <div class="profile-container">#}
+{#                <img class="profil-img" src="{{ asset(app.user.getAvatar) }}" alt="Photo de profil de l'utilisateur">#}
+{#                <h4 class="post-author">{{ app.user.getFullName }}</h4>#}
+{#            </div>#}
+            <form id="postForm" method="POST" action="{{ path('save_post', {'space_id': space.id}) }}"
+                  enctype="multipart/form-data">
                 <div id="editor"></div>
-                <label for="content" style="display:none;">Editeur de texte</label>
+                <label for="content" style="display:none;">Éditeur de texte</label>
                 <textarea name="content" id="content" style="display:none;"></textarea>
-                <button type="submit" id="submit-button">Submit</button>
+
+                <!-- Container pour les boutons -->
+                <div class="button-container">
+                    <div class="left-buttons">
+                        <input type="file" name="document[]" id="document-input" style="display:none;" multiple accept=".pdf, .docx, .pptx, .xlsx, .zip, .txt, .py, .java, .cpp, .jpg, .jpeg, .png, .gif, .svg"/>
+                        <button type="button" class="add-doc-btn" aria-label="Ajouter un document">
+                            {{ ux_icon('carbon:document-add', {height: '24px', width: '24px'}) }}
+                        </button>
+                    </div>
+                    <!-- Affichage du fichier sélectionné -->
+                    <button type="submit" id="submit-button">Poster</button>
+                </div>
+                <ul id="file-list" class="file-list"></ul>
             </form>
         </div>
 
-        <hr>
-
+        <!-- Liste des posts -->
         {% for post in pagination %}
+
             <div class="container-post">
-                <div id="post_box">
+                <div class="post_box">
                     <div class="post-header">
                         <div class="container-profil-post">
-                            <img class="profil-img img-profil-post" src="{{ asset(post.user.avatar) }}" alt="avatar de {{ post.user.fullName }}">
-                            <h4>{{ post.user.fullName }}</h4>
+                            <img class="profil-img img-profil-post" src="{{ asset(post.user.avatar) }}"
+                                 alt="avatar de {{ post.user.fullName }}">
+                            <h4 class="post-author">{{ post.user.fullName }}</h4>
                         </div>
-                        <div class="post-actions">
-                            <button type="button" class="edit-btn" data-post-id="{{ post.id }}" style="background: none; border: none;">
-                                <img src="{{ asset('build/images/pencil.6bc05206.png') }}" alt="bouton edition de poste">
-                            </button>
-                            <button type="button" class="delete-btn" data-post-id="{{ post.id }}" style="background: none; border: none;">
-                                <img src="{{ asset('build/images/close.53e53dde.png') }}" alt="bouton suppression de poste">
-                            </button>
-                            <form id="delete-form-{{ post.id }}" action="{{ path('app_posts_delete', {'id': post.id}) }}" method="POST" style="display:none;">
-                                <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ post.id) }}">
-                            </form>
-                        </div>
+
                     </div>
                     <div class="post-text">
                         <p>{{ post.text|raw }}</p>
                     </div>
-                    <div class="post-edit-form" id="edit-post-form-container-{{ post.id }}" style="display: none;">
-                        {{ form_start(editForms[post.id], {
-                            'action': path('app_postEdit', {'id': post.id}),
-                            'method': 'POST',
-                            'attr': {'class': 'edit-form'}
-                        }) }}
-                        <div id="editor-{{ post.id }}" class="quill-editor"></div>
-                        <textarea style="display:none;" id="edit-content-{{ post.id }}" name="editContent">{{ post.text|raw }}</textarea>
-                        <div class="form-errors">
-                            {{ form_errors(editForms[post.id]) }}
-                        </div>
-                        <div class="edit-form-btn">
-                            <button type="submit" class="save-btn">Editer</button>
-                            <button type="button" class="cancel-btn">Annuler</button>
-                        </div>
-                        {{ form_end(editForms[post.id]) }}
+{#                    {% if editForms[post.id] is defined %}#}
+{#                        <div class="post-edit-form" id="edit-post-form-container-{{ post.id }}" style="display: none;">#}
+{#                            {{ form_start(editForms[post.id], {#}
+{#                                'action': path('app_postEdit', {'id': post.id}),#}
+{#                                'method': 'POST',#}
+{#                                'attr': {'class': 'edit-form'}#}
+{#                            }) }}#}
+{#                            <div id="editor-{{ post.id }}" class="quill-editor"></div>#}
+{#                            {{ form_widget(editForms[post.id].editContent) }}#}
+{#                            {{ form_end(editForms[post.id]) }}#}
+{#                        </div>#}
+{#                    {% else %}#}
+{#                        <p>Erreur : Formulaire d'édition non défini pour le post {{ post.id }}</p>#}
+{#                    {% endif %}#}
+                    <!-- Indicateur de nombre de documents -->
+                    <div class="post-details">
+                        {% if post.documents|length > 0 %}
+                            <span class="available-doc-nb">{{ ux_icon('icons8:document', {height: '18px', width: '18px'}) }} {{ post.documents|length }}  Documents disponible</span>
+                        {% else %}
+                            <span style="display: none;">Aucun document associé</span>
+                        {% endif %}
                     </div>
+                    <!-- Pied de page du post avec le lien vers la page détaillée -->
                     <div class="foot-post">
-                        <button class="read-more-btn">Lire plus</button>
-                        <small>{{ post.createdAt|date('d-m-Y H:i:s') }}</small>
-                        <small>#{{ post.id }}</small>
+                        <div class="left-info">
+                            <small>{{ post.createdAt|date('d/m/Y H:i:s') }}</small>
+                        </div>
+                        <a href="{{ path('app_posts_show', {'id': post.id}) }}" class="details-link">Voir les
+                            détails</a>
                     </div>
-                </div>
-                <div id="comment-section-{{ post.id }}" class="comment-section">
-                    <button type="button" class="toggle-comments-btn" data-post-id="{{ post.id }}" aria-expanded="false">
-                        ↓ Afficher les commentaires ↓
-                    </button>
-                    <div id="comments_{{ post.id }}" class="comments">
-                        {% for comment in commentsData[post.getId] %}
-                            <div class="comment">
-                                <div class="comment-header">
-                                    <img class="profil-img img-profil-comment" src="{{ asset(comment.user.avatar) }}" alt="avatar de {{ comment.user.fullName }}">
-                                    <div class="comment-meta">
-                                        <h5>{{ comment.user.fullName }}</h5>
-                                        <small>{{ comment.createdAt|date('d M Y') }}</small>
-                                    </div>
-                                </div>
-                                <p>{{ comment.text }}</p>
-                            </div>
-                        {% endfor %}
-                    </div>
-                </div>
-                <div id="post-comment">
-                    <form class="form-comment">
-                        <label for="comment" style="display:none;">Commentaire</label>
-                        <textarea name="comment" class="comment-input" placeholder="Entrez votre commentaire"></textarea>
-                        <button type="submit" class="icon-send-btn"><img class="icon-send" src="{{ asset('build/images/send-message.acb93f2a.png') }}" alt="bouton d'envoi de commentaire"></button>
-                    </form>
                 </div>
             </div>
         {% endfor %}
 
+        <!-- Pagination -->
         <div class="navigation active">
             {{ knp_pagination_render(pagination) }}
         </div>
@@ -108,4 +91,5 @@
 
 {% block javascript %}
 {{ parent() }}
+
 {% endblock %}

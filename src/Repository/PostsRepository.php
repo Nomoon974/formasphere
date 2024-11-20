@@ -5,6 +5,7 @@ namespace App\Repository;
 use App\Entity\Posts;
 use App\Entity\Spaces;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -34,6 +35,25 @@ class PostsRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult();
     }
+
+//    public function findPostsBySpaceQueryBuilder($space): QueryBuilder
+//    {
+//        return $this->createQueryBuilder('p')
+//            ->where('p.space = :space')
+//            ->setParameter('space', $space)
+//            ->orderBy('p.created_at', 'DESC');
+//    }
+
+    public function findPostsBySpaceQueryBuilder(Spaces $space): QueryBuilder
+    {
+        return $this->createQueryBuilder('p')
+            ->leftJoin('p.documents', 'd') // Charge la relation documents
+            ->addSelect('d')               // Ajoute les documents dans la requête pour chaque post
+            ->where('p.space = :space')
+            ->setParameter('space', $space)
+            ->orderBy('p.created_at', 'DESC');
+    }
+
 
     //    /**
     //     * @return Posts[] Returns an array of Posts objects

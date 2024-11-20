@@ -55,6 +55,10 @@ security:
     - { path: ^/overview, roles: ROLE_USER }
     - { path: ^/admin, role: ROLE_ADMIN }
 
+  # Redirige vers la page de connexion pour les utilisateurs non authentifiés
+  # accédant aux routes protégées
+  access_denied_url: app_login
+
 when@test:
   security:
     password_hashers:

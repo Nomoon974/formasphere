@@ -2,12 +2,14 @@ function adjustTextArea() {
     const commentInput = document.querySelector('.comment-input');
 
     if (commentInput) {
-        commentInput.addEventListener('input', function() {
-            console.log('Input event triggered'); // Vérifie que l'événement est bien attaché
-            this.style.height = 'auto'; // Réinitialise la hauteur pour recalculer la nouvelle hauteur
-            console.log('New height:', this.scrollHeight); // Vérifie la nouvelle hauteur calculée
-            this.style.height = this.scrollHeight + 'px'; // Définit la hauteur à la hauteur du contenu
-        });
+        // Redimensionne au clic (focus) et lors de la saisie (input)
+        const resizeTextArea = function () {
+            this.style.height = 'auto'; // Réinitialise la hauteur pour recalculer correctement
+            this.style.height = this.scrollHeight + 'px'; // Ajuste à la hauteur du contenu
+        };
+
+        commentInput.addEventListener('focus', resizeTextArea); // Quand l'utilisateur clique dans le champ
+        commentInput.addEventListener('input', resizeTextArea); // Quand l'utilisateur tape dans le champ
     }
 }
 

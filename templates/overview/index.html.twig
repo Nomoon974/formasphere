@@ -10,23 +10,26 @@
 
 {% block overview_content %}
 
+    <div class="spaces-list">
+        <div class="title">
+            {% block title %}Vos Espaces{% endblock %}
+        </div>
 
-
-    <div class="card-grid">
-        {% for space in spaces %}
-            <a href="{{ path('space_views', {'id': space.id}) }}">
-                {% include 'components/card.html.twig' with {
-                    'card_style': card_style,
-                    'theme_color': space.themeColor,
-                    'card_img': card_img,
-                    'card_descr': space.description,
-                    'card_title': space.spaceName,
-                    'image_url': space.space_img | default('build/images/professional_placeholder.081eab66.webp')
-                } %}
-            </a>
-        {% endfor %}
+        <div class="card-grid">
+            {% for space in spaces %}
+                <a href="{{ path('space_views', {'id': space.id}) }}">
+                    {% include 'components/card.html.twig' with {
+                        'card_style': card_style,
+                        'theme_color': space.themeColor,
+                        'card_img': card_img,
+                        'card_descr': space.description,
+                        'card_title': space.spaceName,
+                        'image_url': space.space_img | default('build/images/professional_placeholder.081eab66.webp')
+                    } %}
+                </a>
+            {% endfor %}
+        </div>
     </div>
-
 
 {% endblock %}
 

@@ -21,6 +21,8 @@ import adjustTextArea from "./controllers/adjustTextArea";
 import editPost from "./controllers/editPost";
 import deletePost from "./controllers/deletePost";
 import toggleComments from "./controllers/toggleComments";
+import closeFlashMessages from "./controllers/closeFlashMessage";
+import addDocBtn from "./controllers/addDocBtn";
 
 document.addEventListener('DOMContentLoaded', () => {
     initializeQuill();
@@ -28,5 +30,7 @@ document.addEventListener('DOMContentLoaded', () => {
     adjustTextArea();
     editPost();
     deletePost();
-    toggleComments();
+    // toggleComments();
+    closeFlashMessages();
+    addDocBtn();
 });

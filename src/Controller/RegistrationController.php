@@ -18,6 +18,7 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use SymfonyCasts\Bundle\VerifyEmail\Exception\VerifyEmailExceptionInterface;
+use DateTimeImmutable;
 
 class RegistrationController extends AbstractController
 {
@@ -36,6 +37,10 @@ class RegistrationController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            // Check if user agreed to terms
+            if ($form->get('agreeTerms')->getData()) {
+                $user->setAgreedToTermsAt(new \DateTimeImmutable());
+            }
             // encode the plain password
             $user->setPassword(
                 $userPasswordHasher->hashPassword(
