@@ -11,10 +11,8 @@ use App\Service\FileUploader;
 use App\Entity\Documents;
 use App\Repository\PostsRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\SecurityBundle\Security;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Mime\MimeTypes;
@@ -133,7 +131,6 @@ class PostsController extends AbstractController
             }
         }
 
-
         return $this->render('posts/show.html.twig', [
             'post' => $post,
             'comments' => $comments,
@@ -182,7 +179,7 @@ class PostsController extends AbstractController
         EntityManagerInterface $entityManager,
         Security $security,
         FileUploader $fileUploader,
-        int $space_id
+        int $space_id,
     ): Response {
         $user = $security->getUser();
         $space = $entityManager->getRepository(Spaces::class)->find($space_id);
@@ -207,11 +204,8 @@ class PostsController extends AbstractController
         $post->setUser($user);
         $post->setSpace($space);
         $post->setText(strip_tags($content));
-//        dd($post);
         $entityManager->persist($post);
         $entityManager->flush();
-
-
 
         // Gestion des fichiers
         if ($request->files->has('document')) {
@@ -258,6 +252,8 @@ class PostsController extends AbstractController
                         $document->setTimestamp(new \DateTime());
 
                         $entityManager->persist($document);
+                        $this->addFlash('info', 'Fichier ajouté avec succès.');
+
                     } catch (\Exception $e) {
                         $this->addFlash('error', 'Erreur lors du traitement du fichier : ' . $e->getMessage());
                     }

@@ -6,10 +6,6 @@
 
         <!-- Boîte de composition de nouveau post -->
         <div id="compose_box">
-{#            <div class="profile-container">#}
-{#                <img class="profil-img" src="{{ asset(app.user.getAvatar) }}" alt="Photo de profil de l'utilisateur">#}
-{#                <h4 class="post-author">{{ app.user.getFullName }}</h4>#}
-{#            </div>#}
             <form id="postForm" method="POST" action="{{ path('save_post', {'space_id': space.id}) }}"
                   enctype="multipart/form-data">
                 <div id="editor"></div>
@@ -47,20 +43,7 @@
                     <div class="post-text">
                         <p>{{ post.text|raw }}</p>
                     </div>
-{#                    {% if editForms[post.id] is defined %}#}
-{#                        <div class="post-edit-form" id="edit-post-form-container-{{ post.id }}" style="display: none;">#}
-{#                            {{ form_start(editForms[post.id], {#}
-{#                                'action': path('app_postEdit', {'id': post.id}),#}
-{#                                'method': 'POST',#}
-{#                                'attr': {'class': 'edit-form'}#}
-{#                            }) }}#}
-{#                            <div id="editor-{{ post.id }}" class="quill-editor"></div>#}
-{#                            {{ form_widget(editForms[post.id].editContent) }}#}
-{#                            {{ form_end(editForms[post.id]) }}#}
-{#                        </div>#}
-{#                    {% else %}#}
-{#                        <p>Erreur : Formulaire d'édition non défini pour le post {{ post.id }}</p>#}
-{#                    {% endif %}#}
+
                     <!-- Indicateur de nombre de documents -->
                     <div class="post-details">
                         {% if post.documents|length > 0 %}

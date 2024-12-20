@@ -949,7 +949,7 @@ label {
 .delete-doc-btn {
     all: unset !important;
     position: absolute;
-    top: -15px;
+    top: 0;
     right: -15px;
     cursor: pointer;
     display: flex;
@@ -1020,6 +1020,7 @@ label {
     text-overflow: ellipsis;
     white-space: nowrap;
     max-width: 90px;
+    display: block;
 }
 
 .available-doc-nb {

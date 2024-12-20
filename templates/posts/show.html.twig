@@ -77,10 +77,10 @@
                                 <span class="file-label">{{ doc.link|split('/')|last }}</span>
                             </a>
                             {% if app.user and app.user == post.user %}
-                                <form method="POST" action="{{ path('app_documents_delete', { 'id': doc.id }) }}" class="delete-doc-form">
+                                <form method="POST" action="{{ path('app_documents_delete', { 'id': doc.id, height: '20px', width: '20px' }) }}" class="delete-doc-form">
                                     <input type="hidden" name="_token" value="{{ csrf_token('delete_document' ~ doc.id) }}">
                                     <button type="submit" class="delete-doc-btn" aria-label="Supprimer ce document">
-                                        {{ ux_icon('lets-icons:close-ring', {height: '24px', width: '24px'}) }}
+                                        {{ ux_icon('lets-icons:close-ring', {height: '20px', width: '20px'}) }}
                                     </button>
                                 </form>
                             {% endif %}
