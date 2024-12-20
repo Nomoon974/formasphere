@@ -11,6 +11,7 @@ use App\Service\FileUploader;
 use App\Entity\Documents;
 use App\Repository\PostsRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -142,8 +143,6 @@ class PostsController extends AbstractController
         ]);
     }
 
-
-
     #[Route('/{id}', name: 'app_posts_delete', methods: ['POST'])]
     #[IsGranted('IS_AUTHENTICATED_FULLY')]
     public function delete(Request $request, Posts $post, EntityManagerInterface $entityManager, Security $security): Response
@@ -208,13 +207,20 @@ class PostsController extends AbstractController
         $post->setUser($user);
         $post->setSpace($space);
         $post->setText(strip_tags($content));
-
+//        dd($post);
         $entityManager->persist($post);
         $entityManager->flush();
 
+
+
         // Gestion des fichiers
         if ($request->files->has('document')) {
+
             $files = $request->files->get('document');
+            $files = $request->files->get('document');
+            if (!$files) {
+                $this->addFlash('error', 'Aucun fichier.');
+            }
             $mimeTypes = new MimeTypes(); // Instance de MimeTypes
 
             foreach ($files as $uploadedFile) {
@@ -262,40 +268,9 @@ class PostsController extends AbstractController
         }
         $entityManager->flush();
 
-        $this->addFlash('success', 'Post et fichiers créés avec succès.');
+        $this->addFlash('success', 'Poste créés avec succès.');
 
         return $this->redirectToRoute('space_views', ['id' => $space_id]);
     }
-
-//    #[Route('/post/edit/{id}', name: 'app_postEdit', methods: ['POST'])]
-//    #[IsGranted('IS_AUTHENTICATED_FULLY')]
-//    public function editPost(Request $request, Posts $post, EntityManagerInterface $entityManager, Security $security): JsonResponse
-//    {
-//        if ($post->getUser() !== $security->getUser() && !$this->isGranted('ROLE_ADMIN')) {
-//            return new JsonResponse(['message' => 'Permission refusée'], Response::HTTP_FORBIDDEN);
-//        }
-//
-//        $form = $this->createForm(PostsType::class, $post);
-//        $form->handleRequest($request);
-//
-//        if ($form->isSubmitted() && $form->isValid()) {
-//            $content = $form->get('editContent')->getData();
-//            $purifier = new \HTMLPurifier();
-//            $cleanHtml = $purifier->purify($content);
-//
-//            if (strlen(trim(strip_tags($cleanHtml))) < 10) {
-//                return new JsonResponse(['message' => 'Le contenu est trop court après nettoyage.'], Response::HTTP_BAD_REQUEST);
-//            }
-//
-//            $post->setText($cleanHtml);
-//            $post->setUpdatedAt(new \DateTime());
-//            $entityManager->flush();
-//
-//            return new JsonResponse(['message' => 'Le post a été modifié avec succès.', 'newContent' => $cleanHtml], Response::HTTP_OK);
-//        }
-//
-//        return new JsonResponse(['message' => 'Erreur de validation du formulaire.'], Response::HTTP_BAD_REQUEST);
-//    }
-
 
 }

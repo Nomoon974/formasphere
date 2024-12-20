@@ -5,7 +5,6 @@ function editPost() {
     const editButton = document.querySelector('.edit-btn');
 
     if (!editButton) {
-        console.error('Bouton "Edit" introuvable.');
         return;
     }
 

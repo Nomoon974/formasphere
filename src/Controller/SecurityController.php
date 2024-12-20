@@ -14,9 +14,9 @@ class SecurityController extends AbstractController
     #[isGranted('PUBLIC_ACCESS')]
     public function login(AuthenticationUtils $authenticationUtils): Response
     {
-        // if ($this->getUser()) {
-        //     return $this->redirectToRoute('target_path');
-        // }
+        if ($this->getUser()) {
+            return $this->redirectToRoute('app_overview');
+        }
 
         // get the login error if there is one
         $error = $authenticationUtils->getLastAuthenticationError();

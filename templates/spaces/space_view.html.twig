@@ -14,7 +14,7 @@
                   enctype="multipart/form-data">
                 <div id="editor"></div>
                 <label for="content" style="display:none;">Éditeur de texte</label>
-                <textarea name="content" id="content" style="display:none;"></textarea>
+                <textarea name="content" style="display:none;" id="content-textarea" ></textarea>
 
                 <!-- Container pour les boutons -->
                 <div class="button-container">
@@ -74,8 +74,7 @@
                         <div class="left-info">
                             <small>{{ post.createdAt|date('d/m/Y H:i:s') }}</small>
                         </div>
-                        <a href="{{ path('app_posts_show', {'id': post.id}) }}" class="details-link">Voir les
-                            détails</a>
+                        <div class="post-more-bloc"><a href="{{ path('app_posts_show', {'id': post.id}) }}" class="details-link">Consulter {{ ux_icon('material-symbols:arrow-right', {class: 'arrow-right'}) }}</a></div>
                     </div>
                 </div>
             </div>

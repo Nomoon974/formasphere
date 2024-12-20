@@ -3,6 +3,7 @@
     --light-grey: #cfcfcf;
     --cadetblue: #2b5d5f;
     --bg-color: white;
+    --link-accent-color: #109a10;
 
     --dark-mode-background-primary: #121212;
     --dark-mode-background-secondary: #1E1E1E;
@@ -32,6 +33,7 @@ h4 {
 body, html {
     font-family: "Sen", sans-serif;
     width: 100vw;
+    height: 100vh;
 }
 
 a {
@@ -59,6 +61,15 @@ small {
     font-size: large;
     font-family: "Oswald", sans-serif;
     text-transform: uppercase;
+}
+
+button.btn[disabled],
+button.btn:disabled {
+    cursor: not-allowed;
+    opacity: 0.6;
+    background-color: #f3f3f3 !important; /* Force une nouvelle couleur de background */
+    color: #999 !important; /* Force une nouvelle couleur de texte */
+    border-color: #ddd !important;
 }
 
 /****************** flash message *************/
@@ -151,7 +162,7 @@ small {
 /***************** overview-page *****************/
 
 #container-overview {
-    background-color: var(--light-grey);
+    background-color: var(--bg-color);
     width: 100%;
     height: 100vh;
     display: grid;
@@ -168,11 +179,12 @@ small {
     grid-area: jj;
     grid-template-areas: "logo bar";
     grid-template-columns: 300px 1fr;
+    padding-top: 10px;
 
     width: 100%;
 
     background-color: var(--bg-color);
-    border-bottom: solid 1px var(--light-grey);
+    /*border-bottom: solid 1px var(--light-grey);*/
     position: fixed;
     top: 0;
     left: 0;
@@ -186,10 +198,14 @@ small {
     display: grid;
 
     grid-template-areas: "men main";
-    grid-template-columns: 350px 1fr;
+    grid-template-columns: 280px 1fr;
     grid-template-rows: 1fr;
     grid-area: cc;
-    background-color: var(--light-grey);
+    background-color: var(--bg-color);
+}
+
+.logo_class {
+    margin-bottom: 10px;
 }
 
 .logo-container {
@@ -217,6 +233,26 @@ small {
     font-weight: 300;
     font-style: normal;
     text-transform: uppercase;
+}
+
+.preferenceBtn {
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    transition: transform 0.5s ease-in-out;
+}
+
+#cookie-settings-menu svg {
+    display: block;
+    margin: auto;
+    width: 20px;
+    height: 20px;
+    color: var(--cadetblue);
+}
+
+.preferenceBtn:hover > svg {
+    transform: rotate(180deg);
+    transition: transform 0.5s ease-in-out;
 }
 
 .content-header {
@@ -285,37 +321,26 @@ small {
     background-color: #ffffff;
     border-color: var(--light-grey);
     padding: 0 15px 0 15px;
-    border-right: 1px solid var(--light-grey);
     text-overflow: ellipsis;
     word-wrap: break-word;
     margin-top: 60px;
-
-
-    /* Retirez les propriétés suivantes */
-    /* width: inherit; */
-    /* max-width: 20svw; */
-    /* position: fixed;*/
-    /* top: 60px; */
-    /* left: 0; */
-    /* bottom: 0; */
-    /* overflow-y: auto; */
 
     grid-area: men;
 }
 
 .content-main {
     background-color: #ffffff;
-    padding: 80px 0 0 30px;
+    padding: 30px 0 0 30px;
     grid-area: main;
     width: 100%;
 
-
-    /*position: fixed;*/
     height: 100vh;
-    /*left: 250px;*/
     bottom: 0;
-    /*right: 0; !* Prend tout l'espace restant *!*/
     overflow-y: auto;
+    border: 2px solid rgba(128, 128, 128, 0.10);
+    border-top-left-radius: 20px;
+    max-height: calc(100vh - 80px);
+    margin-top: 80px;
 }
 
 .content-main p {
@@ -326,7 +351,10 @@ small {
 .container-form-login {
     display: flex;
     align-self: center;
+    margin-top: 30px !important;
 }
+
+
 
 /********************** card *******************************/
 
@@ -459,8 +487,8 @@ small {
 }
 
 .logo-container-login-page img {
-    width: 180px;
-    height: 180px;
+    width: 120px;
+    height: 120px;
 }
 
 .container-form-login {
@@ -470,6 +498,10 @@ small {
     display: flex;
     justify-content: center;
     align-items: center;
+}
+
+#logout {
+    color: var(--dark-mode-error-primary);
 }
 
 .container-form-login > form {
@@ -541,60 +573,49 @@ input[type="password"]:-webkit-autofill:focus {
 }
 
 .checkbox label {
-    margin-left: 0.5rem; /* Espacement entre la case à cocher et le texte */
+    margin-left: 0.5rem;
 }
 
-/* Styles pour le bouton de soumission */
 button[type="submit"] {
-    background-color: var(--cadetblue); /* Couleur de fond bleu */
-    color: white; /* Texte blanc */
-    border: none; /* Aucune bordure pour le bouton */
-    padding: 10px 15px; /* Espacement intérieur du bouton */
-    cursor: pointer; /* Style du curseur en tant que pointeur */
-    transition: background-color 0.3s ease; /* Transition fluide pour le survol */
+    background-color: var(--cadetblue);
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
 }
 
 button[type="submit"]:hover {
-    background-color: #0056b3; /* Couleur de fond plus foncée au survol */
+    background-color: #0056b3;
 }
 
-/* Styles pour le container de la case à cocher */
 .checkbox {
-    margin-bottom: 1rem; /* Espacement en bas du container de la case à cocher */
+    margin-bottom: 1rem;
 }
 
-/* Styles spécifiques pour le label de la case à cocher pour un alignement correct */
 .checkbox label {
-    display: block; /* Affichage en bloc */
-    cursor: pointer; /* Pointeur au survol */
+    display: block;
+    cursor: pointer;
 }
 
-/* Cache l'input hidden pour le token CSRF */
 input[type="hidden"] {
-    display: none; /* Cache cet élément */
+    display: none;
 }
 
-/* Styles pour les labels */
 label {
-    display: block; /* Fait en sorte que le label prenne toute la largeur de son container */
-    margin-bottom: 0.25rem; /* Petit espacement en dessous du label */
+    display: block;
+    margin-bottom: 0.25rem;
 }
 
 /******************* spaces **************************/
 
 #space_container {
-    display: flex; /* Utilise flexbox pour une meilleure gestion des enfants */
-    flex-direction: column; /* Organise les enfants en colonne */
-    justify-content: flex-start; /* Aligne les enfants en haut du conteneur */
-    align-items: center; /* Centre les enfants horizontalement */
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
     row-gap: 4vh;
-    /*padding-top: 40px;*/
 
-    /*position: fixed;*/
-    /*height: 100%;*/
-    /*left: 20vw; !* Commence là où le menu se termine *!*/
-    /*bottom: 0;*/
-    /*right: 0; !* Prend tout l'espace restant *!*/
     overflow-y: auto;
     overflow-x: hidden; /* Empêche le défilement horizontal */
 }
@@ -618,12 +639,18 @@ label {
     z-index: 20;
 }
 
+
+#mysearch:focus {
+    outline: none;
+    border: 2px solid var(--cadetblue) !important;
+}
+
 #editor-container {
     width: 100%;
 }
 
 #editor {
-    min-height: 150px; /* Hauteur initiale */
+    min-height: 150px;
 }
 
 .ql-blank, .ql-editor {
@@ -632,33 +659,31 @@ label {
     background-color: white;
 }
 
-/* suppresion barre grise inconnu dans la zone de texte */
 .ql-editor p,
 .ql-editor div,
 .ql-editor span {
-    border-left: none !important; /* Supprime la bordure gauche */
-    margin: 0; /* Supprime les marges */
-    padding: 0; /* Supprime les paddings */
+    border-left: none !important;
+    margin: 0;
+    padding: 0;
     width: 100%;
 }
 
-/* Cible spécifiquement la barre grise */
 .ql-editor .ql-blank::before {
-    border-left: none !important; /* Supprime la bordure gauche des éléments vides */
-    content: none !important; /* Supprime le contenu des éléments vides */
+    border-left: none !important;
+    content: none !important;
 }
 
 .button-container {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-top: 10px; /* Ajustez la marge supérieure selon vos besoins */
+    margin-top: 10px;
 }
 
 .left-buttons {
     display: flex;
     align-items: center;
-    gap: 10px; /* Espace entre les boutons de gauche */
+    gap: 10px;
 }
 
 .add-doc-btn {
@@ -709,7 +734,7 @@ label {
 }
 
 #compose_box {
-    padding: 10px;
+    padding: 10px 10px 0 10px;
     width: 45vw;
     height: max-content;
     border: 1px solid var(--light-grey);
@@ -717,6 +742,7 @@ label {
     -webkit-border-radius: 5px;
     -moz-border-radius: 5px;
     background-color: #fafafa;
+    transition: height 0.2s ease;
 }
 
 #compose_box .profile-container {
@@ -766,7 +792,7 @@ label {
     max-height: 100px;
     overflow: hidden;
     text-overflow: ellipsis;
-    margin: 25px 0 25px 0;
+    margin: 30px 0 30px 0;
 }
 
 .post-text p {
@@ -780,6 +806,25 @@ label {
 
 .post-text.expanded {
     max-height: none !important; /* Supprime la limitation de hauteur */
+}
+
+.post-more-bloc a {
+    display: inline-flex;
+    align-items: center;
+    text-decoration: none;
+    color: inherit;
+}
+
+.post-more-bloc a .arrow-right {
+    width: 24px;
+    height: 24px;
+    display: inline-block;
+}
+
+.post-more-bloc {
+    display: flex;
+    align-items: center;
+    justify-content: start;
 }
 
 .read-more-btn {
@@ -901,7 +946,23 @@ label {
     transform-origin: 30% 5%;
 }
 
+.delete-doc-btn {
+    all: unset !important;
+    position: absolute;
+    top: -15px;
+    right: -15px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.delete-doc-btn * {
+    color: red;
+}
+
 .post-file {
+    position: relative;
     width: 110px;
     height: 65px;
     display: flex;
@@ -947,7 +1008,7 @@ label {
 }
 
 .post-file .ux-icon {
-    font-size: 24px; /* Taille de l'icône principale */
+    font-size: 24px;
     margin-bottom: 8px;
     color: #007bff;
 }
@@ -980,10 +1041,11 @@ label {
 
 .details-link {
     margin-left: auto;
+    color: var(--link-accent-color);
 }
 
 .details-link:visited {
-    color: #0d6efd;
+    color: var(--cadetblue);
 }
 
 
@@ -1044,8 +1106,8 @@ label {
     margin-bottom: 12px;
     margin-left: 42px;
     text-overflow: ellipsis;
-    border-left: none !important; /* Supprime la bordure gauche des éléments vides */
-    flex-grow: 1;  /* Assure que le texte prend toute la largeur disponible */
+    border-left: none !important;
+    flex-grow: 1;
     overflow-wrap: break-word;
     padding-right: 15px;
     box-sizing: border-box;
@@ -1059,7 +1121,7 @@ label {
 }
 
 .img-profil-comment {
-    width: 28px;  /* Ajustez la taille selon vos besoins */
+    width: 28px;
     height: 28px;
     border-radius: 50%;
     margin-right: 10px;
@@ -1111,8 +1173,8 @@ label {
     padding: 5px;
     border: 0;
     border-bottom: 1px solid cadetblue;
-    resize: none; /* Empêche l'utilisateur de redimensionner manuellement le textarea */
-    overflow: hidden; /* Cache les débordements */
+    resize: none;
+    overflow: hidden;
     transition: border-color 0.3s;
     font-size: 1.1rem;
     line-height: 1.4;
@@ -1139,8 +1201,8 @@ label {
 }
 
 .comment-input:focus {
-    border-bottom-color: #007BFF; /* Change la couleur de la bordure inférieure au focus */
-    outline: none; /* Supprime le contour par défaut du navigateur */
+    border-bottom-color: #007BFF;
+    outline: none;
 }
 
 .icon-send {
@@ -1193,7 +1255,6 @@ label {
     }
 }
 
-/* Application de l'animation sur hover */
 .icon-send:hover {
     animation: move 1s infinite;
 }
@@ -1254,7 +1315,6 @@ label {
 
 /******************* pagination *********************/
 
-/* Ajoutez ceci dans votre fichier CSS */
 .navigation {
     text-align: center;
 }
@@ -1289,28 +1349,26 @@ label {
     border-color: #ddd;
 }
 
-/* Styles pour la pagination */
 .pagination a {
-    border: 1px solid var(--light-grey); /* Utilisez une variable CSS ou remplacez par une couleur spécifique */
-    padding: 8px 12px; /* Ajustez selon les besoins pour le padding */
-    border-radius: 4px; /* Rayon des coins arrondis */
-    text-decoration: none; /* Supprime le soulignement par défaut des liens */
-    color: black; /* Couleur du texte, ajustez selon vos variables ou préférences */
-    margin-right: 5px; /* Espacement entre les liens */
-    transition: background-color 0.3s, color 0.3s; /* Transition douce pour hover */
+    border: 1px solid var(--light-grey);
+    padding: 8px 12px;
+    border-radius: 4px;
+    text-decoration: none;
+    color: black;
+    margin-right: 5px;
+    transition: background-color 0.3s, color 0.3s;
 }
 
-/* Effet au survol */
 .pagination a:hover {
-    background-color: var(--light-grey); /* Couleur de fond au survol */
-    color: black; /* Couleur de texte au survol */
+    background-color: var(--light-grey);
+    color: black;
 }
 
-/* Style pour le lien actif de la page courante */
+
 .pagination .active a {
-    background-color: white; /* Couleur de fond pour la page active */
-    color: white; /* Couleur de texte pour la page active */
-    border-color: white; /* Bordure pour la page active */
+    background-color: white;
+    color: white;
+    border-color: white;
 }
 
 .current {
@@ -1394,14 +1452,14 @@ label {
     input[type="checkbox"],
     button[type="submit"] {
         background-color: white;
-        padding: 0.5rem; /* Espacement intérieur */
-        margin-bottom: 0.5rem; /* Espacement extérieur en bas */
+        padding: 0.5rem;
+        margin-bottom: 0.5rem;
         margin-left: auto;
         margin-right: auto;
-        display: block; /* Faire en sorte que les éléments prennent toute la largeur disponible */
-        width: 100%; /* Assurer une largeur complète */
+        display: block;
+        width: 100%;
         height: 50px;
-        box-sizing: border-box; /* Inclure la bordure et le padding dans la largeur totale */
+        box-sizing: border-box;
         border-radius: 5px;
         -webkit-border-radius: 5px;
         -moz-border-radius: 5px;

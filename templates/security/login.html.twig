@@ -16,7 +16,7 @@
 
             {% if app.user %}
                 <div class="mb-3">
-                    You are logged in as {{ app.user.userIdentifier }}, <a id="logout" href="{{ path('app_logout') }}">Logout</a>
+                    Vous êtes connecté en tant que <span style="font-weight: bold">{{ app.user.userIdentifier }}</span>, <a id="logout" href="{{ path('app_logout') }}">Déconnexion</a>
                 </div>
             {% endif %}
 
@@ -34,13 +34,20 @@
 
             <div class="checkbox mb-2">
                 <label>
-                    <div>Remember me</div><div><input type="checkbox" name="_remember_me"></div>
+                    <div>Se souvenir de moi</div><div><input type="checkbox" name="_remember_me"></div>
                 </label>
             </div>
 
-            <button class="btn btn-lg btn-primary" type="submit">
-                Sign in
-            </button>
+            {% if app.user %}
+                <button class="btn btn-lg btn-primary" type="submit" disabled>
+                    Sign in
+                </button>
+             {% else %}
+                <button class="btn btn-lg btn-primary" type="submit">
+                    Sign in
+                </button>
+            {% endif %}
+
         </form>
     </div>
 

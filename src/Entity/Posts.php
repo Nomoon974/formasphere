@@ -17,12 +17,6 @@ class Posts
     #[ORM\Column]
     private ?int $id = null;
 
-    #[Length(
-        min: 5,
-        max: 10000,
-        minMessage: "Votre commentaire doit contenir au moins {{ limit }} caractères.",
-        maxMessage: "Votre commentaire ne peut pas dépasser {{ limit }} caractères."
-    )]
     #[ORM\Column(type: Types::TEXT)]
     private ?string $text = null;
 

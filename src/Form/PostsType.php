@@ -36,7 +36,7 @@ class PostsType extends AbstractType
                         'message' => 'Le contenu ne peut pas être vide.',
                     ]),
                     new Length([
-                        'min' => 10,
+                        'min' => 5,
                     ]),
                     new Callback(function ($object, ExecutionContextInterface $context) {
                         if (trim(strip_tags($object)) === '') {
@@ -93,7 +93,6 @@ class PostsType extends AbstractType
                 'data' => $options['data']->getSpace()->getId(),
             ])
             ->add('document', FileType::class, [
-                'label' => 'Document',
                 'mapped' => false, // pour que ce champ ne soit pas automatiquement lié à l’entité Posts
                 'multiple' => true, // autorise l'upload multiple
                 'required' => false,

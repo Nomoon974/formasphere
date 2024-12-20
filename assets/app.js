@@ -23,6 +23,7 @@ import deletePost from "./controllers/deletePost";
 import toggleComments from "./controllers/toggleComments";
 import closeFlashMessages from "./controllers/closeFlashMessage";
 import addDocBtn from "./controllers/addDocBtn";
+import settingsIcon from "./controllers/settingsIcon";
 
 document.addEventListener('DOMContentLoaded', () => {
     initializeQuill();
@@ -33,4 +34,5 @@ document.addEventListener('DOMContentLoaded', () => {
     // toggleComments();
     closeFlashMessages();
     addDocBtn();
+    settingsIcon();
 });

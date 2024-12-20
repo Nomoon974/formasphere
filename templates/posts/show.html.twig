@@ -44,7 +44,7 @@
                             }) }}
                             <div id="editor-{{ post.id }}" class="quill-editor"></div>
                             {{ form_widget(editForm.editContent) }}
-                            <textarea id="edit-content-{{ post.id }}" >{{ post.text|raw }}</textarea>
+                            <textarea id="edit-content-{{ post.id }}" style="display:none;">{{ post.text|raw }}</textarea>
                             <div class="form-errors">
                                 {{ form_errors(editForm.editContent) }}
                             </div>
@@ -63,22 +63,31 @@
                 <!-- Afficher la liste des fichiers -->
                 <div class="post-file-list">
                     {% if app.user and app.user == post.user %}
-                    <div class="left-buttons">
-                        <input type="file" name="document[]" id="document-input" style="display:none;" multiple accept=".pdf, .docx, .pptx, .xlsx, .zip, .txt, .py, .java, .cpp, .jpg, .jpeg, .png, .gif, .svg"/>
-                        <button type="button" class="add-doc-btn" aria-label="Ajouter un document">
-                            {{ ux_icon('carbon:document-add', {height: '24px', width: '24px'}) }}
-                        </button>
-                    </div>
+                        <div class="left-buttons">
+                            <input type="file" name="document[]" id="document-input" style="display:none;" multiple accept=".pdf, .docx, .pptx, .xlsx, .zip, .txt, .py, .java, .cpp, .jpg, .jpeg, .png, .gif, .svg"/>
+                            <button type="button" class="add-doc-btn" aria-label="Ajouter un document">
+                                {{ ux_icon('carbon:document-add', {height: '24px', width: '24px'}) }}
+                            </button>
+                        </div>
                     {% endif %}
                     {% for doc in documents %}
-                        <a href="{{ asset(doc.link) }}">
-                            <div class="post-file">
+                        <div class="post-file">
+                            <a href="{{ asset(doc.link) }}">
                                 {{ ux_icon('carbon:document-download', {height: '24px', width: '24px'}) }}
                                 <span class="file-label">{{ doc.link|split('/')|last }}</span>
-                            </div>
-                        </a>
+                            </a>
+                            {% if app.user and app.user == post.user %}
+                                <form method="POST" action="{{ path('app_documents_delete', { 'id': doc.id }) }}" class="delete-doc-form">
+                                    <input type="hidden" name="_token" value="{{ csrf_token('delete_document' ~ doc.id) }}">
+                                    <button type="submit" class="delete-doc-btn" aria-label="Supprimer ce document">
+                                        {{ ux_icon('lets-icons:close-ring', {height: '24px', width: '24px'}) }}
+                                    </button>
+                                </form>
+                            {% endif %}
+                        </div>
                     {% endfor %}
                 </div>
+
                 <small>{{ post.createdAt|date('d/m/Y H:i:s') }}</small>
                 <!-- Afficher les commentaires -->
                 <h3 class="comments-title">Commentaires</h3>
