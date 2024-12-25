@@ -1,50 +1,54 @@
 {% extends './layout/base.html.twig' %}
 
-{% block title %}User{% endblock %}
+{% block title %}Profil utilisateur{% endblock %}
 
 {% block body %}
-    <h1>User</h1>
+    <div class="page-profil-container">
+        <h1>Profil de {{ user.firstname }} {{ user.name }}</h1>
 
-    <table class="table">
-        <tbody>
+        <!-- Avatar utilisateur -->
+        <div class="profil-avatar">
+            <img src="{{ asset(user.avatar ?? 'uploads/default-avatar.png') }}" alt="Avatar de {{ user.firstname }}">
+            <div class="edit-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24">
+                    <g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
+                        <path d="m16.475 5.408l2.117 2.117m-.756-3.982L12.109 9.27a2.1 2.1 0 0 0-.58 1.082L11 13l2.648-.53c.41-.082.786-.283 1.082-.579l5.727-5.727a1.853 1.853 0 1 0-2.621-2.621" />
+                        <path d="M19 15v3a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h3" />
+                    </g>
+                </svg>
+            </div>
+        </div>
+
+        <!-- Informations principales dans une table -->
+        <table class="table">
+            <tbody>
             <tr>
                 <th>Email</th>
                 <td>{{ user.email }}</td>
             </tr>
             <tr>
-                <th>Roles</th>
-                <td>{{ user.roles ? user.roles|json_encode : '' }}</td>
-            </tr>
-            <tr>
-                <th>Password</th>
-                <td>{{ user.password }}</td>
-            </tr>
-            <tr>
-                <th>Name</th>
+                <th>Nom</th>
                 <td>{{ user.name }}</td>
             </tr>
             <tr>
-                <th>Avatar</th>
-                <td>{{ user.avatar }}</td>
+                <th>Prénom</th>
+                <td>{{ user.firstname }}</td>
             </tr>
             <tr>
-                <th>Last_login</th>
-                <td>{{ user.lastLogin ? user.lastLogin|date('Y-m-d H:i:s') : '' }}</td>
+                <th>Dernière connexion</th>
+                <td>{{ user.lastLogin ? user.lastLogin|date('d/m/Y H:i') : 'Jamais connecté' }}</td>
             </tr>
             <tr>
                 <th>Status</th>
-                <td>{{ user.status }}</td>
+                <td>{{ user.status ? 'Actif' : 'Inactif' }}</td>
             </tr>
-            <tr>
-                <th>Firstname</th>
-                <td>{{ user.firstname }}</td>
-            </tr>
-        </tbody>
-    </table>
+            </tbody>
+        </table>
 
-    <a href="{{ path('app_user_index') }}">back to list</a>
-
-    <a href="{{ path('app_user_edit', {'id': user.id}) }}">edit</a>
-
-    {{ include('user/_delete_form.html.twig') }}
+        <!-- Boutons d'action -->
+        <div class="btn-container">
+            <a href="{{ path('app_overview') }}">Retour</a>
+            {{ include('user/_delete_form.html.twig') }}
+        </div>
+    </div>
 {% endblock %}

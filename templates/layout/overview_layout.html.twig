@@ -15,8 +15,8 @@
             {% include 'components/logo.html.twig' with {'logo_class': logo_class, 'logo_title': logo_title} %}
             <div class="content-header">
                 <div class="notification-icon">
-                    <img class="icon-bell" src="{{ asset('build/images/new-notification.png')}}" alt="notification-icon">
-{#                    {{ ux_icon('ph:bell', {height: '24px', width: '24px',}) }}#}
+                    <img class="icon-bell" src="{{ asset('build/images/new-notification.png') }}"
+                         alt="notification-icon">
                     <div class="notification-badge"></div>
                 </div>
                 {% block hearder %}
@@ -25,6 +25,7 @@
                             <a style="color: red" href="{{ path('admin') }}">Dashboard Admin</a>
                         {% endif %}
                         <p>Bonjour, {{ app.user.getFullName }}!</p>
+
                         <a href="{{ path('app_user_show', {'id': app.user.id}) }}">
                             <img class="profil-img" src="{{ asset(app.user.getAvatar) }}" alt="user profile picture">
                         </a>

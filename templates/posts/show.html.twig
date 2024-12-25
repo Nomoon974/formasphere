@@ -17,21 +17,17 @@
 
                         {% if app.user and app.user == post.user %}
                             <div class="post-actions">
-                                <button type="button" class="delete-btn" data-post-id="{{ post.id }}"
-                                        style="background: none; border: none;">
-                                    <img src="{{ asset('build/images/close.53e53dde.png') }}"
-                                         alt="Bouton suppression de post">
-                                </button>
+                                <delete-post
+                                        :post-id="{{ post.id }}"
+                                        :token="{{ csrf_token('delete' ~ post.id)|json_encode }}"
+                                        :delete-action-url="{{ path('app_posts_delete', {'id': post.id})|json_encode }}"
+                                        :image-url="{{ asset('build/images/close.53e53dde.png')|json_encode }}"
+                                ></delete-post>
                                 <button type="button" class="edit-btn" data-post-id="{{ post.id }}"
                                         style="background: none; border: none;">
                                     <img src="{{ asset('build/images/pencil.6bc05206.png') }}"
                                          alt="Bouton édition de post">
                                 </button>
-                                <form id="delete-form-{{ post.id }}"
-                                      action="{{ path('app_posts_delete', {'id': post.id}) }}" method="POST"
-                                      style="display:none;">
-                                    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ post.id) }}">
-                                </form>
                             </div>
                         {% endif %}
                     </div>
@@ -55,7 +51,7 @@
                             {{ form_end(editForm) }}
                         </div>
                     {% endif %}
-                    <div class="post-text">
+                    <div class="post-text-show" style="display: none;">
                         <p>{{ post.text|raw }}</p>
                     </div>
                 </div>

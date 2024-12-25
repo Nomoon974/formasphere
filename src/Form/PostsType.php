@@ -3,9 +3,6 @@
 namespace App\Form;
 
 use App\Entity\Posts;
-use App\Entity\Spaces;
-use App\Entity\User;
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
@@ -16,6 +13,7 @@ use Symfony\Component\Validator\Constraints\Callback;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
+use App\Service\MimeTypesService;
 
 class PostsType extends AbstractType
 {
@@ -100,7 +98,10 @@ class PostsType extends AbstractType
                     'accept' => '.pdf, .docx, .pptx, .xlsx, .zip, .txt, .py, .java, .cpp, .jpg, .jpeg, .png, .gif, .svg',
                     'style' => 'display:none',
                     'id' => 'document-input'
-                ]
+                ],
+                'label_attr' => [
+                    'class' => 'hidden-label',
+                    ],
             ]);
     }
 

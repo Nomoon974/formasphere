@@ -18,7 +18,7 @@ class Documents
     #[ORM\JoinColumn(nullable: false)]
     private ?User $user = null;
 
-    #[ORM\Column(length: 50)]
+    #[ORM\Column(length: 255)]
     private ?string $link = null;
 
     #[ORM\Column(length: 50)]

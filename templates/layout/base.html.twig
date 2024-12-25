@@ -20,13 +20,16 @@
 <body>
 {% include 'components/flashMessage.html.twig' %}
 
-{% block body %}
+<div id="vue-app">
+    {% block body %}
 
 
-{% endblock %}
+    {% endblock %}
+</div>
 </body>
 <div id="cookie-settings-menu" style="position: fixed; bottom: 20px; left: 20px; z-index: 1000;">
-    <button type="button" class="preferenceBtn" data-bs-toggle="tooltip" data-bs-placement="left" title="Gérer les préférences cookies">
+    <button type="button" class="preferenceBtn" data-bs-toggle="tooltip" data-bs-placement="left"
+            title="Gérer les préférences cookies">
         {{ ux_icon('ant-design:setting-outlined') }}
     </button>
 
@@ -78,4 +81,4 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
 <!-- Below is the link that users can use to open Preferences Center to change their preferences. Do not modify the ID parameter. Place it where appropriate, style it as needed. -->
 
-{#<a href="#" id="open_preferences_center">Modifier les paramètres de cookies</a>#}
+{# <a href="#" id="open_preferences_center">Modifier les paramètres de cookies</a> #}

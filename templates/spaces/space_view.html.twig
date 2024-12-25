@@ -3,33 +3,11 @@
 {% block overview_content %}
     <div id="space_container">
         {% include 'components/search_bar.html.twig' %}
-
         <!-- Boîte de composition de nouveau post -->
-        <div id="compose_box">
-            <form id="postForm" method="POST" action="{{ path('save_post', {'space_id': space.id}) }}"
-                  enctype="multipart/form-data">
-                <div id="editor"></div>
-                <label for="content" style="display:none;">Éditeur de texte</label>
-                <textarea name="content" style="display:none;" id="content-textarea" ></textarea>
-
-                <!-- Container pour les boutons -->
-                <div class="button-container">
-                    <div class="left-buttons">
-                        <input type="file" name="document[]" id="document-input" style="display:none;" multiple accept=".pdf, .docx, .pptx, .xlsx, .zip, .txt, .py, .java, .cpp, .jpg, .jpeg, .png, .gif, .svg"/>
-                        <button type="button" class="add-doc-btn" aria-label="Ajouter un document">
-                            {{ ux_icon('carbon:document-add', {height: '24px', width: '24px'}) }}
-                        </button>
-                    </div>
-                    <!-- Affichage du fichier sélectionné -->
-                    <button type="submit" id="submit-button">Poster</button>
-                </div>
-                <ul id="file-list" class="file-list"></ul>
-            </form>
-        </div>
+        <quil-editor :form-action="'{{ path('save_post', {'space_id': space.id}) }}'"></quil-editor>
 
         <!-- Liste des posts -->
         {% for post in pagination %}
-
             <div class="container-post">
                 <div class="post_box">
                     <div class="post-header">
@@ -47,9 +25,7 @@
                     <!-- Indicateur de nombre de documents -->
                     <div class="post-details">
                         {% if post.documents|length > 0 %}
-                            <span class="available-doc-nb">{{ ux_icon('icons8:document', {height: '18px', width: '18px'}) }} {{ post.documents|length }}  Documents disponible</span>
-                        {% else %}
-                            <span style="display: none;">Aucun document associé</span>
+                            <span class="available-doc-nb">{{ ux_icon('icons8:document', {height: '18px', width: '18px'}) }} {{ post.documents|length }}</span>
                         {% endif %}
                     </div>
                     <!-- Pied de page du post avec le lien vers la page détaillée -->
@@ -57,7 +33,7 @@
                         <div class="left-info">
                             <small>{{ post.createdAt|date('d/m/Y H:i:s') }}</small>
                         </div>
-                        <div class="post-more-bloc"><a href="{{ path('app_posts_show', {'id': post.id}) }}" class="details-link">Consulter {{ ux_icon('material-symbols:arrow-right', {class: 'arrow-right'}) }}</a></div>
+                        <div class="post-more-bloc"><a href="{{ path('app_posts_show', {'id': post.id}) }}" class="details-link" title="Consulter le post">Consulter {{ ux_icon('material-symbols:arrow-right', {class: 'arrow-right'}) }}</a></div>
                     </div>
                 </div>
             </div>

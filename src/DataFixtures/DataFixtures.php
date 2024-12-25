@@ -46,6 +46,12 @@ class DataFixtures extends Fixture
             $user->setPassword($this->passwordHasher->hashPassword($user, $plainPassword));
             $user->setStatus("test");
             $user->setRoles(['ROLE_ADMIN']);
+            for ($s = 0; $s < rand(1, 3); $s++) {
+                $spaceIndex = rand(0, 4); // Index des espaces dans les références
+                if ($this->hasReference('space-' . $spaceIndex)) {
+                    $user->addSpace($this->getReference('space-' . $spaceIndex)); // Association User <-> Space
+                }
+            }
             $manager->persist($user);
             $this->addReference('user-' . $j, $user);
         }

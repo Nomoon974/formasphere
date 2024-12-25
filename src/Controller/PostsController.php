@@ -10,7 +10,10 @@ use App\Form\PostsType;
 use App\Service\FileUploader;
 use App\Entity\Documents;
 use App\Repository\PostsRepository;
+use App\Service\MimeTypesService;
 use Doctrine\ORM\EntityManagerInterface;
+use HTMLPurifier;
+use HTMLPurifier_Config;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
@@ -74,9 +77,6 @@ class PostsController extends AbstractController
         );
 
         $documents = $entityManager->getRepository(Documents::class)->findBy(['post' => $post]);
-        foreach ($documents as $document) {
-            $document->setLink($this->getParameter('uploads_directory') . $document->getLink());
-        }
 
         // Créer le formulaire pour ajouter un commentaire
         $comment = new Comment();
@@ -181,6 +181,7 @@ class PostsController extends AbstractController
         FileUploader $fileUploader,
         int $space_id,
     ): Response {
+        // Récupération de l'utilisateur et de l'espace
         $user = $security->getUser();
         $space = $entityManager->getRepository(Spaces::class)->find($space_id);
 
@@ -193,56 +194,54 @@ class PostsController extends AbstractController
             return $this->redirectToRoute('space_views', ['id' => $space_id]);
         }
 
-        // Création du post
         $content = $request->request->get('content');
+
+        // Si le contenu est vide ou trop court
         if (!$content || trim(strip_tags($content)) === '') {
             $this->addFlash('error', 'Le contenu ne peut pas être vide.');
             return $this->redirectToRoute('space_views', ['id' => $space_id]);
         }
 
+        // Nettoyage du texte avec HTMLPurifier
+        $config = HTMLPurifier_Config::createDefault();
+        $config->set('HTML.Allowed', 'p,b,strong,i,em,u,a[href|title],ul,ol,li,br,blockquote,h1,h2,h3,h4,h5,h6,span[style],img[src|alt|width|height]');
+        $config->set('HTML.AllowedAttributes', 'href,src,alt,title,style,width,height');
+        $config->set('CSS.AllowedProperties', ['color']);
+        $config->set('AutoFormat.RemoveEmpty', true);
+
+        $purifier = new HTMLPurifier($config);
+        $cleanHtml = $purifier->purify($content);
+
+        // Création et enregistrement du post
         $post = new Posts();
         $post->setUser($user);
         $post->setSpace($space);
-        $post->setText(strip_tags($content));
+        $post->setText($cleanHtml);
         $entityManager->persist($post);
         $entityManager->flush();
 
-        // Gestion des fichiers
+        // *** TRAITEMENT DES FICHIERS ATTACHÉS ***
         if ($request->files->has('document')) {
-
             $files = $request->files->get('document');
-            $files = $request->files->get('document');
-            if (!$files) {
-                $this->addFlash('error', 'Aucun fichier.');
-            }
-            $mimeTypes = new MimeTypes(); // Instance de MimeTypes
+            $mimeTypes = new MimeTypes();
 
             foreach ($files as $uploadedFile) {
                 if ($uploadedFile && $uploadedFile->isValid()) {
                     try {
-                        // Utilisation du composant Mime pour deviner le type MIME
+                        // Vérification du type MIME
                         $mimeType = $mimeTypes->guessMimeType($uploadedFile->getPathname());
-
-                        // Vérifie le type MIME et la taille avant le déplacement
-                        if (!in_array($mimeType, ['application/pdf', 'image/png', 'image/jpeg'])) {
+                        if (!in_array($mimeType, MimeTypesService::ALLOWED_MIME_TYPES)) {
                             $this->addFlash('error', 'Type de fichier non autorisé : ' . $mimeType);
                             continue;
                         }
 
-                        if (count($files) > 6) { // Exemple : 6 fichiers max
-                            $this->addFlash('error', 'Vous ne pouvez pas télécharger plus de 6 fichiers.');
-                            return $this->redirectToRoute('space_views', ['id' => $space_id]);
-                        }
-
                         if ($uploadedFile->getSize() > 5 * 1024 * 1024) { // 5 Mo
-                            $this->addFlash('error', 'La taille d’un fichier ne peut pas dépasser 2 Mo.');
+                            $this->addFlash('error', 'La taille d’un fichier ne peut pas dépasser 5 Mo.');
                             continue;
                         }
 
-                        // Déplace le fichier et génère un nouveau nom
                         $newFilename = $fileUploader->upload($uploadedFile);
 
-                        // Création de l'entité Document
                         $document = new Documents();
                         $document->setSpace($space);
                         $document->setUser($user);
@@ -253,7 +252,6 @@ class PostsController extends AbstractController
 
                         $entityManager->persist($document);
                         $this->addFlash('info', 'Fichier ajouté avec succès.');
-
                     } catch (\Exception $e) {
                         $this->addFlash('error', 'Erreur lors du traitement du fichier : ' . $e->getMessage());
                     }
@@ -262,10 +260,11 @@ class PostsController extends AbstractController
                 }
             }
         }
+
+        // Sauvegarde des documents en BDD
         $entityManager->flush();
 
-        $this->addFlash('success', 'Poste créés avec succès.');
-
+        $this->addFlash('success', 'Post créé avec succès.');
         return $this->redirectToRoute('space_views', ['id' => $space_id]);
     }
 

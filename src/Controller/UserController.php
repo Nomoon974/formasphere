@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Form\UserType;
+use App\Repository\SpacesRepository;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -43,15 +44,18 @@ class UserController extends AbstractController
     }
 
     #[Route('/{id}', name: 'app_user_show', methods: ['GET'])]
-    public function show(User $user): Response
+    public function show(User $user, SpacesRepository $spacesRepository): Response
     {
 
         if ($user !== $this->getUser() && !$this->isGranted('ROLE_USER')) {
             throw $this->createAccessDeniedException('Vous n\'êtes pas autorisé à modifier ce profil.');
         }
 
+        $connectedSpace = $spacesRepository->findConnectedSpaceForUser($user);
+
         return $this->render('user/show.html.twig', [
             'user' => $user,
+            'connectedSpace' => $connectedSpace
         ]);
     }
 
