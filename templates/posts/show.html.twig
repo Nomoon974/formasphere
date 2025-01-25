@@ -5,120 +5,129 @@
             {{ ux_icon('ph:arrow-left-thin', {height: '24px', width: '24px',}) }} Retour
         </a>
     </div>
-    <div class="spaces-list">
-        <div class="post_box">
-            <div id="post_container">
-                <!-- Afficher le post -->
-                <div class="post">
-                    <div class="post-header">
-                        <img class="profil-img img-profil-post" src="{{ asset(post.user.avatar) }}"
-                             alt="avatar de {{ post.user.fullName }}">
-                        <h4 class="post-author">{{ post.user.fullName }}</h4>
+    <div class="space_container">
+{#        <div class="post_box">#}
+{#            <div id="post_container">#}
+{#                <!-- Afficher le post -->#}
+{#                <div class="post">#}
+{#                    <div class="post-header">#}
+{#                        <img class="profil-img img-profil-post" src="{{ asset(post.user.avatar) }}"#}
+{#                             alt="avatar de {{ post.user.fullName }}">#}
+{#                        <h4 class="post-author">{{ post.user.fullName }}</h4>#}
 
-                        {% if app.user and app.user == post.user %}
-                            <div class="post-actions">
-                                <delete-post
-                                        :post-id="{{ post.id }}"
-                                        :token="{{ csrf_token('delete' ~ post.id)|json_encode }}"
-                                        :delete-action-url="{{ path('app_posts_delete', {'id': post.id})|json_encode }}"
-                                        :image-url="{{ asset('build/images/close.53e53dde.png')|json_encode }}"
-                                ></delete-post>
-                                <button type="button" class="edit-btn" data-post-id="{{ post.id }}"
-                                        style="background: none; border: none;">
-                                    <img src="{{ asset('build/images/pencil.6bc05206.png') }}"
-                                         alt="Bouton édition de post">
-                                </button>
-                            </div>
-                        {% endif %}
-                    </div>
-                    {% if app.user and app.user == post.user %}
-                        <div class="post-edit-form" id="edit-post-form-container-{{ post.id }}" style="display: none;">
-                            {{ form_start(editForm, {
-                                'action': path('app_posts_show', {'id': post.id}),
-                                'method': 'POST',
-                                'attr': {'class': 'edit-form'}
-                            }) }}
-                            <div id="editor-{{ post.id }}" class="quill-editor"></div>
-                            {{ form_widget(editForm.editContent) }}
-                            <textarea id="edit-content-{{ post.id }}" style="display:none;">{{ post.text|raw }}</textarea>
-                            <div class="form-errors">
-                                {{ form_errors(editForm.editContent) }}
-                            </div>
-                            <div class="post-actions">
-                                <button type="submit" class="save-btn">Sauvegarder</button>
-                                <button type="button" class="cancel-btn">Annuler</button>
-                            </div>
-                            {{ form_end(editForm) }}
-                        </div>
-                    {% endif %}
-                    <div class="post-text-show" style="display: none;">
-                        <p>{{ post.text|raw }}</p>
-                    </div>
-                </div>
+{#                        {% if app.user and app.user == post.user %}#}
+{#                            <div class="post-actions">#}
+{#                                <delete-post#}
+{#                                        :post-id="{{ post.id }}"#}
+{#                                        :token="{{ csrf_token('delete' ~ post.id)|json_encode }}"#}
+{#                                        :delete-action-url="{{ path('app_posts_delete', {'id': post.id})|json_encode }}"#}
+{#                                        :image-url="{{ asset('build/images/close.53e53dde.png')|json_encode }}"#}
+{#                                ></delete-post>#}
+{#                                <button type="button" class="edit-btn" data-post-id="{{ post.id }}"#}
+{#                                        style="background: none; border: none;">#}
+{#                                    <img src="{{ asset('build/images/pencil.6bc05206.png') }}"#}
+{#                                         alt="Bouton édition de post">#}
+{#                                </button>#}
+{#                            </div>#}
+{#                        {% endif %}#}
+{#                    </div>#}
+{#                    {% if app.user and app.user == post.user %}#}
+{#                        <div class="post-edit-form" id="edit-post-form-container-{{ post.id }}" style="display: none;">#}
+{#                            {{ form_start(editForm, {#}
+{#                                'action': path('app_posts_show', {'id': post.id}),#}
+{#                                'method': 'POST',#}
+{#                                'attr': {'class': 'edit-form'}#}
+{#                            }) }}#}
+{#                            <div id="editor-{{ post.id }}" class="quill-editor"></div>#}
+{#                            {{ form_widget(editForm.editContent) }}#}
+{#                            <textarea id="edit-content-{{ post.id }}" style="display:none;">{{ post.text|raw }}</textarea>#}
+{#                            <div class="form-errors">#}
+{#                                {{ form_errors(editForm.editContent) }}#}
+{#                            </div>#}
+{#                            <div class="post-actions">#}
+{#                                <button type="submit" class="save-btn">Sauvegarder</button>#}
+{#                                <button type="button" class="cancel-btn">Annuler</button>#}
+{#                            </div>#}
+{#                            {{ form_end(editForm) }}#}
+{#                        </div>#}
+{#                    {% endif %}#}
 
-                <!-- Afficher la liste des fichiers -->
-                <div class="post-file-list">
-                    {% if app.user and app.user == post.user %}
-                        <div class="left-buttons">
-                            <input type="file" name="document[]" id="document-input" style="display:none;" multiple accept=".pdf, .docx, .pptx, .xlsx, .zip, .txt, .py, .java, .cpp, .jpg, .jpeg, .png, .gif, .svg"/>
-                            <button type="button" class="add-doc-btn" aria-label="Ajouter un document">
-                                {{ ux_icon('carbon:document-add', {height: '24px', width: '24px'}) }}
-                            </button>
-                        </div>
-                    {% endif %}
-                    {% for doc in documents %}
-                        <div class="post-file">
-                            <a href="{{ asset(doc.link) }}">
-                                {{ ux_icon('carbon:document-download', {height: '24px', width: '24px'}) }}
-                                <span class="file-label">{{ doc.link|split('/')|last }}</span>
-                            </a>
-                            {% if app.user and app.user == post.user %}
-                                <form method="POST" action="{{ path('app_documents_delete', { 'id': doc.id, height: '20px', width: '20px' }) }}" class="delete-doc-form">
-                                    <input type="hidden" name="_token" value="{{ csrf_token('delete_document' ~ doc.id) }}">
-                                    <button type="submit" class="delete-doc-btn" aria-label="Supprimer ce document">
-                                        {{ ux_icon('lets-icons:close-ring', {height: '20px', width: '20px'}) }}
-                                    </button>
-                                </form>
-                            {% endif %}
-                        </div>
-                    {% endfor %}
-                </div>
+{#                    <div class="post-text-show" >#}
+{#                        <p>{{ post.text|raw }}</p>#}
+{#                    </div>#}
+{#                </div>#}
 
-                <small>{{ post.createdAt|date('d/m/Y H:i:s') }}</small>
-                <!-- Afficher les commentaires -->
-                <h3 class="comments-title">Commentaires</h3>
-                {% for comment in comments %}
-                    <div class="comment">
-                        <div class="comment-header">
-                            <img class="profil-img img-profil-comment" src="{{ asset(comment.user.avatar) }}"
-                                 alt="avatar de {{ comment.user.fullName }}">
-                            <div class="comment-meta">
-                                <h5 class="comment-author">{{ comment.user.fullName }}</h5>
-                                <small>{{ comment.createdAt|date('d/m/Y H:i:s') }}</small>
-                            </div>
-                        </div>
-                        <p>{{ comment.text|raw }}</p>
-                    </div>
-                {% else %}
-                    <small>Aucun commentaire pour le moment.</small>
-                {% endfor %}
+{#                <!-- Afficher la liste des fichiers -->#}
+{#                <div class="post-file-list">#}
+{#                    {% if app.user and app.user == post.user %}#}
+{#                        <div class="left-buttons">#}
+{#                            <input type="file" name="document[]" id="document-input" style="display:none;" multiple accept=".pdf, .docx, .pptx, .xlsx, .zip, .txt, .py, .java, .cpp, .jpg, .jpeg, .png, .gif, .svg"/>#}
+{#                            <button type="button" class="add-doc-btn" aria-label="Ajouter un document">#}
+{#                                {{ ux_icon('carbon:document-add', {height: '24px', width: '24px'}) }}#}
+{#                            </button>#}
+{#                        </div>#}
+{#                    {% endif %}#}
+{#                    {% for doc in documents %}#}
+{#                        <div class="post-file">#}
+{#                            <a href="{{ asset(doc.link) }}">#}
+{#                                {{ ux_icon('carbon:document-download', {height: '24px', width: '24px'}) }}#}
+{#                                <span class="file-label">{{ doc.link|split('/')|last }}</span>#}
+{#                            </a>#}
+{#                            {% if app.user and app.user == post.user %}#}
+{#                                <form method="POST" action="{{ path('app_documents_delete', { 'id': doc.id, height: '20px', width: '20px' }) }}" class="delete-doc-form">#}
+{#                                    <input type="hidden" name="_token" value="{{ csrf_token('delete_document' ~ doc.id) }}">#}
+{#                                    <button type="submit" class="delete-doc-btn" aria-label="Supprimer ce document">#}
+{#                                        {{ ux_icon('lets-icons:close-ring', {height: '20px', width: '20px'}) }}#}
+{#                                    </button>#}
+{#                                </form>#}
+{#                            {% endif %}#}
+{#                        </div>#}
+{#                    {% endfor %}#}
+{#                </div>#}
 
-                <!-- Formulaire pour ajouter un commentaire -->
-                <h3 class="comments-title">Ajouter un commentaire</h3>
-                {{ form_start(editForm) }}
-                <div class="form-comment">
-                    {{ form_label(form.text, null, {'label_attr': {'style': 'display:none;'}}) }}
-                    {{ form_widget(form.text, {'attr': {
-                        'class': 'comment-input',
-                        'placeholder': 'Entrez votre commentaire'
-                    }}) }}
-                    <button type="submit" class="icon-send-btn">
-                        <img class="icon-send" src="{{ asset('build/images/send-message.acb93f2a.png') }}"
-                             alt="Envoyer le commentaire">
-                    </button>
-                </div>
-                {{ form_end(form) }}
-            </div>
-        </div>
+{#                <small>{{ post.createdAt|date('d/m/Y H:i:s') }}</small>#}
+{#                <!-- Afficher les commentaires -->#}
+{#                <h3 class="comments-title">Commentaires</h3>#}
+{#                {% for comment in comments %}#}
+{#                    <div class="comment">#}
+{#                        <div class="comment-header">#}
+{#                            <img class="profil-img img-profil-comment" src="{{ asset(comment.user.avatar) }}"#}
+{#                                 alt="avatar de {{ comment.user.fullName }}">#}
+{#                            <div class="comment-meta">#}
+{#                                <h5 class="comment-author">{{ comment.user.fullName }}</h5>#}
+{#                                <small>{{ comment.createdAt|date('d/m/Y H:i:s') }}</small>#}
+{#                            </div>#}
+{#                        </div>#}
+{#                        <p>{{ comment.text|raw }}</p>#}
+{#                    </div>#}
+{#                {% else %}#}
+{#                    <small>Aucun commentaire pour le moment.</small>#}
+{#                {% endfor %}#}
+
+{#                <!-- Formulaire pour ajouter un commentaire -->#}
+{#                <h3 class="comments-title">Ajouter un commentaire</h3>#}
+{#                {{ form_start(editForm) }}#}
+{#                <div class="form-comment">#}
+{#                    {{ form_label(form.text, null, {'label_attr': {'style': 'display:none;'}}) }}#}
+{#                    {{ form_widget(form.text, {'attr': {#}
+{#                        'class': 'comment-input',#}
+{#                        'placeholder': 'Entrez votre commentaire'#}
+{#                    }}) }}#}
+{#                    <button type="submit" class="icon-send-btn">#}
+{#                        <img class="icon-send" src="{{ asset('build/images/send-message.acb93f2a.png') }}"#}
+{#                             alt="Envoyer le commentaire">#}
+{#                    </button>#}
+{#                </div>#}
+{#                {{ form_end(form) }}#}
+{#            </div>#}
+{#        </div>#}
+        <post-show
+                :post="{{ post_json }}"
+                :documents="{{ documents_json }}"
+                :comments="{{ comments_json}}"
+                :user="{{ user_json }}"
+                csrf-token="{{ csrf_token('delete_post' ~ post.id) }}"
+        ></post-show>
+        {% include 'components/chat.html.twig' %}
     </div>
 {% endblock %}

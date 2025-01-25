@@ -2,10 +2,10 @@
 
 {% block overview_content %}
     <div id="space_container">
+
         {% include 'components/search_bar.html.twig' %}
         <!-- Boîte de composition de nouveau post -->
         <quil-editor :form-action="'{{ path('save_post', {'space_id': space.id}) }}'"></quil-editor>
-
         <!-- Liste des posts -->
         {% for post in pagination %}
             <div class="container-post">
@@ -18,7 +18,7 @@
                         </div>
 
                     </div>
-                    <div class="post-text">
+                    <div class="post-text ellipsis">
                         <p>{{ post.text|raw }}</p>
                     </div>
 

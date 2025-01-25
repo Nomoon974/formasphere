@@ -10,18 +10,24 @@ use Doctrine\Persistence\ObjectManager;
 use Faker\Factory;
 use App\Entity\User;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 
 
 class DataFixtures extends Fixture
 {
-    public function __construct(private readonly UserPasswordHasherInterface $passwordHasher)
+    public function __construct(
+        private readonly UserPasswordHasherInterface $passwordHasher,
+        private readonly ParameterBagInterface $params
+    )
     {
+        $this->profilePicturesDirectory = $this->params->get('kernel.project_dir') . '/public/build/images/profile-pictures';
     }
 
     public function load(ObjectManager $manager)
     {
         $faker = Factory::create();
         $plainPassword = "123456";
+
 
         // Spaces
         for ($i = 0; $i < 5; $i++) {
@@ -45,6 +51,7 @@ class DataFixtures extends Fixture
             $user->setEmail($faker->email);
             $user->setPassword($this->passwordHasher->hashPassword($user, $plainPassword));
             $user->setStatus("test");
+            $user->setAvatar($this->getRandomFile($this->profilePicturesDirectory));
             $user->setRoles(['ROLE_ADMIN']);
             for ($s = 0; $s < rand(1, 3); $s++) {
                 $spaceIndex = rand(0, 4); // Index des espaces dans les références
@@ -89,4 +96,30 @@ class DataFixtures extends Fixture
 
         $manager->flush();  // Final flush to persist all posts and comments
     }
+
+    public function getRandomFile(string $directory): ?string
+    {
+        // Vérifie si le dossier existe
+        if (!is_dir($directory)) {
+            throw new \RuntimeException("Le dossier spécifié n'existe pas : $directory");
+        }
+
+        // Liste les fichiers dans le dossier
+        $files = array_diff(scandir($directory), ['.', '..']);
+
+        // Filtre uniquement les fichiers
+        $files = array_filter($files, function ($file) use ($directory) {
+            return is_file($directory . '/' . $file);
+        });
+
+        // Si aucun fichier n'est trouvé, retourne null
+        if (empty($files)) {
+            return null;
+        }
+
+        // Sélectionne un fichier aléatoire et retourne son chemin relatif
+        $randomFile = $files[array_rand($files)];
+        return 'build/images/profile-pictures/' . $randomFile;
+    }
+
 }

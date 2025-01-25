@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Documents;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -13,48 +14,45 @@ use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 
 class DocumentsController extends AbstractController
 {
-    #[Route('/documents/{id}/delete', name: 'app_documents_delete', methods: ['POST'])]
+    #[Route('/documents/{id}/delete', name: 'app_documents_delete', methods: ['DELETE'])]
     public function delete(
         int $id,
         Request $request,
         EntityManagerInterface $entityManager,
         CsrfTokenManagerInterface $csrfTokenManager
-    ): Response {
-        $documents = $entityManager->getRepository(Documents::class)->find($id);
+    ): JsonResponse {
+        $documents = new Documents();
 
-        // Vérifie que le fichier existe
-        if (!$documents) {
-            $this->addFlash('error', 'Fichier introuvable.');
-            return $this->redirectToRoute('app_posts_show', ['id' => $documents->getPost()->getId()]);
+        $document = $entityManager->getRepository(Documents::class)->find($id);
+
+        if (!$document) {
+            return new JsonResponse(['error' => 'Fichier introuvable.'], Response::HTTP_NOT_FOUND);
         }
 
         // Vérifie que l'utilisateur est le propriétaire du fichier
-        if ($documents->getPost()->getUser() !== $this->getUser()) {
-            $this->addFlash('error', 'Vous n\'êtes pas autorisé à supprimer ce fichier.');
-            return $this->redirectToRoute('app_posts_show', ['id' => $documents->getPost()->getId()]);
+        if ($document->getPost()->getUser() !== $this->getUser()) {
+            return new JsonResponse(['error' => 'Vous n\'êtes pas autorisé à supprimer ce fichier.'], Response::HTTP_FORBIDDEN);
         }
 
-        $submittedToken = $request->request->get('_token');
-        $csrfToken = new CsrfToken('delete_document' . $documents->getId(), $submittedToken);
+        $submittedToken = json_decode($request->getContent(), true)['_token'] ?? '';
+        $csrfToken = new CsrfToken('delete_document' . $document->getId(), $submittedToken);
 
-        // Vérifie le jeton CSRF
         if (!$csrfTokenManager->isTokenValid($csrfToken)) {
-            $this->addFlash('error', 'Jeton CSRF invalide.');
-            return $this->redirectToRoute('app_posts_show', ['id' => $documents->getPost()->getId()]);
+            return new JsonResponse(['error' => 'Jeton CSRF invalide.'], Response::HTTP_FORBIDDEN);
         }
 
         // Supprime le fichier du disque
-        $documentsPath = $this->getParameter('uploads_directory') . '/' . $documents->getLink();
+        $documentsPath = $this->getParameter('uploads_directory') . '/' . $document->getLink();
         if (file_exists($documentsPath)) {
             unlink($documentsPath);
         }
 
-        // Supprime le fichier de la base de données
-        $entityManager->remove($documents);
+        // Supprime l'entrée de la base de données
+        $entityManager->remove($document);
         $entityManager->flush();
 
-        $this->addFlash('success', 'Fichier supprimé avec succès.');
-        return $this->redirectToRoute('app_posts_show', ['id' => $documents->getPost()->getId()]);
+        return new JsonResponse(['success' => 'Fichier supprimé avec succès.'], Response::HTTP_OK);
     }
+
 
 }

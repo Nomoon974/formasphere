@@ -2,7 +2,9 @@
 
 <div class="{{ logo_class }}">
     {% block logo %}
-        <img src="{{ asset('build/images/logo.f697d48c.png') }}" alt="logo">
+        <a href="{{ path('app_overview') }}">
+            <img src="{{ asset('build/images/logo.f697d48c.png') }}" alt="logo">
+        </a>
     {% endblock %}
     <h2>{{ logo_title }}</h2>
 </div>

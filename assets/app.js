@@ -4,12 +4,22 @@ import { createApp } from 'vue'; // Import Vue.js
 import QuilEditor from "./js/QuilEditor.vue";
 import DeletePost from './js/DeletePost.vue';
 import AddDocBtn from "./js/AddDocBtn.vue";
+import PostShow from "./js/PostShow.vue";
+import TestComponent from "./js/TestComponent.vue";
+import FileItem from "./js/FileItem.vue";
+import EditPostButton from "./js/EditPostButton.vue";
+import CommentSection from "./js/CommentSection.vue";
 const app = createApp({});
 
 app.component('DeletePost', DeletePost);
 app.component('QuilEditor', QuilEditor);
 app.component('AddDocBtn', AddDocBtn);
-app.mount('#vue-app'); // Montez l'application sur une div spécifique
+app.component('PostShow', PostShow);
+app.component('TestComponent', TestComponent);
+app.component('FileItem', FileItem);
+app.component('EditPostButton', EditPostButton);
+app.component('CommentSection', CommentSection);
+app.mount('#vue-app');
 /*
  * Welcome to your app's main JavaScript file!
  *
@@ -27,12 +37,13 @@ import './images/logo.png'
 import "./controllers/QuilEditor";
 import "./controllers/toggleReadMore.js";
 import "./controllers/adjustTextArea";
-import "./controllers/editPost";
+// import "./controllers/editPost";
 import "./controllers/deletePost";
 import toggleComments from "./controllers/toggleComments";
 import "./controllers/closeFlashMessage";
 import "./controllers/addDocBtn";
 import "./controllers/settingsIcon";
+import "./controllers/LineEllipsis";
 
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -45,4 +56,5 @@ document.addEventListener('DOMContentLoaded', () => {
     // closeFlashMessages();
     // addDocBtn();
     // settingsIcon();
+    LineEllipsis();
 });

@@ -301,6 +301,7 @@ button.btn:disabled {
     border-radius: 20px;
     transition: all 0.3s ease-in;
     overflow: hidden;
+    color: #005B8F;
 }
 
 .profil-img:hover {
@@ -318,8 +319,9 @@ button.btn:disabled {
     flex-direction: column;
     justify-content: center;
     align-self: center;
-    width: max-content;
+    width: 90%;
     margin: auto;
+
 }
 
 .spaces-list .title {
@@ -658,12 +660,15 @@ label {
 #mysearch {
     pointer-events: auto;
     z-index: 20;
+    box-sizing: border-box;
+    transition: border-color 0.2s ease;
 }
 
 
 #mysearch:focus {
     outline: none;
     border: 2px solid var(--cadetblue) !important;
+    box-sizing: border-box;
 }
 
 #editor-container {
@@ -832,6 +837,8 @@ label {
 
 .btn-back {
     margin-left: 20px;
+    position: fixed;
+    color: #005B8F;
 }
 
 .post_box {
@@ -846,18 +853,23 @@ label {
 
 }
 
-.post-text {
-    max-height: 100px;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    margin: 30px 0 30px 0;
-    word-wrap: break-word;
-
+.space_container .post_box {
+    margin-bottom: 200px;
+    margin-inline: auto;
 }
 
-.post-text p {
+.post-text {
+    display: -webkit-box !important; /* Définit l'affichage en ligne */
+    -webkit-box-orient: vertical; /* Définit l'orientation verticale */
+    overflow: hidden !important; /* Masque les dépassements */
+    text-overflow: ellipsis; /* Ajoute les ellipses "..." */
+    -webkit-line-clamp: 3 !important; /* Limite le nombre de lignes */
+    word-wrap: break-word; /* Coupe les mots longs */
+    margin: 30px 0; /* Espacement vertical */
+}
+
+.post-text * {
     border-left: none !important;
-    text-overflow: ellipsis;
     max-height: 100px;
 }
 
@@ -924,9 +936,13 @@ label {
     gap: 2px;
 }
 
+.post-actions svg {
+    width: 18px !important;
+}
+
 .edit-btn, .delete-btn {
-    width: 40px; /* Ajustez selon la taille de votre bouton */
-    height: 40px; /* Ajustez selon la taille de votre bouton */
+    width: 30px; /* Ajustez selon la taille de votre bouton */
+    height: 30px; /* Ajustez selon la taille de votre bouton */
     background-color: transparent;
     color: white;
     border: none; /* Supprime le border pour éviter tout mouvement */
@@ -1019,7 +1035,6 @@ label {
 }
 
 .delete-doc-form {
-
     position: absolute;
     top: -10px;
     right: -10px;
@@ -1035,18 +1050,23 @@ label {
 
 .delete-doc-btn * {
     color: red;
+    background-color: white;
+
+    position: absolute;
+    top: -4px;
+    right: -4px;
 }
 
 .post-file {
     position: relative;
     width: 110px;
-    height: 65px;
+    height: 60px;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    border: 2px solid var(--light-grey);
-    border-radius: 8px;
+    border: 2px solid rgba(201, 201, 201, 0.31);
+    border-radius: 5px;
     background-color: #f9f9f9;
     text-align: center;
     font-size: 14px;
@@ -1095,7 +1115,7 @@ label {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
-    max-width: 90px;
+    max-width: max-content;
     display: block;
 }
 
@@ -1148,8 +1168,9 @@ label {
     margin-top: 5px;
 }
 
-.post-actions img {
+.post-actions svg {
     width: 20px;
+    color: var(--light-grey) !important;
 }
 
 #post-comment {
@@ -1248,6 +1269,7 @@ label {
 .comment-input {
     flex-grow: 1;
     padding: 5px;
+    margin-bottom: 5px;
     border: 0;
     border-bottom: 1px solid cadetblue;
     resize: none;
@@ -1290,6 +1312,8 @@ label {
     width: max-content !important;
     background-color: transparent !important;
     align-self: flex-end;
+    border: none;
+    padding-bottom: 10px;
 }
 
 #comment-section {

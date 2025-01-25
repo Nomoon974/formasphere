@@ -2,8 +2,7 @@
 
 namespace App\Controller;
 
-use App\Entity\Comment;
-use App\Entity\Posts;
+
 use App\Entity\Spaces;
 use App\Form\PostsType;
 use App\Form\SpacesType;
@@ -98,7 +97,7 @@ class SpacesController extends AbstractController
         $pagination = $paginator->paginate(
             $queryBuilder->getQuery(),
             $request->query->getInt('page', 1),
-            10
+            15
         );
 
         // Création des formulaires d'édition pour chaque post

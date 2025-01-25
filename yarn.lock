@@ -2650,6 +2650,11 @@ html-entities@^2.3.2:
   resolved "https://registry.yarnpkg.com/html-entities/-/html-entities-2.5.2.tgz#201a3cf95d3a15be7099521620d19dfb4f65359f"
   integrity sha512-K//PSRMQk4FZ78Kyau+mZurHn3FH0Vwr+H36eE0rPbeYkRRi9YxceYPhuN60UwWorxyKHhqoAJl2OFKa4BVtaA==
 
+html-truncate@^1.2.2:
+  version "1.2.2"
+  resolved "https://registry.yarnpkg.com/html-truncate/-/html-truncate-1.2.2.tgz#db2e331dcf1cba0bd432a507d16e988609f2575f"
+  integrity sha512-oiXb65RDxSYY8eXJKJiKHHpI7LyQbMG8LbSuvvWLLxAKNywJ7aaq0M1ynj2QJs0odQNggEEg/dTFVtH3lG0ClQ==
+
 htmlparser2@^6.1.0:
   version "6.1.0"
   resolved "https://registry.yarnpkg.com/htmlparser2/-/htmlparser2-6.1.0.tgz#c4d762b6c3371a05dbe65e94ae43a9f845fb8fb7"
@@ -4229,6 +4234,11 @@ terser@^5.26.0:
     commander "^2.20.0"
     source-map-support "~0.5.20"
 
+text-ellipsis@^1.0.3:
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/text-ellipsis/-/text-ellipsis-1.0.3.tgz#b7991ca1518eaef2603252e26dc6330a61b44348"
+  integrity sha512-k+qJ/Q+pMThYjniWXa6mY8IU75XZXGUXumvbmKPsO6IQckPs5wlI6TvXae5yj+MBqmPJIseGfjO/aeLWE2B1aA==
+
 thunky@^1.0.2:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/thunky/-/thunky-1.1.0.tgz#5abaf714a9405db0504732bbccd2cedd9ef9537d"
@@ -4348,6 +4358,13 @@ vue-template-compiler@^2.7.16:
   dependencies:
     de-indent "^1.0.2"
     he "^1.2.0"
+
+vue-truncate-collapsed@^3.0.1:
+  version "3.0.1"
+  resolved "https://registry.yarnpkg.com/vue-truncate-collapsed/-/vue-truncate-collapsed-3.0.1.tgz#ced6af3c7b097bcd97f8a95c32c417514579b57d"
+  integrity sha512-Xg4YPpJnvlm+72Y0MgcH27ZnJYD2v9sVLzmvoj5R+fNNxXKqVfpnihjcYUZA0zkSD4fbWUr43IRGEzRQFTqzPg==
+  dependencies:
+    html-truncate "^1.2.2"
 
 vue@^3.3:
   version "3.5.13"

@@ -28,6 +28,8 @@
         "@hotwired/turbo": "^8.0.12",
         "dompurify": "^3.2.3",
         "quill": "^2.0.1",
-        "vue": "^3.3"
+        "text-ellipsis": "^1.0.3",
+        "vue": "^3.3",
+        "vue-truncate-collapsed": "^3.0.1"
     }
 }

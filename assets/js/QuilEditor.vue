@@ -19,7 +19,7 @@
           />
 
         </div>
-        <AddDocBtn @trigger-file="triggerFileInput" />
+        <add-doc-btn file-input="file-input" @trigger-file="triggerFileInput" />
         <button type="submit" id="submit-button">Poster</button>
       </div>
     </form>
@@ -75,10 +75,10 @@ export default {
         modules: {
           toolbar: [
             ['bold', 'italic', 'underline', 'strike'],
-            [{ 'color': []} ],
+            [{'color': []}],
             ['blockquote', 'code-block'],
-            [{ 'header': 1 }, { 'header': 2 }],
-            [{ 'list': 'ordered' }, { 'list': 'bullet' }],
+            [{'header': 1}, {'header': 2}],
+            [{'list': 'ordered'}, {'list': 'bullet'}],
             ['link'],
             ['clean']
           ]
@@ -114,7 +114,6 @@ export default {
           button.setAttribute('title', 'Effacer le formatage');
         }
       });
-
 
 
       this.quill.root.style.minHeight = '150px'; // Hauteur initiale définie
@@ -165,7 +164,7 @@ export default {
         ALLOWED_TAGS: [
           'p', 'br', 'b', 'i', 'u', 's', 'strong', 'em',
           'a', 'ul', 'ol', 'li', 'h1', 'h2', 'h3',
-          'blockquote', 'code', 'pre','span'
+          'blockquote', 'code', 'pre', 'span'
         ],
         ALLOWED_ATTR: ['href', 'target', 'rel', 'class', 'style'],
         ALLOWED_STYLES: {
@@ -187,6 +186,7 @@ export default {
       // FormData pour la soumission
       const formData = new FormData();
       formData.append('content', htmlContent);
+      console.log(htmlContent)
 
       // Ajout des fichiers sélectionnés
       this.fileList.forEach((file) => formData.append('document[]', file));

@@ -11,15 +11,19 @@ use App\Service\FileUploader;
 use App\Entity\Documents;
 use App\Repository\PostsRepository;
 use App\Service\MimeTypesService;
+use App\Service\PostDataProvider;
 use Doctrine\ORM\EntityManagerInterface;
 use HTMLPurifier;
 use HTMLPurifier_Config;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Mime\MimeTypes;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Csrf\CsrfToken;
+use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route('/posts')]
@@ -63,112 +67,99 @@ class PostsController extends AbstractController
         ]);
     }
 
-    #[Route('/post/{id}', name: 'app_posts_show', methods: ['GET', 'POST'])]
+    #[Route('/post/{id}', name: 'app_posts_show', methods: ['GET'])]
     public function show(
-        Posts                  $post,
-        Request                $request,
-        EntityManagerInterface $entityManager
-    ): Response
-    {
-        // Récupérer les commentaires associés au post
-        $comments = $entityManager->getRepository(Comment::class)->findBy(
-            ['post' => $post],
-            ['created_at' => 'DESC']
-        );
+        Posts $post,
+        CsrfTokenManagerInterface $csrfTokenManager,
+        PostsRepository $postsRepository,
+        PostDataProvider $postDataProvider,
+        Security $security
+    ): Response {
+        $user = $security->getUser();
 
-        $documents = $entityManager->getRepository(Documents::class)->findBy(['post' => $post]);
+        $data = $postsRepository->findPostWithRelations($post);
+        $serializedData = $postDataProvider->serializePostData($data, $csrfTokenManager);
 
-        // Créer le formulaire pour ajouter un commentaire
-        $comment = new Comment();
-        $form = $this->createForm(CommentType::class, $comment);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $comment->setUser($this->getUser());
-            $comment->setPost($post);
-            $comment->setCreatedAt(new \DateTimeImmutable());
-
-            $entityManager->persist($comment);
-            $entityManager->flush();
-
-            return $this->redirectToRoute('app_posts_show', ['id' => $post->getId()]);
-        }
-
-        // Création du formulaire d'édition pour ce post spécifique
-        $editForm = $this->createForm(PostsType::class, $post);
-
-        // Traite le formulaire s'il est soumis
-        $editForm->handleRequest($request);
-
-        if ($request->isMethod('POST') && $editForm->isSubmitted()) {
-            if ($editForm->isValid()) {
-
-
-                $content = $editForm->get('editContent')->getData();
-                if (strlen(trim(strip_tags($content))) < 10) {
-                    $this->addFlash('error', 'Le contenu doit contenir au moins 10 caractères.');
-                    return $this->redirectToRoute('app_posts_show', ['id' => $post->getId()]);
-                }
-
-                $purifier = new \HTMLPurifier();
-                $cleanHtml = $purifier->purify($content);
-
-                $plainText = strip_tags($cleanHtml);
-                if (strlen(trim($plainText)) < 10) {
-                    $this->addFlash('error', 'Le contenu est trop court ou invalide après nettoyage.');
-                    return $this->redirectToRoute('app_posts_show', ['id' => $post->getId()]);
-                }
-
-                $post->setText($cleanHtml);
-
-                $post->setUpdatedAt(new \DateTime());
-                $entityManager->flush();
-
-                $this->addFlash('success', 'Le post a été modifié avec succès.');
-                return $this->redirectToRoute('app_posts_show', ['id' => $post->getId()]);
-            } else {
-                $this->addFlash('error', 'Le formulaire contient des erreurs. Veuillez vérifier les champs et réessayer.');
-            }
-        }
+        $csrfToken = $csrfTokenManager->getToken('delete_document')->getValue();
 
         return $this->render('posts/show.html.twig', [
             'post' => $post,
-            'comments' => $comments,
-            'documents' => $documents,
-            'form' => $form->createView(),
-            'editForm' => $editForm->createView(),
+            'user' => $user,
+            'post_json' => json_encode($serializedData['post']),
+            'documents_json' => json_encode($serializedData['documents']),
+            'comments_json' => json_encode($serializedData['comments']),
+            'user_json' => json_encode([
+                'id' => $user ? $user->getId() : null,
+                'fullName' => $user ? $user->getFullName() : null,
+            ]),
+            'csrf_token' => $csrfToken,
         ]);
     }
 
-    #[Route('/{id}', name: 'app_posts_delete', methods: ['POST'])]
-    #[IsGranted('IS_AUTHENTICATED_FULLY')]
-    public function delete(Request $request, Posts $post, EntityManagerInterface $entityManager, Security $security): Response
-    {
-        // Vérifier si l'utilisateur est authentifié
-        if (!$this->isGranted('IS_AUTHENTICATED_FULLY')) {
-            $this->addFlash('error', 'Vous devez être authentifié pour supprimer un post.');
-            return $this->redirectToRoute('app_login'); // Redirige vers la page de connexion
+    #[Route('/post/{id}/edit', name: 'app_posts_edit', methods: ['POST'])]
+    public function edit(
+        Posts $post,
+        Request $request,
+        EntityManagerInterface $entityManager,
+        Security $security
+    ): JsonResponse {
+        $user = $security->getUser();
+
+        // Vérifiez si l'utilisateur a le droit de modifier
+        if (!$user || $user !== $post->getUser()) {
+            return new JsonResponse(['error' => 'Permission refusée.'], 403);
         }
 
-        // Seul l'admin et le créateur du post peuvent le supprimer
+        $data = json_decode($request->getContent(), true);
+        $content = $data['content'] ?? '';
+
+        // Validation du contenu
+        if (strlen(trim(strip_tags($content))) < 10) {
+            return new JsonResponse(['error' => 'Le contenu doit contenir au moins 10 caractères.'], 400);
+        }
+
+        $purifier = new \HTMLPurifier();
+        $cleanHtml = $purifier->purify($content);
+
+        $post->setText($cleanHtml);
+        $post->setUpdatedAt(new \DateTimeImmutable());
+        $entityManager->flush();
+
+        return new JsonResponse(['success' => true, 'updatedText' => $post->getText()]);
+    }
+
+    #[Route('/{id}/delete', name: 'app_posts_delete', methods: ['POST'])]
+    #[IsGranted('IS_AUTHENTICATED_FULLY')]
+    public function delete(
+        Request $request,
+        CsrfTokenManagerInterface $csrfTokenManager,
+        Posts $post,
+        EntityManagerInterface $entityManager,
+        Security $security
+    ): \Symfony\Component\HttpFoundation\RedirectResponse
+    {
+        // Récupérer l'utilisateur actuel
         $user = $security->getUser();
+
+        // Vérifier que l'utilisateur a le droit de supprimer le post (propriétaire ou admin)
         if ($post->getUser() !== $user && !$this->isGranted('ROLE_ADMIN')) {
             $this->addFlash('error', 'Vous n\'avez pas la permission de supprimer ce post.');
             return $this->redirectToRoute('space_views', ['id' => $post->getSpace()->getId()]);
         }
 
-        // Valider le token CSRF
-        if (!$this->isCsrfTokenValid('delete' . $post->getId(), $request->request->get('_token'))) {
-            $this->addFlash('error', 'Token CSRF invalide.');
+        // Vérification du token CSRF
+        $submittedToken = $request->request->get('_token');
+        if (!$csrfTokenManager->isTokenValid(new CsrfToken('delete_post' . $post->getId(), $submittedToken))) {
+            $this->addFlash('error', 'Jeton CSRF invalide.');
             return $this->redirectToRoute('space_views', ['id' => $post->getSpace()->getId()]);
-        }
+        };
 
-        // Supprimer le post
+        // Suppression du post
         $entityManager->remove($post);
         $entityManager->flush();
 
+        // Ajouter un message de succès et rediriger
         $this->addFlash('success', 'Le post a été supprimé avec succès.');
-
         return $this->redirectToRoute('space_views', ['id' => $post->getSpace()->getId()]);
     }
 

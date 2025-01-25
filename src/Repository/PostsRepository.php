@@ -2,6 +2,8 @@
 
 namespace App\Repository;
 
+use App\Entity\Comment;
+use App\Entity\Documents;
 use App\Entity\Posts;
 use App\Entity\Spaces;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
@@ -52,6 +54,27 @@ class PostsRepository extends ServiceEntityRepository
             ->where('p.space = :space')
             ->setParameter('space', $space)
             ->orderBy('p.created_at', 'DESC');
+    }
+
+    public function findPostWithRelations(Posts $post): array
+    {
+        $entityManager = $this->getEntityManager();
+
+        // Récupérer les documents associés au post
+        $documents = $entityManager->getRepository(Documents::class)->findBy(['post' => $post]);
+
+        // Récupérer les commentaires associés au post
+        $comments = $entityManager->getRepository(Comment::class)->findBy(
+            ['post' => $post],
+            ['created_at' => 'DESC']
+        );
+
+        // Retourner toutes les données sous forme d'un tableau
+        return [
+            'post' => $post,
+            'documents' => $documents,
+            'comments' => $comments,
+        ];
     }
 
 
