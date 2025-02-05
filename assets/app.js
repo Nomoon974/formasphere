@@ -9,6 +9,7 @@ import TestComponent from "./js/TestComponent.vue";
 import FileItem from "./js/FileItem.vue";
 import EditPostButton from "./js/EditPostButton.vue";
 import CommentSection from "./js/CommentSection.vue";
+import UserDropdown from "./js/UserDropdown.vue";
 const app = createApp({});
 
 app.component('DeletePost', DeletePost);
@@ -19,6 +20,7 @@ app.component('TestComponent', TestComponent);
 app.component('FileItem', FileItem);
 app.component('EditPostButton', EditPostButton);
 app.component('CommentSection', CommentSection);
+app.component('UserDropdown', UserDropdown);
 app.mount('#vue-app');
 /*
  * Welcome to your app's main JavaScript file!
@@ -32,7 +34,6 @@ import './styles/app.css';
 import './images/formasphere.png'
 import './images/uifaces-abstract-image.jpg'
 import './images/logo.png'
-
 
 import "./controllers/QuilEditor";
 import "./controllers/toggleReadMore.js";

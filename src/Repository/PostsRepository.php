@@ -38,14 +38,6 @@ class PostsRepository extends ServiceEntityRepository
             ->getResult();
     }
 
-//    public function findPostsBySpaceQueryBuilder($space): QueryBuilder
-//    {
-//        return $this->createQueryBuilder('p')
-//            ->where('p.space = :space')
-//            ->setParameter('space', $space)
-//            ->orderBy('p.created_at', 'DESC');
-//    }
-
     public function findPostsBySpaceQueryBuilder(Spaces $space): QueryBuilder
     {
         return $this->createQueryBuilder('p')

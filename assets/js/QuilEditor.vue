@@ -1,6 +1,29 @@
 <template>
-  <div id="compose_box">
+
+  <div class="loader" v-if="!isQuillLoaded">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+      <circle fill="#2B5D5F" stroke="#2B5D5F" stroke-width="18" r="15" cx="40" cy="100">
+        <animate attributeName="opacity" calcMode="spline" dur="1" values="1;0;1;" keySplines=".5 0 .5 1;.5 0 .5 1"
+                 repeatCount="indefinite" begin="-.4">
+        </animate>
+      </circle>
+      <circle fill="#2B5D5F" stroke="#2B5D5F" stroke-width="18" r="15" cx="100" cy="100">
+        <animate attributeName="opacity" calcMode="spline" dur="1" values="1;0;1;" keySplines=".5 0 .5 1;.5 0 .5 1"
+                 repeatCount="indefinite" begin="-.2">
+        </animate>
+      </circle>
+      <circle fill="#2B5D5F" stroke="#2B5D5F" stroke-width="18" r="15" cx="160" cy="100">
+        <animate attributeName="opacity" calcMode="spline" dur="1" values="1;0;1;" keySplines=".5 0 .5 1;.5 0 .5 1"
+                 repeatCount="indefinite" begin="0">
+        </animate>
+      </circle>
+    </svg>
+  </div>
+
+  <div id="compose_box" v-if="isQuillLoaded">
+
     <form id="postForm" @submit.prevent="handleSubmit" enctype="multipart/form-data" :action="formAction" method="POST">
+
       <!-- Éditeur de contenu -->
       <div id="editor"></div>
       <textarea name="content" style="display: none;" id="content-textarea" v-model="content"></textarea>
@@ -19,7 +42,7 @@
           />
 
         </div>
-        <add-doc-btn file-input="file-input" @trigger-file="triggerFileInput" />
+        <add-doc-btn file-input="file-input" @trigger-file="triggerFileInput"/>
         <button type="submit" id="submit-button">Poster</button>
       </div>
     </form>
@@ -48,16 +71,36 @@ export default {
       fileList: [], // Liste des fichiers sélectionnés
       submissionError: null,
       submissionSuccess: false,
+      isQuillLoaded: false,
     };
   },
+  beforeMount() {
+    console.log("🚀 beforeMount : Affichage du loader...");
+    this.isQuillLoaded = false; // 🔥 On force l'affichage du loader ici
+  },
   mounted() {
-    this.initializeQuill(); // Initialisation de Quill au montage
+    console.log("✅ Component mounted!");
+    this.$nextTick(() => {
+      console.log("🔄 Vue a fini de rendre le DOM, on initialise Quill...");
+      this.initializeQuill();
+    });
+    setTimeout(() => {
+      this.initializeQuill();
+    }, 500);
+
   },
   methods: {
     /**
      * Initialisation de Quill
+     *  Attention, cette méthode est appelée deux fois : lors du premier rendu et lors du montage
+     *  On force l'affichage du loader ici
      */
     initializeQuill() {
+      this.quill.once("text-change", () => {
+        this.isQuillLoaded = true; // 🔥 Cache le loader dès que Quill est prêt
+        console.log("🎉 Quill est chargé, isQuillLoaded =", this.isQuillLoaded);
+      });
+      console.log("✅ initializeQuill() called!");
       const editor = document.getElementById('editor');
 
       if (!editor || editor.dataset.quillInitialized) {
@@ -84,6 +127,13 @@ export default {
           ]
         }
       });
+
+      if (this.quill) {
+        console.log("✅ Quill instance créée :", this.quill);
+      } else {
+        console.error("❌ Quill n'a pas été instancié !");
+      }
+
 
       document.querySelectorAll('.ql-toolbar .ql-formats button').forEach((button) => {
         if (button.classList.contains('ql-bold')) {
@@ -247,4 +297,14 @@ export default {
 </script>
 
 <style scoped>
+.loader {
+  width: 40px;
+  height: 40px;
+  margin: 20px auto;
+}
+
+.loader > p {
+  color: black;
+  font-size: 2em;
+}
 </style>

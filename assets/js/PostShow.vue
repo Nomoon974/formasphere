@@ -54,13 +54,14 @@
             @files-added="handleFilesAdded"
             :acceptedFileTypes="acceptedFileTypes"
             :allowMultiple="true"
+            :isEditing="isEditing"
         />
         <file-item
             v-for="doc in localDocuments"
             :key="doc.id"
             :file="doc"
             :csrfToken="doc.csrfToken"
-            :isEditable="isEditable"
+            :isEditing="isEditing"
             @file-deleted="handleFileDeleted"
         ></file-item>
       </div>
@@ -141,7 +142,6 @@ export default {
   },
   setup(props) {
     const comments = ref(props.comments);
-
     function handleNewComment(newComment) {
       comments.value.push(newComment);
     }
@@ -153,8 +153,8 @@ export default {
   },
   data() {
     return {
-      isEditing: false,
       quillEditor: null,
+      isEditing: false,
       originalContent: "",
       editedContent: "",
       localDocuments: [...this.documents],
@@ -280,6 +280,9 @@ export default {
 
     formatDate(date) {
       return new Date(date).toLocaleString("fr-FR", {dateStyle: "medium", timeStyle: "short"});
+    },
+    mounted() {
+      console.log(this.post);
     },
   },
 };

@@ -1,10 +1,10 @@
 <template>
-  <div class="post-file">
+  <div :class="['post-file', { editable: isEditing }]">
     <a :href="file.link" target="_blank">
       <span v-html="downloadIcon"></span>
       <span class="file-label">{{ extractFileName(file.link) }}</span>
     </a>
-    <button v-if="isEditable" class="delete-doc-btn" @click="deleteFile">
+    <button v-if="isEditing" class="delete-doc-btn" @click="deleteFile" aria-label="Supprimer ce document">
       <span v-html="deleteIcon"></span>
     </button>
   </div>
@@ -23,7 +23,7 @@ export default {
       required: true,
       default: "",
     },
-    isEditable: {
+    isEditing: {
       type: Boolean,
       required: true,
     },
@@ -84,7 +84,6 @@ export default {
 
   },
   mounted() {
-    console.log('Jeton CSRF reçu dans FileItem :', this.csrfToken);
   },
 };
 </script>

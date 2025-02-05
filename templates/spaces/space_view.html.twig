@@ -33,7 +33,10 @@
                         <div class="left-info">
                             <small>{{ post.createdAt|date('d/m/Y H:i:s') }}</small>
                         </div>
-                        <div class="post-more-bloc"><a href="{{ path('app_posts_show', {'id': post.id}) }}" class="details-link" title="Consulter le post">Consulter {{ ux_icon('material-symbols:arrow-right', {class: 'arrow-right'}) }}</a></div>
+                        <div class="post-more-bloc"><a href="{{ path('app_posts_show', {'id': post.id}) }}"
+                                                       class="details-link"
+                                                       title="Consulter le post">Consulter {{ ux_icon('material-symbols:arrow-right', {class: 'arrow-right'}) }}</a>
+                        </div>
                     </div>
                 </div>
             </div>

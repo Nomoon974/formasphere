@@ -15,6 +15,8 @@ use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Contracts\Cache\CacheInterface;
+use Symfony\Contracts\Cache\ItemInterface;
 
 #[Route('/spaces')]
 class SpacesController extends AbstractController
@@ -90,13 +92,21 @@ class SpacesController extends AbstractController
         Security $security,
         PaginatorInterface $paginator,
         Request $request,
-        PostsRepository $postsRepository
+        PostsRepository $postsRepository,
+        CacheInterface $cache
     ): Response {
-        $queryBuilder = $postsRepository->findPostsBySpaceQueryBuilder($space);
+        $page = $request->query->getInt('page', 1);
+        $cacheKey = sprintf('space_%d_page_%d_posts', $space->getId(), $page);
+
+        $posts = $cache->get($cacheKey, function (ItemInterface $item) use ($postsRepository, $space) {
+            $item->expiresAfter(12000);
+            $queryBuilder = $postsRepository->findPostsBySpaceQueryBuilder($space);
+            return $queryBuilder->getQuery()->getResult();
+        });
 
         $pagination = $paginator->paginate(
-            $queryBuilder->getQuery(),
-            $request->query->getInt('page', 1),
+            $posts,
+            $page,
             15
         );
 
@@ -114,6 +124,5 @@ class SpacesController extends AbstractController
             'editForms' => $editForms,
         ]);
     }
-
 
 }

@@ -300,7 +300,7 @@ button.btn:disabled {
     height: 40px;
     border-radius: 20px;
     transition: all 0.3s ease-in;
-    overflow: hidden;
+
     color: #005B8F;
 }
 
@@ -320,8 +320,9 @@ button.btn:disabled {
     justify-content: center;
     align-self: center;
     width: 90%;
-    margin: auto;
-
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 30px;
 }
 
 .spaces-list .title {
@@ -372,9 +373,6 @@ button.btn:disabled {
     z-index: 1;
 }
 
-
-
-
 /********************** card *******************************/
 
 .card-grid {
@@ -392,9 +390,9 @@ button.btn:disabled {
     overflow: hidden;
 
     border: 1px solid var(--light-grey);
-    border-radius: 20px;
-    -webkit-border-radius: 20px;
-    -moz-border-radius: 20px;
+    border-radius: 5px;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
 
     display: grid;
     grid-template-areas:
@@ -403,11 +401,13 @@ button.btn:disabled {
     grid-template-rows: 60% 40%;
 
     transition: all 0.2s ease-in;
+
+    clip-path: polygon(0 0, 89% 0, 100% 10%, 100% 70%, 100% 100%, 0 100%, 0% 70%, 0% 30%);
 }
 
 .card_style:hover {
-    -webkit-box-shadow: 5px 5px 15px 5px rgba(0, 0, 0, 0.1);
-    box-shadow: 2px 2px 5px 5px rgba(0, 0, 0, 0.1);
+    -webkit-box-shadow: 3px 3px 10px 3px rgba(0, 0, 0, 0.1);
+    box-shadow: 1px 1px 3px 3px rgba(0, 0, 0, 0.1);
     transform: translateY(-2px);
 }
 
@@ -427,9 +427,10 @@ button.btn:disabled {
     background-color: white;
     grid-area: cardcontent;
     width: 100%;
-    padding: 5px;
+    padding: 8px;
     text-overflow: ellipsis;
     font-size: small;
+    overflow: hidden;
 }
 
 .card_content h2 {
@@ -735,6 +736,7 @@ label {
     justify-content: center;
     align-items: center;
     transition: outline-color 0.3s ease;
+    margin-right: 15px;
 }
 
 .add-doc-btn:hover {
@@ -971,8 +973,6 @@ label {
 }
 
 .delete-btn:hover, .edit-btn:hover {
-    /* Utilise l'outline au lieu du border */
-    /* Pour delete-btn */
     outline: red solid 1px;
 }
 
@@ -1004,11 +1004,11 @@ label {
 
 .save-btn {
     margin-top: 5px;
-    background-color: #28a745; /* Green color for save button */
+    background-color: seagreen; /* Green color for save button */
 }
 
 .cancel-btn {
-    background-color: #dc3545; /* Red color for cancel button */
+    background-color: indianred; /* Red color for cancel button */
 }
 
 .edit-btn:disabled, .delete-btn:disabled {
@@ -1019,7 +1019,7 @@ label {
 .post-file-list {
     display: flex;
     flex-wrap: wrap;
-    gap: 15px;
+    margin-top: 15px;
     justify-content: start;
     padding: 10px;
 }
@@ -1057,23 +1057,6 @@ label {
     right: -4px;
 }
 
-.post-file {
-    position: relative;
-    width: 110px;
-    height: 60px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    border: 2px solid rgba(201, 201, 201, 0.31);
-    border-radius: 5px;
-    background-color: #f9f9f9;
-    text-align: center;
-    font-size: 14px;
-    transition: transform 0.2s, box-shadow 0.2s;
-    cursor: pointer;
-}
-
 @keyframes keyframes1 {
     0% {
         transform: rotate(-1deg);
@@ -1098,9 +1081,33 @@ label {
     }
 }
 
-.post-file:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+/* Style de base, sans animation */
+.post-file {
+    position: relative;
+    width: 110px;
+    height: 60px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border: 2px solid rgba(201, 201, 201, 0.31);
+    border-radius: 5px;
+    background-color: #f9f9f9;
+    text-align: center;
+    font-size: 14px;
+    transition: transform 0.2s, box-shadow 0.2s;
+    cursor: pointer;
+    animation: none !important; /* ✅ Empêcher toute animation par défaut */
+}
+
+/* Ajoute l'animation SEULEMENT quand `.editable` est présente */
+.post-file.editable {
+    animation: keyframes1 0.5s infinite alternate ease-in-out !important;
+}
+
+/* Variation pour un effet aléatoire */
+.post-file.editable:nth-child(2n) {
+    animation: keyframes2 0.5s infinite alternate ease-in-out !important;
 }
 
 .post-file .ux-icon {
@@ -1194,6 +1201,7 @@ label {
     width: inherit;
     margin-left: 5px;
     word-break: break-word;
+    margin-bottom: 5px;
 }
 
 .comment p {
@@ -1202,7 +1210,7 @@ label {
     display: flex;
     justify-content: start;
     margin-bottom: 12px;
-    margin-left: 42px;
+    margin-left: 45px;
     text-overflow: ellipsis;
     border-left: none !important;
     flex-grow: 1;
@@ -1290,12 +1298,12 @@ label {
 .comments-title {
     font-size: 1.4em;
     color: var(--cadetblue);
-    margin: 8px 0 8px 0;
+    margin: 10px 0 10px 0;
 }
 
 .comment-author, .post-author {
     font-weight: 500;
-    font-size: 1.1em;
+    font-size: 1.2em;
     text-transform: capitalize;
 }
 

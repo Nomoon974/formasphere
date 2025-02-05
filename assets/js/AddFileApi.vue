@@ -8,16 +8,9 @@
         style="display: none;"
         @change="handleFileChange"
     />
-    <button type="button" class="add-doc-btn" @click="triggerFileInput" aria-label="Ajouter un document">
+    <button type="button" class="add-doc-btn" v-if="isEditing" @click="triggerFileInput" aria-label="Ajouter un document">
       <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 32 32"><path fill="currentColor" d="M30 24h-4v-4h-2v4h-4v2h4v4h2v-4h4z"/><path fill="currentColor" d="M16 28H8V4h8v6a2.006 2.006 0 0 0 2 2h6v4h2v-6a.91.91 0 0 0-.3-.7l-7-7A.9.9 0 0 0 18 2H8a2.006 2.006 0 0 0-2 2v24a2.006 2.006 0 0 0 2 2h8Zm2-23.6l5.6 5.6H18Z"/></svg>
-
     </button>
-    <div class="file-list">
-      <div v-for="(file, index) in selectedFiles" :key="index" class="file-item">
-        <span>{{ file.name }}</span>
-        <button type="button" @click="removeFile(index)">✖</button>
-      </div>
-    </div>
   </div>
 </template>
 
@@ -38,6 +31,10 @@ export default {
       default: `<svg xmlns="http://www.w3.org/2000/svg" width="1.5em" height="1.5em" viewBox="0 0 24 24">
         <path fill="currentColor" d="M14 2H6c-1.11 0-2 .89-2 2v16c0 1.11.89 2 2 2h7.81c-.53-.91-.81-1.95-.81-3c0-.33.03-.67.08-1H6v-2h7.81c.46-.8 1.1-1.5 1.87-2H6v-2h12v1.08c.33-.05.67-.08 1-.08s.67.03 1 .08V8zm-1 7V3.5L18.5 9zm5 6v3h-3v2h3v3h2v-3h3v-2h-3v-3z"/>
       </svg>`,
+    },
+    isEditing: {
+      type: Boolean,
+      required: true,
     },
   },
   data() {
@@ -82,17 +79,6 @@ export default {
   background: none;
   border: none;
   cursor: pointer;
-}
-
-.file-list {
-  margin-top: 10px;
-}
-
-.file-item {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 5px;
 }
 
 .file-item button {

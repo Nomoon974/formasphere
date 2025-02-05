@@ -3,14 +3,10 @@
 <div class="{{ card_style }}">
     <div class="{{ card_img }}">
         <img src="{{ asset(image_url) }}" alt="image formation">
-
     </div>
 
-    <div class="{{ card_content }}">
-{#        <div style="background-color: {{ theme_color|default('#00000') }}; height: 20px; width: 20px; border-radius: 10px"></div>#}
+    <div class="{{ card_content }} ellipsis">
         <h2>{{ card_title }}</h2>
         {{ card_descr }}
-
     </div>
-
 </div>
