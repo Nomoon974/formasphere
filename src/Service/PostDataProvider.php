@@ -16,6 +16,7 @@ class PostDataProvider
 
         $postData = [
             'id' => $post->getId(),
+            'title' => $post->getTitle(),
             'text' => $post->getText(),
             'createdAt' => $post->getCreatedAt()->format('c'),
             'updatedAt' => $post->getUpdatedAt() ? $post->getUpdatedAt()->format('c') : null,

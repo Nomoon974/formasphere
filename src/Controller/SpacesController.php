@@ -15,6 +15,7 @@ use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Contracts\Cache\CacheInterface;
 use Symfony\Contracts\Cache\ItemInterface;
 
@@ -30,6 +31,7 @@ class SpacesController extends AbstractController
     }
 
     #[Route('/new', name: 'app_spaces_new', methods: ['GET', 'POST'])]
+    #[IsGranted('ROLE_ADMIN')]
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
         $space = new Spaces();
@@ -49,15 +51,9 @@ class SpacesController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'app_spaces_show', methods: ['GET'])]
-    public function show(Spaces $space): Response
-    {
-        return $this->render('spaces/show.html.twig', [
-            'space' => $space,
-        ]);
-    }
 
     #[Route('/{id}/edit', name: 'app_spaces_edit', methods: ['GET', 'POST'])]
+    #[IsGranted('ROLE_ADMIN')]
     public function edit(Request $request, Spaces $space, EntityManagerInterface $entityManager): Response
     {
         $form = $this->createForm(SpacesType::class, $space);
@@ -76,6 +72,7 @@ class SpacesController extends AbstractController
     }
 
     #[Route('/{id}', name: 'app_spaces_delete', methods: ['POST'])]
+    #[IsGranted('ROLE_ADMIN')]
     public function delete(Request $request, Spaces $space, EntityManagerInterface $entityManager): Response
     {
         if ($this->isCsrfTokenValid('delete'.$space->getId(), $request->request->get('_token'))) {
@@ -87,6 +84,7 @@ class SpacesController extends AbstractController
     }
 
     #[Route('/space/{id}', name: 'space_views')]
+    #[IsGranted('IS_AUTHENTICATED_FULLY')]
     public function view(
         Spaces $space,
         Security $security,
@@ -116,6 +114,8 @@ class SpacesController extends AbstractController
             $form = $this->createForm(PostsType::class, $post);
             $editForms[$post->getId()] = $form->createView();
         }
+
+        $cache->delete(sprintf('space_%d_page_%d_posts', $space->getId(), 1));
 
         return $this->render('spaces/space_view.html.twig', [
             'space' => $space,

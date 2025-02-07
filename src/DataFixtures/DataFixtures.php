@@ -70,6 +70,7 @@ class DataFixtures extends Fixture
             $user = $this->getReference('user-' . $j);
             for ($k = 0; $k < 20; $k++) {
                 $post = new Posts();
+                $post->setTitle($faker->sentence($nbWords = 6, $variableNbWords = true));
                 $post->setText($faker->paragraph);
                 $post->setCreatedAt(new \DateTimeImmutable());  // Convert to DateTimeImmutable
                 $post->setUser($user);

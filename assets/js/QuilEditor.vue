@@ -20,9 +20,12 @@
     </svg>
   </div>
 
-  <div id="compose_box" v-if="isQuillLoaded">
+  <div id="compose_box" v-show="isQuillLoaded">
 
     <form id="postForm" @submit.prevent="handleSubmit" enctype="multipart/form-data" :action="formAction" method="POST">
+
+      <label style="display: none;" for="title-input">Titre</label>
+      <input  name="title" id="title-input" v-model="title" required>
 
       <!-- Éditeur de contenu -->
       <div id="editor"></div>
@@ -63,6 +66,10 @@ export default {
       type: String,
       required: true,
     },
+    redirectUrl: {
+      type: String,
+      required: true,
+    },
   },
   data() {
     return {
@@ -72,6 +79,7 @@ export default {
       submissionError: null,
       submissionSuccess: false,
       isQuillLoaded: false,
+      title: '',
     };
   },
   beforeMount() {
@@ -84,10 +92,6 @@ export default {
       console.log("🔄 Vue a fini de rendre le DOM, on initialise Quill...");
       this.initializeQuill();
     });
-    setTimeout(() => {
-      this.initializeQuill();
-    }, 500);
-
   },
   methods: {
     /**
@@ -96,10 +100,6 @@ export default {
      *  On force l'affichage du loader ici
      */
     initializeQuill() {
-      this.quill.once("text-change", () => {
-        this.isQuillLoaded = true; // 🔥 Cache le loader dès que Quill est prêt
-        console.log("🎉 Quill est chargé, isQuillLoaded =", this.isQuillLoaded);
-      });
       console.log("✅ initializeQuill() called!");
       const editor = document.getElementById('editor');
 
@@ -128,12 +128,13 @@ export default {
         }
       });
 
+      this.quill ? this.isQuillLoaded = true : this.isQuillLoaded = false;
+
       if (this.quill) {
         console.log("✅ Quill instance créée :", this.quill);
       } else {
         console.error("❌ Quill n'a pas été instancié !");
       }
-
 
       document.querySelectorAll('.ql-toolbar .ql-formats button').forEach((button) => {
         if (button.classList.contains('ql-bold')) {
@@ -165,7 +166,6 @@ export default {
         }
       });
 
-
       this.quill.root.style.minHeight = '150px'; // Hauteur initiale définie
       this.quill.root.style.overflowY = 'hidden'; // Empêche les scrollbars
 
@@ -175,7 +175,6 @@ export default {
       });
 
       editor.dataset.quillInitialized = true;
-
     },
 
     resizeEditor() {
@@ -236,7 +235,9 @@ export default {
       // FormData pour la soumission
       const formData = new FormData();
       formData.append('content', htmlContent);
+      formData.append('title', this.title);
       console.log(htmlContent)
+      console.log(this.title)
 
       // Ajout des fichiers sélectionnés
       this.fileList.forEach((file) => formData.append('document[]', file));
@@ -256,7 +257,7 @@ export default {
               this.resetForm();
               console.log('Soumission réussie');
               this.submissionSuccess = true;
-              window.location.reload();
+              window.location.href = this.redirectUrl;
             } else {
               response.text().then((text) => {
                 console.error('Erreur :', text);
@@ -306,5 +307,16 @@ export default {
 .loader > p {
   color: black;
   font-size: 2em;
+}
+
+#title-input {
+  height: 40px;
+  width: 100%;
+  border: 1px solid #ccc;
+  outline: none;
+  font-size: 1.1em;
+  padding: 10px;
+  border-radius: 8px;
+  margin-bottom: 8px;
 }
 </style>

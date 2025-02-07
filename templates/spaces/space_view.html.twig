@@ -5,18 +5,31 @@
 
         {% include 'components/search_bar.html.twig' %}
         <!-- Boîte de composition de nouveau post -->
-        <quil-editor :form-action="'{{ path('save_post', {'space_id': space.id}) }}'"></quil-editor>
+        <quil-editor :form-action="'{{ path('save_post', {'space_id': space.id}) }}'" :redirect-url="'{{ path('space_views', {'id': space.id}) }}'">
+        </quil-editor>
         <!-- Liste des posts -->
         {% for post in pagination %}
             <div class="container-post">
                 <div class="post_box">
                     <div class="post-header">
                         <div class="container-profil-post">
-                            <img class="profil-img img-profil-post" src="{{ asset(post.user.avatar) }}"
-                                 alt="avatar de {{ post.user.fullName }}">
-                            <h4 class="post-author">{{ post.user.fullName }}</h4>
+                            {% if post.user.avatar == null %}
+                                <img class="profil-img img-profil-post"
+                                     src="{{ asset('/build/images/pp1.8ce6bd64.webp') }}"
+                                     alt="avatar de {{ post.user.fullName }}">
+                                <h4 class="post-author">{{ post.user.fullName }}</h4>
+                            {% else %}
+                                <img class="profil-img img-profil-post"
+                                     src="{{ asset(post.user.avatar) }}"
+                                     alt="avatar de {{ post.user.fullName }}">
+                                <h4 class="post-author">{{ post.user.fullName }}</h4>
+                            {% endif %}
                         </div>
 
+                    </div>
+                    <div class="title-post-container">
+                        <small class="title-post">Titre :&nbsp;</small>
+                        <h4 class="post-title">{{ post.title }}</h4>
                     </div>
                     <div class="post-text ellipsis">
                         <p>{{ post.text|raw }}</p>
@@ -33,9 +46,11 @@
                         <div class="left-info">
                             <small>{{ post.createdAt|date('d/m/Y H:i:s') }}</small>
                         </div>
-                        <div class="post-more-bloc"><a href="{{ path('app_posts_show', {'id': post.id}) }}"
-                                                       class="details-link"
-                                                       title="Consulter le post">Consulter {{ ux_icon('material-symbols:arrow-right', {class: 'arrow-right'}) }}</a>
+                        <div class="post-more-bloc">
+                            <a href="{{ path('app_posts_show', {'id': post.id}) }}"
+                               class="details-link"
+                               title="Consulter le post">Consulter {{ ux_icon('material-symbols:arrow-right', {class: 'arrow-right'}) }}
+                            </a>
                         </div>
                     </div>
                 </div>
@@ -52,5 +67,4 @@
 
 {% block javascript %}
 {{ parent() }}
-
 {% endblock %}

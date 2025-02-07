@@ -25,6 +25,7 @@ use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Csrf\CsrfToken;
 use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 #[Route('/posts')]
 class PostsController extends AbstractController
@@ -36,14 +37,6 @@ class PostsController extends AbstractController
     {
         $this->entityManager = $entityManager;
         $this->security = $security;
-    }
-
-    #[Route('/', name: 'app_posts_index', methods: ['GET'])]
-    public function index(PostsRepository $postsRepository): Response
-    {
-        return $this->render('posts/index.html.twig', [
-            'posts' => $postsRepository->findAll(),
-        ]);
     }
 
     #[Route('/new', name: 'app_posts_new', methods: ['GET', 'POST'])]
@@ -67,14 +60,16 @@ class PostsController extends AbstractController
         ]);
     }
 
+    #[IsGranted('IS_AUTHENTICATED_FULLY')]
     #[Route('/post/{id}', name: 'app_posts_show', methods: ['GET'])]
     public function show(
-        Posts $post,
+        Posts                     $post,
         CsrfTokenManagerInterface $csrfTokenManager,
-        PostsRepository $postsRepository,
-        PostDataProvider $postDataProvider,
-        Security $security
-    ): Response {
+        PostsRepository           $postsRepository,
+        PostDataProvider          $postDataProvider,
+        Security                  $security
+    ): Response
+    {
         $user = $security->getUser();
 
         $data = $postsRepository->findPostWithRelations($post);
@@ -96,13 +91,15 @@ class PostsController extends AbstractController
         ]);
     }
 
+    #[IsGranted('IS_AUTHENTICATED_FULLY')]
     #[Route('/post/{id}/edit', name: 'app_posts_edit', methods: ['POST'])]
     public function edit(
-        Posts $post,
-        Request $request,
+        Posts                  $post,
+        Request                $request,
         EntityManagerInterface $entityManager,
-        Security $security
-    ): JsonResponse {
+        Security               $security
+    ): JsonResponse
+    {
         $user = $security->getUser();
 
         // Vérifiez si l'utilisateur a le droit de modifier
@@ -111,31 +108,42 @@ class PostsController extends AbstractController
         }
 
         $data = json_decode($request->getContent(), true);
+
         $content = $data['content'] ?? '';
+        $title = $data['title'] ?? '';
 
         // Validation du contenu
-        if (strlen(trim(strip_tags($content))) < 10) {
+        if (
+            strlen(trim(strip_tags($content))) < 10
+            || strlen(trim(strip_tags($title))) < 3
+        ) {
             return new JsonResponse(['error' => 'Le contenu doit contenir au moins 10 caractères.'], 400);
         }
 
         $purifier = new \HTMLPurifier();
         $cleanHtml = $purifier->purify($content);
-
+        $post->setTitle($title);
         $post->setText($cleanHtml);
         $post->setUpdatedAt(new \DateTimeImmutable());
         $entityManager->flush();
 
-        return new JsonResponse(['success' => true, 'updatedText' => $post->getText()]);
+        $this->addFlash('success', 'Post mis à jour avec succès.');
+
+        return new JsonResponse([
+            'success' => true,
+            'updatedText' => $post->getText(),
+            'updatedTitle' => $post->getTitle(),
+        ]);
     }
 
     #[Route('/{id}/delete', name: 'app_posts_delete', methods: ['POST'])]
     #[IsGranted('IS_AUTHENTICATED_FULLY')]
     public function delete(
-        Request $request,
+        Request                   $request,
         CsrfTokenManagerInterface $csrfTokenManager,
-        Posts $post,
-        EntityManagerInterface $entityManager,
-        Security $security
+        Posts                     $post,
+        EntityManagerInterface    $entityManager,
+        Security                  $security
     ): \Symfony\Component\HttpFoundation\RedirectResponse
     {
         // Récupérer l'utilisateur actuel
@@ -166,12 +174,14 @@ class PostsController extends AbstractController
     #[Route("/space/{space_id}/post/save", name: "save_post", methods: ['POST'])]
     #[IsGranted('IS_AUTHENTICATED_FULLY')]
     public function savePost(
-        Request $request,
+        Request                $request,
         EntityManagerInterface $entityManager,
-        Security $security,
-        FileUploader $fileUploader,
-        int $space_id,
-    ): Response {
+        Security               $security,
+        FileUploader           $fileUploader,
+        int                    $space_id,
+        ValidatorInterface     $validator,
+    ): Response
+    {
         // Récupération de l'utilisateur et de l'espace
         $user = $security->getUser();
         $space = $entityManager->getRepository(Spaces::class)->find($space_id);
@@ -185,6 +195,7 @@ class PostsController extends AbstractController
             return $this->redirectToRoute('space_views', ['id' => $space_id]);
         }
 
+        $title = $request->request->get('title');
         $content = $request->request->get('content');
 
         // Si le contenu est vide ou trop court
@@ -205,9 +216,19 @@ class PostsController extends AbstractController
 
         // Création et enregistrement du post
         $post = new Posts();
+        $post->setTitle($title);
         $post->setUser($user);
         $post->setSpace($space);
         $post->setText($cleanHtml);
+
+        $errors = $validator->validate($post);
+        if (count($errors) > 0) {
+            foreach ($errors as $error) {
+                $this->addFlash('error', $error->getMessage());
+            }
+            return $this->redirectToRoute('space_views', ['id' => $space_id]);
+        }
+
         $entityManager->persist($post);
         $entityManager->flush();
 

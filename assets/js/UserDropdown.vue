@@ -36,7 +36,6 @@
   </div>
 </template>
 
-
 <script>
 export default {
   name: "UserDropdown",
@@ -91,6 +90,7 @@ export default {
   border-radius: 50%;
   cursor: pointer;
   transition: transform 0.2s ease-in-out;
+  margin: 0;
 }
 
 /* Effet de zoom au survol */

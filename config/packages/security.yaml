@@ -52,8 +52,11 @@ security:
   access_control:
     - { path: ^/login$, roles: PUBLIC_ACCESS }
     - { path: ^/verify/email, roles: PUBLIC_ACCESS }
-    - { path: ^/overview, roles: ROLE_USER }
-    - { path: ^/admin, role: ROLE_ADMIN }
+    - { path: ^/overview, roles: [ROLE_USER, ROLE_TEACHER] }
+    - { path: ^/space, roles: [ROLE_USER, ROLE_TEACHER] }
+    - { path: ^/post, roles: [ROLE_USER, ROLE_TEACHER] }
+    - { path: ^/documents, roles: [ROLE_USER, ROLE_TEACHER] }
+    - { path: ^/admin, roles: ROLE_ADMIN }
 
   # Redirige vers la page de connexion pour les utilisateurs non authentifiés
   # accédant aux routes protégées

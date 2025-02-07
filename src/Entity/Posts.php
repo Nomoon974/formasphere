@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: PostsRepository::class)]
 class Posts
@@ -41,6 +42,16 @@ class Posts
 
     #[ORM\OneToMany(mappedBy: 'post', targetEntity: Documents::class, cascade: ['persist', 'remove'])]
     private Collection $documents;
+
+    #[Assert\NotBlank(message: 'Le titre ne peut pas être vide.')]
+    #[Assert\Length(
+        min: 3,
+        max: 100,
+        minMessage: 'Le titre doit faire au moins {{ limit }} caractères.',
+        maxMessage: 'Le titre ne peut pas dépasser {{ limit }} caractères.'
+    )]
+    #[ORM\Column(length: 255)]
+    private ?string $title = null;
 
     public function __construct()
     {
@@ -198,6 +209,18 @@ class Posts
                 $document->setPost(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getTitle(): ?string
+    {
+        return $this->title;
+    }
+
+    public function setTitle(string $title): static
+    {
+        $this->title = $title;
 
         return $this;
     }
