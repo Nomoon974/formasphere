@@ -33,6 +33,10 @@ services:
         tags:
             - { name: 'twig.extension' }
 
+    App\Service\MercureJwtProvider:
+        arguments:
+            $jwtSecret: '%env(MERCURE_JWT_SECRET)%'
+
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
     App\EventListener\LoginListener:

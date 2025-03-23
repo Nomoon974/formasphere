@@ -13,10 +13,17 @@
         <div id="header-container">
             {% include 'components/logo.html.twig' with {'logo_class': logo_class, 'logo_title': logo_title} %}
             <div class="content-header">
+                <dark-mode-button></dark-mode-button>
+
                 <div class="notification-icon">
-                    <img class="icon-bell" src="{{ asset('build/images/new-notification.png') }}"
-                         alt="notification-icon">
-                    <div class="notification-badge"></div>
+                    {#                    <img class="icon-bell" src="{{ asset('build/images/new-notification.png') }}" #}
+                    {#                         alt="notification-icon"> #}
+                    {#                    <div class="notification-badge"></div> #}
+                    <notification :user-id="{{ app.user.id|json_encode }}"
+                                  :notifications="{{ app.user.notifications|json_encode }}"
+                    ></notification>
+
+
                 </div>
                 {% block hearder %}
                     {% if app.user %}

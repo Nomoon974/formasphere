@@ -19,7 +19,7 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Contracts\Cache\CacheInterface;
 use Symfony\Contracts\Cache\ItemInterface;
 
-#[Route('/spaces')]
+
 class SpacesController extends AbstractController
 {
     #[Route('/', name: 'app_spaces_index', methods: ['GET'])]
@@ -93,6 +93,7 @@ class SpacesController extends AbstractController
         PostsRepository $postsRepository,
         CacheInterface $cache
     ): Response {
+
         $page = $request->query->getInt('page', 1);
         $cacheKey = sprintf('space_%d_page_%d_posts', $space->getId(), $page);
 

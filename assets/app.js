@@ -10,6 +10,9 @@ import FileItem from "./js/FileItem.vue";
 import EditPostButton from "./js/EditPostButton.vue";
 import CommentSection from "./js/CommentSection.vue";
 import UserDropdown from "./js/UserDropdown.vue";
+import ScrollButton from "./js/ScrollButton.vue";
+import Notification from "./js/Notification.vue";
+import DarkModeButton from "./js/DarkModeButton.vue";
 const app = createApp({});
 
 app.component('DeletePost', DeletePost);
@@ -21,6 +24,9 @@ app.component('FileItem', FileItem);
 app.component('EditPostButton', EditPostButton);
 app.component('CommentSection', CommentSection);
 app.component('UserDropdown', UserDropdown);
+app.component('ScrollButton', ScrollButton);
+app.component('Notification', Notification);
+app.component('DarkModeButton', DarkModeButton);
 app.mount('#vue-app');
 /*
  * Welcome to your app's main JavaScript file!

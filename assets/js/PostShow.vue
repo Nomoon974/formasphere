@@ -39,13 +39,23 @@
           <h4 v-if="!isEditing"> {{ post.title }}</h4>
         </div>
         <div v-if="isEditing" class="post-edit-form">
-          <input v-model:="post.title" type="text"/>
+          <div>
+            <input class="edit-post-title" v-model:="post.title" type="text"/>
+          </div>
           <div ref="editor" class="quill-editor"></div>
           <textarea v-model="editedContent" class="hidden-label"></textarea>
           <div class="form-errors" v-if="error">{{ error }}</div>
-          <div class="post-actions">
-            <button class="save-btn" @click="saveEdit">Sauvegarder</button>
-            <button class="cancel-btn" @click="cancelEdit">Annuler</button>
+          <div class="action-edit-btn">
+            <add-file-button
+                @files-added="handleFilesAdded"
+                :acceptedFileTypes="acceptedFileTypes"
+                :allowMultiple="true"
+                :isEditing="isEditing"
+            />
+            <div class="post-actions">
+              <button class="save-btn" @click="saveEdit">Sauvegarder</button>
+              <button class="cancel-btn" @click="cancelEdit">Annuler</button>
+            </div>
           </div>
         </div>
         <div v-else class="post-text-show">
@@ -55,12 +65,7 @@
 
       <!-- Liste des fichiers -->
       <div class="post-file-list">
-        <add-file-button
-            @files-added="handleFilesAdded"
-            :acceptedFileTypes="acceptedFileTypes"
-            :allowMultiple="true"
-            :isEditing="isEditing"
-        />
+
         <file-item
             v-for="doc in localDocuments"
             :key="doc.id"
@@ -279,23 +284,46 @@ export default {
   min-height: 200px;
   border: 1px solid #ccc;
   border-radius: 4px;
-  padding: 10px;
 }
 
 .hidden-label {
   display: none;
 }
 
+.edit-post-title {
+  border-radius: 6px;
+}
+
+.action-edit-btn {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
 .post-actions {
-  margin-top: 10px;
+  margin-top: 2px;
+  width: max-content;
 }
 
 .title-post-container {
   display: inline-flex;
   align-items: center;
   justify-content: start;
-  margin-bottom: 10px;
+  margin-bottom: 5px;
   flex-direction: row;
+  width: 100%;
+}
+
+.post-edit-form > div {
+  width: 100% !important;
+  margin-bottom: 2px !important;
+}
+
+.post-edit-form > div > input {
+  width: 100% !important;
+  border: 1px solid var(--light-grey) !important;
+  border-radius: 4px !important;
+  padding: 5px !important;
 }
 
 .title-post {

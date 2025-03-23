@@ -21,7 +21,6 @@ class DocumentsController extends AbstractController
         EntityManagerInterface $entityManager,
         CsrfTokenManagerInterface $csrfTokenManager
     ): JsonResponse {
-        $documents = new Documents();
 
         $document = $entityManager->getRepository(Documents::class)->find($id);
 
@@ -30,7 +29,7 @@ class DocumentsController extends AbstractController
         }
 
         // Vérifie que l'utilisateur est le propriétaire du fichier
-        if ($document->getPost()->getUser() !== $this->getUser()) {
+        if ($document->getPost()->getUser() !== $this->getUser() || !$this->isGranted('ROLE_ADMIN')) {
             return new JsonResponse(['error' => 'Vous n\'êtes pas autorisé à supprimer ce fichier.'], Response::HTTP_FORBIDDEN);
         }
 

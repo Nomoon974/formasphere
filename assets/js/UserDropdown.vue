@@ -124,6 +124,10 @@ export default {
   margin: 0 !important;
 }
 
+.dropdown-menu li:hover {
+  background-color: var(--light-grey);
+}
+
 .dropdown-menu li a {
   text-decoration: none;
   color: #333;

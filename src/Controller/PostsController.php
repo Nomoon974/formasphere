@@ -2,15 +2,16 @@
 
 namespace App\Controller;
 
-use App\Entity\Comment;
 use App\Entity\Posts;
 use App\Entity\Spaces;
-use App\Form\CommentType;
+use App\Entity\User;
+use App\Enum\NotificationType;
 use App\Form\PostsType;
 use App\Service\FileUploader;
 use App\Entity\Documents;
 use App\Repository\PostsRepository;
 use App\Service\MimeTypesService;
+use App\Service\NotificationService;
 use App\Service\PostDataProvider;
 use Doctrine\ORM\EntityManagerInterface;
 use HTMLPurifier;
@@ -97,7 +98,8 @@ class PostsController extends AbstractController
         Posts                  $post,
         Request                $request,
         EntityManagerInterface $entityManager,
-        Security               $security
+        Security               $security,
+        NotificationService    $notificationService
     ): JsonResponse
     {
         $user = $security->getUser();
@@ -126,6 +128,16 @@ class PostsController extends AbstractController
         $post->setText($cleanHtml);
         $post->setUpdatedAt(new \DateTimeImmutable());
         $entityManager->flush();
+
+        $notificationService->sendNotification(
+        /** @var User $user */
+            $user,
+            "/notifications/{$post->getId()}",
+            "{$user->getFullName()} a mis à jour le post {$post->getTitle()}",
+            "app_posts_show",
+            ['id' => $post->getId()],
+            NotificationType::INFO
+        );
 
         $this->addFlash('success', 'Post mis à jour avec succès.');
 
@@ -180,6 +192,7 @@ class PostsController extends AbstractController
         FileUploader           $fileUploader,
         int                    $space_id,
         ValidatorInterface     $validator,
+        NotificationService    $notificationService,
     ): Response
     {
         // Récupération de l'utilisateur et de l'espace
@@ -273,7 +286,16 @@ class PostsController extends AbstractController
             }
         }
 
-        // Sauvegarde des documents en BDD
+        $notificationService->sendNotification(
+            /** @var User $user */
+            $user,
+            "/notifications/{$space->getId()}",
+            "{$user->getFullName()} a créé un nouveau post dans {$space->getSpaceName()}",
+            "space_views",
+            ['id' => $space->getId()],
+            NotificationType::INFO
+        );
+
         $entityManager->flush();
 
         $this->addFlash('success', 'Post créé avec succès.');

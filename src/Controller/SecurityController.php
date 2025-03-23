@@ -10,7 +10,7 @@ use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
 class SecurityController extends AbstractController
 {
-    #[Route(path: '/login', name: 'app_login')]
+    #[Route(path: '/', name: 'app_login')]
     #[isGranted('PUBLIC_ACCESS')]
     public function login(AuthenticationUtils $authenticationUtils): Response
     {

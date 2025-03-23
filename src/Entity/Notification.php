@@ -5,6 +5,9 @@ namespace App\Entity;
 use App\Repository\NotificationRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Serializer\Annotation\SerializedName;
+
 
 #[ORM\Entity(repositoryClass: NotificationRepository::class)]
 class Notification
@@ -12,22 +15,27 @@ class Notification
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['notification:read'])]
     private ?int $id = null;
 
-    #[ORM\ManyToOne(inversedBy: 'notifications')]
+    #[ORM\ManyToOne( inversedBy: 'notifications')]
+    #[ORM\JoinColumn(nullable: false)]
+    #[Groups(['notification_user'])]
     private ?User $user = null;
 
     #[ORM\Column(type: Types::TEXT)]
+    #[Groups(['notification:read'])]
     private ?string $body = null;
 
-    #[ORM\Column(length: 255)]
-    private ?string $state = null;
+    #[ORM\Column(type: Types::BOOLEAN)]
+    #[Groups(['notification_read'])]
+    private ?bool $is_read = false;
 
     #[ORM\Column(length: 255)]
     private ?string $notification_type = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
-    private ?\DateTimeInterface $notification_date = null;
+    private ?\DateTimeInterface $notificationDate = null;
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $associated_link = null;
@@ -61,17 +69,16 @@ class Notification
         return $this;
     }
 
-    public function getState(): ?string
+    public function getIsRead(): ?bool
     {
-        return $this->state;
+        return $this->is_read;
     }
 
-    public function setState(string $state): static
+    public function setIsRead(?bool $is_read): void
     {
-        $this->state = $state;
-
-        return $this;
+        $this->is_read = $is_read;
     }
+
 
     public function getNotificationType(): ?string
     {
@@ -87,12 +94,13 @@ class Notification
 
     public function getNotificationDate(): ?\DateTimeInterface
     {
-        return $this->notification_date;
+        return $this->notificationDate;
     }
 
-    public function setNotificationDate(\DateTimeInterface $notification_date): static
+    #[SerializedName('notification_date')]
+    public function setNotificationDate(\DateTimeInterface $notificationDate): static
     {
-        $this->notification_date = $notification_date;
+        $this->notificationDate = $notificationDate;
 
         return $this;
     }

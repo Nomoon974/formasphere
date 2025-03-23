@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
@@ -19,6 +20,7 @@ class User implements UserInterface, \Symfony\Component\Security\Core\User\Passw
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['notification_read'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 180, unique: true)]
@@ -56,7 +58,7 @@ class User implements UserInterface, \Symfony\Component\Security\Core\User\Passw
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: Contents::class)]
     private Collection $contents;
 
-    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Notification::class)]
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Notification::class, orphanRemoval: true)]
     private Collection $notifications;
 
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: Report::class)]

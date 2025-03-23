@@ -73,6 +73,7 @@ export default {
 .file-uploader {
   display: flex;
   flex-direction: column;
+  width: max-content;
 }
 
 .add-doc-btn {

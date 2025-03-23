@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+
+<title>Notification</title>
+
+{% block body %}
+    <h1>Notification</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ notification.id }}</td>
+            </tr>
+            <tr>
+                <th>Body</th>
+                <td>{{ notification.body }}</td>
+            </tr>
+            <tr>
+                <th>State</th>
+                <td>{{ notification.state }}</td>
+            </tr>
+            <tr>
+                <th>Notification_type</th>
+                <td>{{ notification.notificationType }}</td>
+            </tr>
+            <tr>
+                <th>Notification_date</th>
+                <td>{{ notification.notificationDate ? notification.notificationDate|date('Y-m-d H:i:s') : '' }}</td>
+            </tr>
+            <tr>
+                <th>Associated_link</th>
+                <td>{{ notification.associatedLink }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_notification_index') }}">back to list</a>
+
+    <a href="{{ path('app_notification_edit', {'id': notification.id}) }}">edit</a>
+
+    {{ include('notification/_delete_form.html.twig') }}
+{% endblock %}

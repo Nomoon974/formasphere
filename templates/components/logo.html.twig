@@ -1,10 +1,14 @@
 {# components/logo.html.twig #}
 
 <div class="{{ logo_class }}">
+<a href="{{ path('app_overview') }}">
     {% block logo %}
-        <a href="{{ path('app_overview') }}">
+
+        <div>
             <img src="{{ asset('build/images/logo.f697d48c.png') }}" alt="logo">
-        </a>
+        </div>
+        
     {% endblock %}
-    <h2>{{ logo_title }}</h2>
+    <h2 class="logo_title">{{ logo_title }}</h2>
+</a>
 </div>

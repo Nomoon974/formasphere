@@ -23,7 +23,7 @@ class DataFixtures extends Fixture
         $this->profilePicturesDirectory = $this->params->get('kernel.project_dir') . '/public/build/images/profile-pictures';
     }
 
-    public function load(ObjectManager $manager)
+    public function load(ObjectManager $manager): void
     {
         $faker = Factory::create();
         $plainPassword = "123456";

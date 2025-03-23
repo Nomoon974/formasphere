@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Belanosima:wght@400;600;700&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
 :root {
     /*--light-grey: #cfcfcf;*/
     --light-grey: #cfcfcf;
@@ -42,10 +44,12 @@ a {
     text-decoration: none;
     text-underline-color: var(--light-grey) !important;
     text-underline-offset: 4px;
+    font-family: 'Sen', Courier, monospace;
+    width: max-content;
 }
 
 a:hover {
-    text-decoration: underline !important;
+    text-decoration: none;
     text-underline-color: var(--cadetblue);
 }
 
@@ -218,12 +222,25 @@ button.btn:disabled {
     margin-bottom: 10px;
 }
 
+.logo-container a {
+    display: flex !important;
+    width: max-content !important;
+    text-transform: capitalize;
+    text-decoration: none !important;
+}
+
+.logo-container a:hover {
+    color: none;
+    cursor: pointer;
+}
+
 .logo-container {
     grid-area: logo;
     background-color: white;
     padding: 5px;
     display: flex;
     justify-content: center;
+    flex-direction: row;
     align-items: center;
     margin-bottom: 1px;
     border-color: var(--light-grey);
@@ -233,14 +250,14 @@ button.btn:disabled {
 .logo-container img {
     width: 35px;
     height: 35px;
+    margin-right: 4px;
 }
 
 .logo-container > h2 {
     margin-left: 5px;
-
-    font-family: "Oswald", sans-serif;
+    font-family: "Belanosima", sans-serif !important;
     font-optical-sizing: auto;
-    font-weight: 300;
+    font-weight: 400;
     font-style: normal;
     text-transform: uppercase;
 }
@@ -304,6 +321,12 @@ button.btn:disabled {
     color: #005B8F;
 }
 
+.logo_title {
+    font-family: "Belanosima", serif;
+    text-transform: uppercase;
+    color: var(--cadetblue);
+}
+
 .profil-img:hover {
     transform: scale(1.1);
     transition: transform 0.3s ease-in-out;
@@ -346,7 +369,6 @@ button.btn:disabled {
 
 .content-main {
     background-color: #ffffff;
-    padding: 30px 0 0 0;
     grid-area: main;
     width: 100%;
 
@@ -499,16 +521,24 @@ button.btn:disabled {
     align-items: center;
     margin-top: 50px;
     flex-direction: column;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .logo-container-login-page h2 {
-    font-size: 3em;
-    font-family: "Oswald", sans-serif;
-    font-weight: 300;
+    font-size: 2.6em;
+    font-family: "Belanosima", sans-serif;
+    color: var(--cadetblue);
+    font-weight: 400;
     text-transform: uppercase;
 }
 
-.logo-container-login-page img {
+.logo-container-login-page a div {
+    width: min-content;
+    margin: auto;
+}
+
+.logo-container-login-page a div img {
     width: 120px;
     height: 120px;
 }
@@ -642,6 +672,10 @@ label {
 
     overflow-y: auto;
     overflow-x: hidden;
+}
+
+.post_box_show {
+    margin-top: 20px;
 }
 
 .search_bar_container {
@@ -845,6 +879,7 @@ label {
 }
 
 .btn-back {
+    margin-top: 20px;
     margin-left: 20px;
     position: fixed;
     color: #005B8F;
