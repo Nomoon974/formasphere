@@ -133,8 +133,10 @@ button.btn:disabled {
     font-weight: bold;
     line-height: 20px;
     cursor: pointer;
-    color: #fff;
+    color: var(--cadetblue);
     opacity: 0.8;
+    background: none;
+    border: none;
 }
 
 .close-bttn:hover {
@@ -206,6 +208,12 @@ button.btn:disabled {
     z-index: 1000;
 }
 
+.logo_header {
+    width: 180px !important;
+    height: max-content !important;
+    object-fit: contain;
+}
+
 #container-main {
     width: 100%;
     height: fit-content;
@@ -247,11 +255,11 @@ button.btn:disabled {
     overflow: hidden;
 }
 
-.logo-container img {
-    width: 35px;
-    height: 35px;
-    margin-right: 4px;
-}
+/*.logo-container img {*/
+/*    width: 35px;*/
+/*    height: 35px;*/
+/*    margin-right: 4px;*/
+/*}*/
 
 .logo-container > h2 {
     margin-left: 5px;
@@ -410,17 +418,13 @@ button.btn:disabled {
     width: 250px;
     height: 350px;
     overflow: hidden;
+    /*background-image: url('build/images/professional_placeholder.webp');*/
+    background-size: contain;
 
     border: 1px solid var(--light-grey);
     border-radius: 5px;
     -webkit-border-radius: 5px;
     -moz-border-radius: 5px;
-
-    display: grid;
-    grid-template-areas:
-    "cardimg"
-    "cardcontent";
-    grid-template-rows: 60% 40%;
 
     transition: all 0.2s ease-in;
 
@@ -446,13 +450,17 @@ button.btn:disabled {
 }
 
 .card_content {
-    background-color: white;
-    grid-area: cardcontent;
+    background: rgb(255,255,255);
+    background: linear-gradient(0deg, rgba(255,255,255,1) 38%, rgba(207,207,207,0.01928095456932777) 100%);
     width: 100%;
+    height: 100%;
     padding: 8px;
     text-overflow: ellipsis;
     font-size: small;
     overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: end;
 }
 
 .card_content h2 {
@@ -495,8 +503,13 @@ button.btn:disabled {
 .list_style {
     list-style: none;
     margin-left: 15px;
-    font-size: larger;
+    font-size: large;
     text-decoration: none !important;
+
+    display: flex;
+    flex-direction: row;
+    width: max-content !important;
+    gap: 10px;
 }
 
 .list_style a {
@@ -679,9 +692,11 @@ label {
 }
 
 .search_bar_container {
-    margin: auto 0 auto 0;
+    margin: 40px 0 auto 0;
     width: 12vw;
     transition: all 0.3s ease;
+    display: flex;
+    flex-direction: row;
 }
 
 .search_bar_container:focus-within {
@@ -692,14 +707,42 @@ label {
     visibility: hidden;
 }
 
+.search_button {
+    background-color: transparent !important;
+    border: 1px solid var(--light-grey) !important;
+    cursor: pointer;
+    transition: all 0.5s ease;
+    margin: 0 !important;
+    width: 62px !important;
+    height: 48px !important;
+    padding: 0 8px 0 8px !important;
+    border-bottom-left-radius: 0 !important;
+    border-top-left-radius: 0 !important;
+    border-left: none !important;
+}
+
+.search_button svg {
+    color: var(--light-grey) !important;
+    width: 25px;
+    height: 25px;
+}
+
+.search_button:hover svg {
+    color: var(--cadetblue) !important;
+    transition: all 0.5s ease-in-out;
+}
+
 #mysearch {
     pointer-events: auto;
     z-index: 20;
     box-sizing: border-box;
     transition: border-color 0.2s ease;
     margin: 0;
+    border-bottom-right-radius: 0;
+    border-top-right-radius: 0;
+    padding: 0 8px 0 8px !important;
+    height: 48px !important;
 }
-
 
 #mysearch:focus {
     outline: none;

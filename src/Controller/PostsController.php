@@ -40,27 +40,6 @@ class PostsController extends AbstractController
         $this->security = $security;
     }
 
-    #[Route('/new', name: 'app_posts_new', methods: ['GET', 'POST'])]
-    #[IsGranted('IS_AUTHENTICATED_FULLY')]
-    public function new(Request $request, EntityManagerInterface $entityManager): Response
-    {
-        $post = new Posts();
-        $form = $this->createForm(PostsType::class, $post);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager->persist($post);
-            $entityManager->flush();
-
-            return $this->redirectToRoute('app_posts_index', [], Response::HTTP_SEE_OTHER);
-        }
-
-        return $this->render('posts/new.html.twig', [
-            'post' => $post,
-            'form' => $form,
-        ]);
-    }
-
     #[IsGranted('IS_AUTHENTICATED_FULLY')]
     #[Route('/post/{id}', name: 'app_posts_show', methods: ['GET'])]
     public function show(
@@ -139,7 +118,7 @@ class PostsController extends AbstractController
             NotificationType::INFO
         );
 
-        $this->addFlash('success', 'Post mis à jour avec succès.');
+        $this->addFlash('success', 'Poste mis à jour avec succès.');
 
         return new JsonResponse([
             'success' => true,

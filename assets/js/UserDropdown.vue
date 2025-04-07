@@ -98,14 +98,27 @@ export default {
   transform: scale(1.1);
 }
 
+.dropdown-menu::before {
+  content: "";
+  position: absolute;
+  top: -10px; /* place l'encoche au-dessus */
+  right: 20px; /* ou left: 20px selon la position de ton bouton */
+  width: 0;
+  height: 0;
+  border-left: 8px solid transparent;
+  border-right: 8px solid transparent;
+  border-bottom: 8px solid white; /* couleur identique au fond du menu */
+  z-index: 1;
+}
+
 /* Menu déroulant caché par défaut */
 .dropdown-menu {
   position: absolute;
-  top: 50px;
+  top: 60px;
   right: 0;
   width: max-content;
   background: white;
-  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   border-radius: 8px;
   overflow: hidden;
   transform: translateY(-10px);

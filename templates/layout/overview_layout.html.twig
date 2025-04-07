@@ -16,9 +16,6 @@
                 <dark-mode-button></dark-mode-button>
 
                 <div class="notification-icon">
-                    {#                    <img class="icon-bell" src="{{ asset('build/images/new-notification.png') }}" #}
-                    {#                         alt="notification-icon"> #}
-                    {#                    <div class="notification-badge"></div> #}
                     <notification :user-id="{{ app.user.id|json_encode }}"
                                   :notifications="{{ app.user.notifications|json_encode }}"
                     ></notification>
@@ -27,10 +24,6 @@
                 </div>
                 {% block hearder %}
                     {% if app.user %}
-                        {% if is_granted('ROLE_ADMIN') %}
-                            <a style="color: red" href="{{ path('admin') }}">Dashboard Admin</a>
-                        {% endif %}
-
                         <user-dropdown
                                 :user-data='{{ userData_json|json_encode|raw }}'
                         ></user-dropdown>
@@ -45,7 +38,7 @@
 
             <div class="content-menu">
                 {% block menu %}
-                    {% include 'components/menu-list.html.twig' with {'container_list': container_list, 'list_style': list_style, 'list_content': list_content, 'rou': rou} %}
+                    {% include 'components/menu-list.html.twig' with {'container_list': container_list, 'list_style': list_style, 'list_content': list_content, 'routes': routes} %}
                 {% endblock %}
             </div>
 

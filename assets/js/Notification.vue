@@ -23,8 +23,8 @@
     </button>
     <div v-if="dropdownOpen" class="notification-dropdown">
       <ul>
-        <li v-for="notif in notifications" :key="notif.id" :class="{'unread': !notif.isRead}">
-          <a :href="notif.associatedLink">
+        <li v-for="notif in notifications" @click="scrollToPost(id)" :key="notif.id" :class="{'unread': !notif.isRead}">
+          <a :href="notif.associatedLink" >
             {{ notif.body }}
           </a>
         </li>
@@ -76,6 +76,17 @@ export default {
       this.notifications = data.reverse();
       this.unreadCount = this.notifications.filter(n => !n.isRead).length;
     },
+
+    scrollToPost(id) {
+      const post = document.getElementById(`post_${id}`);
+      if (post) {
+        post.scrollIntoView({
+          behavior: 'smooth',
+          block: 'start',
+        });
+      }
+    },
+
     async listenForRealTime() {
       if (!this.topic) {
         console.error("Aucun topic défini !");
@@ -88,7 +99,7 @@ export default {
       const url = new URL('http://localhost:1337/.well-known/mercure');
       url.searchParams.append('topic', this.topic);
 
-      const eventSource = new EventSource(url, { withCredentials: true });
+      const eventSource = new EventSource(url, {withCredentials: true});
 
       eventSource.onmessage = (event) => {
         const data = JSON.parse(event.data);
@@ -108,8 +119,8 @@ export default {
     },
 
     async toggleDropdown() {
-
-      if (!this.dropdownOpen) {
+      this.dropdownOpen = !this.dropdownOpen;
+      if (this.dropdownOpen) {
         for (const notif of this.notifications) {
           console.log(notif);
           if (!notif.isRead) {
@@ -117,8 +128,6 @@ export default {
           }
         }
       }
-
-      this.dropdownOpen = !this.dropdownOpen;
     },
     handleClickOutside(event) {
       // Si le dropdown est ouvert et que le clic n'est pas à l'intérieur
@@ -152,8 +161,9 @@ export default {
   position: absolute;
   background: white;
   background: none !important;
-  left: -50px;
-  top: 35px;
+  left: -100px;
+  top: 50px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 .notification-dropdown ul {
@@ -165,6 +175,7 @@ export default {
   border: 1px solid var(--light-grey);
   border-radius: 5px;
   padding: 0 !important;
+  margin: 0 !important;
 }
 
 .notification-dropdown ul li {
@@ -188,10 +199,25 @@ export default {
 }
 
 .notification-btn {
-  background: none !important;
-  border: none !important;
+  position: relative; /* nécessaire pour positionner le badge */
+  background: none;
+  border: none;
   cursor: pointer;
-  margin: 0;
+}
+
+.notification-btn span {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  background: linear-gradient(120deg, rgba(255, 166, 166, 1) 0%, rgba(255, 0, 0, 1) 100%);
+  color: white;
+  font-size: 0.75rem;
+  font-weight: bold;
+  //padding: 2px 6px;
+  border-radius: 50%;
+  min-width: 20px;
+  text-align: center;
+  box-shadow: 0 0 0 2px white; /* optionnel : pour effet "badge qui flotte" */
 }
 
 .notification-btn svg {

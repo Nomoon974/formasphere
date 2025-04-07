@@ -1,10 +1,16 @@
 {# component/menu.html.twig #}
 <ul>
-    {% for route in rou %}
+    {% for route in routes %}
         <a href="{{ route.url }}">
             <div class=" {{ container_list }}">
                 <li class="{{ list_style }}">
-                    {{ route.title }}
+                    {% if route.title == 'Tableau de bord Admin' %}
+                        <div>{{ ux_icon(route.icon, {height: "20px", width: "20px", color: "indianred",}) }}</div>
+                        <div style="color: indianred !important;">{{ route.title }}</div>
+                    {% else %}
+                        <div>{{ ux_icon(route.icon, {height: "20px", width: "20px", }) }}</div>
+                        <div>{{ route.title }}</div>
+                    {% endif %}
                 </li>
             </div>
         </a>

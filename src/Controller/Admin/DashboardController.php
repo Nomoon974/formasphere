@@ -21,8 +21,8 @@ class DashboardController extends AbstractDashboardController
     public function configureDashboard(): Dashboard
     {
         return Dashboard::new()
-            ->setTitle('<img style="border-radius: 5px; border: solid 1px rgb(24,48,69); width: 95%" src="build/images/formasphere.cfc68f6b.png"> Formasphere')
-            ->setFaviconPath('build/images/formasphere.cfc68f6b.png');
+            ->setTitle('<img style="border-radius: 5px; border: solid 1px rgb(24,48,69); width: 95%" src="build/images/formasphere_icon.6a7ef70d.png"> Formasphere')
+            ->setFaviconPath('build/images/formasphere_icon.6a7ef70d.png');
     }
 
     public function configureMenuItems(): iterable

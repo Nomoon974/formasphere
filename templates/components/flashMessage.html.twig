@@ -1,7 +1,7 @@
 <div id="flash-messages">
         {% for label, messages in app.flashes %}
                 <div class="flash-message flash-{{ label }}">
-                        <span class="close-bttn">&times;</span>
+                        <close-flash-message></close-flash-message>
                         {% for message in messages %}
                                 <p class="text-flash">{{ message }}</p>
                         {% endfor %}
