@@ -1628,6 +1628,36 @@ label {
     right: 40px;
     z-index: 1000;
 }
+/******************************************** a retirer */
+.tooltip-wip {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  cursor: not-allowed;
+  z-index: 1001;
+}
+
+.tooltip-wip::after {
+  content: "🚧 Work in Progress";
+  position: absolute;
+  bottom: 100%; /* place au-dessus */
+  right: 0;
+  margin-bottom: 10px;
+  background-color: rgba(0,0,0,0.75);
+  color: white;
+  padding: 5px 10px;
+  font-size: 12px;
+  border-radius: 4px;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+}
+
+.tooltip-wip:hover::after {
+  opacity: 1;
+}
+/******************************************** a retirer */
 
 #chat-icon {
     width: 50px;

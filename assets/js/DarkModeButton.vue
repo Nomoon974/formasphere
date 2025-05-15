@@ -22,7 +22,7 @@ export default {
 
 <template>
 
-  <div>
+  <div class="tooltip-wip">
     <input type="checkbox" @change="toggleDarkMode" class="checkbox" id="checkbox">
     <label for="checkbox" class="checkbox-label">
       <svg xmlns="http://www.w3.org/2000/svg" width="1.6em" height="1.6em" viewBox="0 0 36 36">
